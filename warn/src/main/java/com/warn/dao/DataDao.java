@@ -33,6 +33,7 @@ public interface DataDao {
 
     OldMan getOldManByEquipId(@Param("id")String sensorPointObjID);
 
+    List<OldMan> datagridMap(LouMarker louMarker);
 
     OldMan getOldManByOid(@Param("id")Integer oid);
 

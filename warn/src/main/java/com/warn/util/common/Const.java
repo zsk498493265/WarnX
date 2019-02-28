@@ -1,6 +1,10 @@
 package com.warn.util.common;
 
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
 public class Const {
     public static final String REDIRECT_HOME = "/";
 	public static final String SESSION_USER = "USER";		//保存用户
@@ -9,4 +13,12 @@ public class Const {
 	public static final String COOKIEDOMAINNAME = "2015_V_5_SSM";   //自己随便定义
 	// 加密cookie时的网站自定码
 	public static final String WEBKEY = "2015_V_5_SSM";  	 	//自己随便定义
+
+	public static String longToDate(Long lo){
+		Date date = new Date(lo);
+		SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		sd.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
+		return sd.format(date);
+	}
+
 }

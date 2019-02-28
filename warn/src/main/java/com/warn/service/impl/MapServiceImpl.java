@@ -35,6 +35,17 @@ public class MapServiceImpl implements MapService {
         return mapDao.getLouMarkers();
     }
 
+    public List<LouMarker> getLousAndOlds(){
+        List<LouMarker> louMarkerList = mapDao.getLouMarkers();
+        for(LouMarker louMarker:louMarkerList){
+            OldMan oldMan = new OldMan();
+            oldMan.setLouMarker(louMarker);
+            List<OldMan> oldManList = dataDao.datagridMap(louMarker);
+            louMarker.setOldMan(oldManList);
+        }
+        return louMarkerList;
+    }
+
     @Override
     public OldMan addHouseMarker(HouseMarker houseMarker) {
         mapDao.addHouseMarker(houseMarker);
