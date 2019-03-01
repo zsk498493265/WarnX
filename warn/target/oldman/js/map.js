@@ -654,7 +654,7 @@ function getJieDaoMarkers() {
 }
 
 //获得楼数据
-var len,louName,olds;
+var len,louName=new Array(),oldss=new Array(),marker=new Array(),marker2=new Array(),marker3=new Array();
 function getLouMarkers() {
     $.ajax({
         type: "GET",
@@ -671,151 +671,32 @@ function getLouMarkers() {
                 louNumG=dataR[i].greenSum,louNumR=dataR[i].redSum,louNumY=dataR[i].yellowSum;
                 var icon = BMapLib.MarkerTool.SYS_ICONS[6];
                 var point = new BMap.Point(data.data[i].xG, data.data[i].yG);
-                var marker = new BMap.Marker(point, {icon: icon});
+                marker[i] = new BMap.Marker(point, {icon: icon});
                 var oldNum=data.data[i].greenSum+data.data[i].yellowSum+data.data[i].redSum;
-                marker.setTitle(data.data[i].info);
+                marker[i].setTitle(data.data[i].info);
 
                 //newPoint
                 var icon2 = BMapLib.MarkerTool.SYS_ICONS[8];
                 var icon3 = BMapLib.MarkerTool.SYS_ICONS[9];
                 var point2 = new BMap.Point(data.data[i].xR, data.data[i].yR);
                 var point3 = new BMap.Point(data.data[i].xY, data.data[i].yY);
-                var marker2 = new BMap.Marker(point2, {icon: icon2});
-                var marker3 = new BMap.Marker(point3, {icon: icon3});
-                marker2.setTitle(data.data[i].info);
-                marker3.setTitle(data.data[i].info);
+                marker2[i] = new BMap.Marker(point2, {icon: icon2});
+                marker3[i] = new BMap.Marker(point3, {icon: icon3});
+                marker2[i].setTitle(data.data[i].info);
+                marker3[i].setTitle(data.data[i].info);
                 // if(typeof(data.data[i].oldMan)=="undefined")continue;
 
-                var len=dataR[i].oldMan.length,louName=dataR[i].info;
-                var olds=dataR[i].oldMan;
-                //new
-                marker.addEventListener("click", function (e) {
-                    //console.log(dataR[i]);
-                    /**
-                     *
-                     * 获得该楼道的统计信息
-                     */
-                        // alert(this.getTitle());
-                    var opts = {
-                            width : 200,     // 信息窗口宽度
-                            height: 500,     // 信息窗口高度
-                            title : this.getTitle()  // 信息窗口标题
-                        };
-                    var infostr="楼名："+louName+"<br/>";
+                louName[i]=dataR[i].info;
+                oldss[i]=new Array();
+                oldss[i]=dataR[i].oldMan;
+                //new remove listener
 
-                    for(var j=0;j<len;j++)
-                    {
-                        if(olds[j].status!=0)continue;
-                        infostr+=olds[j].oldName;
-                        infostr=infostr+":"+"<div id='test' style='width:10px;height:10px;background:#00ee00;'></div>";
-                        // if(isGreen(olds[j].oid)){
-                        //     infostr=infostr+":"+"<div id='test' style='width:10px;height:10px;background:#00ee00;'></div>";
-                        //
-                        // }
-                        // else
-                        // {
-                        //     if(olds[j].status==0)
-                        //         infostr=infostr+":"+"<div id='test' style='width:10px;height:10px;background:#00ee00;'></div>";
-                        //     else if(olds[j].status==1)
-                        //         infostr=infostr+":"+"<div id='test' style='width:10px;height:10px;background:#FFFF00;'></div>";
-                        //     else if(olds[j].status==2)
-                        //         infostr=infostr+":"+"<div id='test' style='width:10px;height:10px;background:#dd1144;'></div>";
-                        // }
-                        infostr=infostr+"手机："+olds[j].oldPhone+",";
-                        infostr=infostr+"密码："+olds[j].oldPwd+"<br/>";
-                        infostr+="<Button onclick='f1()'>实时通讯</Button>";
-                        infostr+="<button onclick='exec()'>查看室内情况</button>";
-                        infostr+="<br/>"
-                    }
-                    //alert(infostr);
-                    //alert(olds.length);
-                    // for(var i=0;i<Sum.district.length;i++) {
-                    //     for(var j=0;j<Sum.district[i].street.length;j++) {
-                    //         if (Sum.district[i].street[j].name == jName) {
-                    //             varSum = Sum.district[i].street[j].sum;
-                    //             varGreenSum = Sum.district[i].street[j].greenSum;
-                    //             varYellowSum = Sum.district[i].street[j].yellowSum;
-                    //             varRedSum = Sum.district[i].street[j].redSum;
-                    //             varQname=Sum.district[i].name;
-                    //         }
-                    //     }
-                    // }
-                    //该街道的统计情况
-                    //var infoWindow = new BMap.InfoWindow("所属区："+varQname+"<br/>购买服务总人数："+varSum+"<br/>正常："+varGreenSum+"<br/>正在接受服务："+varYellowSum+"<br/>预警："+varRedSum,opts);  // 创建信息窗口对象
-                    // var infoWindow = new BMap.InfoWindow("楼名："+varQname+"<br/>购买服务总人数：1<br/>老人1:<div id='test' style='width:10px;height:10px;background:#00ee00;'></div><button onclick='exec()'>btn1</button><Button onclick='f1()'>btn2</Button><br/>老人2:<div id='test' style='width:10px;height:10px;background:#dd1144;'></div><br/>",opts);  // 创建信息窗口对象
-
-                    var infoWindow = new BMap.InfoWindow(infostr,opts);  // 创建信息窗口对象
-
-                    this.openInfoWindow(infoWindow,new BMap.Point(this.point.lng,this.point.lat));
-                });
-                marker2.addEventListener("click", function (e) {
-                    console.log(olds);
-                    /**
-                     *
-                     * 获得该楼道的统计信息
-                     */
-                        // alert(this.getTitle());
-                    var opts = {
-                            width : 200,     // 信息窗口宽度
-                            height: 500,     // 信息窗口高度
-                            title : this.getTitle()  // 信息窗口标题
-                        };
-                    var infostr="楼名："+louName+"<br/>";
-
-                    for(var j=0;j<len;j++)
-                    {
-                        alert(olds[j].status);
-                        if(olds[j].status!=2)continue;
-
-                        infostr+=olds[j].oldName;
-                        infostr=infostr+":"+"<div id='test' style='width:10px;height:10px;background:#dd1144;'></div>";
-                        infostr=infostr+"手机："+olds[j].oldPhone+",";
-                        infostr=infostr+"密码："+olds[j].oldPwd+"<br/>";
-                        infostr+="<Button onclick='f1()'>实时通讯</Button>";
-                        infostr+="<button onclick='exec()'>查看室内情况</button>";
-                        infostr+="<br/>"
-                    }
-
-                    var infoWindow = new BMap.InfoWindow(infostr,opts);  // 创建信息窗口对象
-
-                    this.openInfoWindow(infoWindow,new BMap.Point(this.point.lng,this.point.lat));
-                });
-                marker3.addEventListener("click", function (e) {
-                    //console.log(dataR[i]);
-                    /**
-                     *
-                     * 获得该楼道的统计信息
-                     */
-                        // alert(this.getTitle());
-                    var opts = {
-                            width : 200,     // 信息窗口宽度
-                            height: 500,     // 信息窗口高度
-                            title : this.getTitle()  // 信息窗口标题
-                        };
-                    var infostr="楼名："+louName+"<br/>";
-
-                    for(var j=0;j<len;j++)
-                    {
-                        if(olds[j].status!=1)continue;
-                        infostr+=olds[j].oldName;
-                        infostr=infostr+":"+"<div id='test' style='width:10px;height:10px;background:#FFFF00;'></div>";
-                        infostr=infostr+"手机："+olds[j].oldPhone+",";
-                        infostr=infostr+"密码："+olds[j].oldPwd+"<br/>";
-                        infostr+="<Button onclick='f1()'>实时通讯</Button>";
-                        infostr+="<button onclick='exec()'>查看室内情况</button>";
-                        infostr+="<br/>"
-                    }
-
-                    var infoWindow = new BMap.InfoWindow(infostr,opts);  // 创建信息窗口对象
-
-                    this.openInfoWindow(infoWindow,new BMap.Point(this.point.lng,this.point.lat));
-                });
                 if(dataR[i].greenSum)
-                map.addOverlay(marker);
+                map.addOverlay(marker[i]);
                 if(dataR[i].redSum)
-                map.addOverlay(marker2);
+                map.addOverlay(marker2[i]);
                 if(dataR[i].yellowSum)
-                map.addOverlay(marker3);
+                map.addOverlay(marker3[i]);
 
                 // var lHtml=[];
                 // lHtml.push('<span style="font-size:12px;background-color: #00b5ad">'+data.data[i].qName+":"+data.data[i].sum +'</span><br/>');
@@ -845,15 +726,143 @@ function getLouMarkers() {
                     fontWeight: "bold",
                     border: "none"
                 });
-                marker.setLabel(label);
-                marker2.setLabel(label2);
-                marker3.setLabel(label3);
+                marker[i].setLabel(label);
+                marker2[i].setLabel(label2);
+                marker3[i].setLabel(label3);
 
                 // }
 
 
 
             }
+            //move out
+            var tempOlds;
+            for(var i=0;i<dataR.length;i++)
+            {
+                marker[i].oldsInfo=oldss[i];
+                marker2[i].oldsInfo=oldss[i];
+                marker3[i].oldsInfo=oldss[i];
+                marker[i].addEventListener("click", function (e) {
+
+                    /**
+                     *
+                     * 获得该楼道的统计信息
+                     */
+                        // alert(this.getTitle());
+                    var opts = {
+                            width : 200,     // 信息窗口宽度
+                            height: 500,     // 信息窗口高度
+                            title : this.getTitle()  // 信息窗口标题
+                        };
+                    var infostr="";
+
+                    for(var j=0;j<this.oldsInfo.length;j++)
+                    {
+                        if(this.oldsInfo[j].status!=0)continue;
+                        infostr+=this.oldsInfo[j].oldName;
+                        infostr=infostr+":"+"<div id='test' style='width:10px;height:10px;background:#00ee00;'></div>";
+                        // if(isGreen(olds[j].oid)){
+                        //     infostr=infostr+":"+"<div id='test' style='width:10px;height:10px;background:#00ee00;'></div>";
+                        //
+                        // }
+                        // else
+                        // {
+                        //     if(olds[j].status==0)
+                        //         infostr=infostr+":"+"<div id='test' style='width:10px;height:10px;background:#00ee00;'></div>";
+                        //     else if(olds[j].status==1)
+                        //         infostr=infostr+":"+"<div id='test' style='width:10px;height:10px;background:#FFFF00;'></div>";
+                        //     else if(olds[j].status==2)
+                        //         infostr=infostr+":"+"<div id='test' style='width:10px;height:10px;background:#dd1144;'></div>";
+                        // }
+                        infostr=infostr+"手机："+this.oldsInfo[j].oldPhone+",";
+                        infostr=infostr+"密码："+this.oldsInfo[j].oldPwd+"<br/>";
+                        infostr+="<Button onclick='f1()'>实时通讯</Button>";
+                        infostr+="<button onclick='exec()'>查看室内情况</button>";
+                        infostr+="<br/>"
+                    }
+                    //alert(infostr);
+                    //alert(olds.length);
+                    // for(var i=0;i<Sum.district.length;i++) {
+                    //     for(var j=0;j<Sum.district[i].street.length;j++) {
+                    //         if (Sum.district[i].street[j].name == jName) {
+                    //             varSum = Sum.district[i].street[j].sum;
+                    //             varGreenSum = Sum.district[i].street[j].greenSum;
+                    //             varYellowSum = Sum.district[i].street[j].yellowSum;
+                    //             varRedSum = Sum.district[i].street[j].redSum;
+                    //             varQname=Sum.district[i].name;
+                    //         }
+                    //     }
+                    // }
+                    //该街道的统计情况
+                    //var infoWindow = new BMap.InfoWindow("所属区："+varQname+"<br/>购买服务总人数："+varSum+"<br/>正常："+varGreenSum+"<br/>正在接受服务："+varYellowSum+"<br/>预警："+varRedSum,opts);  // 创建信息窗口对象
+                    // var infoWindow = new BMap.InfoWindow("楼名："+varQname+"<br/>购买服务总人数：1<br/>老人1:<div id='test' style='width:10px;height:10px;background:#00ee00;'></div><button onclick='exec()'>btn1</button><Button onclick='f1()'>btn2</Button><br/>老人2:<div id='test' style='width:10px;height:10px;background:#dd1144;'></div><br/>",opts);  // 创建信息窗口对象
+
+                    var infoWindow = new BMap.InfoWindow(infostr,opts);  // 创建信息窗口对象
+
+                    this.openInfoWindow(infoWindow,new BMap.Point(this.point.lng,this.point.lat));
+                });
+                marker2[i].addEventListener("click", function (e) {
+                    /**
+                     *
+                     * 获得该楼道的统计信息
+                     */
+                        // alert(this.getTitle());
+                    var opts = {
+                            width : 200,     // 信息窗口宽度
+                            height: 500,     // 信息窗口高度
+                            title : this.getTitle()  // 信息窗口标题
+                        };
+                    var infostr="";
+
+                    for(var j=0;j<this.oldsInfo.length;j++)
+                    {
+                        if(this.oldsInfo[j].status!=2)continue;
+
+                        infostr+=this.oldsInfo[j].oldName;
+                        infostr=infostr+":"+"<div id='test' style='width:10px;height:10px;background:#dd1144;'></div>";
+                        infostr=infostr+"手机："+this.oldsInfo[j].oldPhone+",";
+                        infostr=infostr+"密码："+this.oldsInfo[j].oldPwd+"<br/>";
+                        infostr+="<Button onclick='f1()'>实时通讯</Button>";
+                        infostr+="<button onclick='exec()'>查看室内情况</button>";
+                        infostr+="<br/>"
+                    }
+
+                    var infoWindow = new BMap.InfoWindow(infostr,opts);  // 创建信息窗口对象
+
+                    this.openInfoWindow(infoWindow,new BMap.Point(this.point.lng,this.point.lat));
+                });
+                marker3[i].addEventListener("click", function (e) {
+
+                    /**
+                     *
+                     * 获得该楼道的统计信息
+                     */
+                        // alert(this.getTitle());
+                    var opts = {
+                            width : 200,     // 信息窗口宽度
+                            height: 500,     // 信息窗口高度
+                            title : this.getTitle()  // 信息窗口标题
+                        };
+                    var infostr="";
+
+                    for(var j=0;j<this.oldsInfo.length;j++)
+                    {
+                        if(this.oldsInfo[j].status!=1)continue;
+                        infostr+=this.oldsInfo[j].oldName;
+                        infostr=infostr+":"+"<div id='test' style='width:10px;height:10px;background:#FFFF00;'></div>";
+                        infostr=infostr+"手机："+this.oldsInfo[j].oldPhone+",";
+                        infostr=infostr+"密码："+this.oldsInfo[j].oldPwd+"<br/>";
+                        infostr+="<Button onclick='f1()'>实时通讯</Button>";
+                        infostr+="<button onclick='exec()'>查看室内情况</button>";
+                        infostr+="<br/>"
+                    }
+
+                    var infoWindow = new BMap.InfoWindow(infostr,opts);  // 创建信息窗口对象
+
+                    this.openInfoWindow(infoWindow,new BMap.Point(this.point.lng,this.point.lat));
+                });
+            }
+
         }
     });
 }
