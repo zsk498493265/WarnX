@@ -12,6 +12,8 @@
         <result property="oldAddress" column="oldAddress"/>
         <result property="oldRegtime" column="oldRegtime"/>
         <result property="version" column="version"/>
+        <result property="oldQQ" column="oldQQ"/>
+        <result property="oldPwd" column="oldPwd"/>
         <association property="relatives" javaType="com.warn.entity.Relatives">
             <id property="relid" column="relid"/>
             <result property="rName" column="rName"/>
@@ -90,6 +92,12 @@
         </if>
     </select>
 
+    <select id="datagridMap" resultType="com.warn.entity.OldMan">
+        SELECT
+        oid,oldName,oldQQ,oldPwd,status
+        from oldman
+        where louID = #{id}
+    </select>
 
     <!--参数只有一个的话 可以直接用对象的属性值，但是有两个以上的话 就要 对象名.属性名-->
     <select id="datagridUser" resultMap="resultOldMan">

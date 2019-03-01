@@ -29,48 +29,48 @@ var selectDistrict=[];//存储添加标注时  区的选择  实时更新
 // var selectOldMan=[];//存储添加标注时  人员的选择  实时更新
 
 //老人信息表格内容填充
-var greenNum=0,redNum=0,yellowNum=0;
-var old_turn_green=new Array();
-$.ajax({
-    type: "GET",
-    url: "/patrol/getOldIds",
-    dataType: "json",
-    async: false,
-    success: function (data) {
-
-
-        for (var i = 0; i < data.data.length; i++) {
-            old_turn_green.push(data.data[i]);
-
-        }
-
-    }
-});
-$.ajax({
-    type: "GET",
-    // url: pathJs + "/map/getLouMarkersAndOlds",
-    url: "/map/getLouMarkersAndOlds",
-    dataType: "json",
-    async: false,
-    success: function (data) {
-
-        for (var i = 0; i < data.data.length; i++) {
-            for (var j = 0; j < data.data[i].oldMan.length; j++) {
-                if (data.data[i].oldMan[j].status == 0)
-                    greenNum++;
-                else if (data.data[i].oldMan[j].status == 1)
-                    yellowNum++;
-                else if (data.data[i].oldMan[j].status == 2)
-                    redNum++;
-            }
-        }
-        var tempAll=greenNum+redNum+yellowNum;
-        document.getElementById("greenNum").innerText = "已接受服务老人数量：" + greenNum;
-        document.getElementById("redNum").innerText = "未接受服务老人数量：" + redNum;
-        document.getElementById("yellowNum").innerText = "正在接受服务老人数量：" + yellowNum;
-        document.getElementById("allNum").innerText = "老人总数：" + tempAll;
-    }
-});
+// var greenNum=0,redNum=0,yellowNum=0;
+// var old_turn_green=new Array();
+// $.ajax({
+//     type: "GET",
+//     url: "/patrol/getOldIds",
+//     dataType: "json",
+//     async: false,
+//     success: function (data) {
+//
+//
+//         for (var i = 0; i < data.data.length; i++) {
+//             old_turn_green.push(data.data[i]);
+//
+//         }
+//
+//     }
+// });
+// //!!!
+// $.ajax({
+//     type: "GET",
+//     url: "/map/getLouMarkersAndOlds",
+//     dataType: "json",
+//     async: false,
+//     success: function (data) {
+//
+//         for (var i = 0; i < data.data.length; i++) {
+//             for (var j = 0; j < data.data[i].oldMan.length; j++) {
+//                 if (data.data[i].oldMan[j].status == 0)
+//                     greenNum++;
+//                 else if (data.data[i].oldMan[j].status == 1)
+//                     yellowNum++;
+//                 else if (data.data[i].oldMan[j].status == 2)
+//                     redNum++;
+//             }
+//         }
+//         var tempAll=greenNum+redNum+yellowNum;
+//         document.getElementById("greenNum").innerText = "已接受服务老人数量：" + greenNum;
+//         document.getElementById("redNum").innerText = "未接受服务老人数量：" + redNum;
+//         document.getElementById("yellowNum").innerText = "正在接受服务老人数量：" + yellowNum;
+//         document.getElementById("allNum").innerText = "老人总数：" + tempAll;
+//     }
+// });
 //
 
 var map = new BMap.Map("container");
@@ -83,7 +83,7 @@ if(getCookie("zoom")!=null&&getCookie("zoom")!=""){
         getLouMarkers();
         getWorkerMarkers();
     }else if(getCookie("zoom")==19){
-        getLouMarkers_label();
+        getLouMarkers();
         getWorkerMarkers();
     }else{
         getJieDaoMarkers();
@@ -118,7 +118,7 @@ map.addEventListener("zoomend", function(){
     }else if(this.getZoom()==19){
         map.clearOverlays();
         //房屋级别 且 上一个地图级别不是房屋级别   有label
-        getLouMarkers_label();
+        getLouMarkers();
         getWorkerMarkers();
     }
     preZoom=this.getZoom();
@@ -654,7 +654,7 @@ function getJieDaoMarkers() {
 }
 
 //获得楼数据
-var olds,len,louName;
+var len,louName,olds;
 function getLouMarkers() {
     $.ajax({
         type: "GET",
@@ -666,21 +666,31 @@ function getLouMarkers() {
 
             for(var i=0;i<data.data.length;i++) {
                 var dataR=data.data;
-
                 // if(data.data[i].greenSum!=0){
+                var louNumG,louNumR,louNumY;
+                louNumG=dataR[i].greenSum,louNumR=dataR[i].redSum,louNumY=dataR[i].yellowSum;
                 var icon = BMapLib.MarkerTool.SYS_ICONS[6];
                 var point = new BMap.Point(data.data[i].xG, data.data[i].yG);
                 var marker = new BMap.Marker(point, {icon: icon});
                 var oldNum=data.data[i].greenSum+data.data[i].yellowSum+data.data[i].redSum;
                 marker.setTitle(data.data[i].info);
 
+                //newPoint
+                var icon2 = BMapLib.MarkerTool.SYS_ICONS[8];
+                var icon3 = BMapLib.MarkerTool.SYS_ICONS[9];
+                var point2 = new BMap.Point(data.data[i].xR, data.data[i].yR);
+                var point3 = new BMap.Point(data.data[i].xY, data.data[i].yY);
+                var marker2 = new BMap.Marker(point2, {icon: icon2});
+                var marker3 = new BMap.Marker(point3, {icon: icon3});
+                marker2.setTitle(data.data[i].info);
+                marker3.setTitle(data.data[i].info);
                 // if(typeof(data.data[i].oldMan)=="undefined")continue;
 
-                len=dataR[i].oldMan.length,louName=dataR[i].info;
-                olds=dataR[i].oldMan;
+                var len=dataR[i].oldMan.length,louName=dataR[i].info;
+                var olds=dataR[i].oldMan;
                 //new
                 marker.addEventListener("click", function (e) {
-                    console.log(dataR[i]);
+                    //console.log(dataR[i]);
                     /**
                      *
                      * 获得该楼道的统计信息
@@ -691,34 +701,26 @@ function getLouMarkers() {
                             height: 500,     // 信息窗口高度
                             title : this.getTitle()  // 信息窗口标题
                         };
-                    var jName=this.getTitle().split("：")[1];
-                    var varQname="";
-                    var varSum=2;
-                    var varGreenSum=1;
-                    var varYellowSum=3;
-                    var varRedSum=1;
-                    //alert(data.data[i].info);
                     var infostr="楼名："+louName+"<br/>";
 
                     for(var j=0;j<len;j++)
                     {
+                        if(olds[j].status!=0)continue;
                         infostr+=olds[j].oldName;
-                        //infostr=infostr+":"+olds[j].status+",";
-                        //alert(isGreen(olds[j].oid));
-                        if(isGreen(olds[j].oid)){
-                            infostr=infostr+":"+"<div id='test' style='width:10px;height:10px;background:#00ee00;'></div>";
-
-                        }
-                        else
-                        {
-                            if(olds[j].status==0)
-                                infostr=infostr+":"+"<div id='test' style='width:10px;height:10px;background:#00ee00;'></div>";
-                            else if(olds[j].status==1)
-                                infostr=infostr+":"+"<div id='test' style='width:10px;height:10px;background:#FFFF00;'></div>";
-                            else if(olds[j].status==2)
-                                infostr=infostr+":"+"<div id='test' style='width:10px;height:10px;background:#dd1144;'></div>";
-                        }
-
+                        infostr=infostr+":"+"<div id='test' style='width:10px;height:10px;background:#00ee00;'></div>";
+                        // if(isGreen(olds[j].oid)){
+                        //     infostr=infostr+":"+"<div id='test' style='width:10px;height:10px;background:#00ee00;'></div>";
+                        //
+                        // }
+                        // else
+                        // {
+                        //     if(olds[j].status==0)
+                        //         infostr=infostr+":"+"<div id='test' style='width:10px;height:10px;background:#00ee00;'></div>";
+                        //     else if(olds[j].status==1)
+                        //         infostr=infostr+":"+"<div id='test' style='width:10px;height:10px;background:#FFFF00;'></div>";
+                        //     else if(olds[j].status==2)
+                        //         infostr=infostr+":"+"<div id='test' style='width:10px;height:10px;background:#dd1144;'></div>";
+                        // }
                         infostr=infostr+"手机："+olds[j].oldPhone+",";
                         infostr=infostr+"密码："+olds[j].oldPwd+"<br/>";
                         infostr+="<Button onclick='f1()'>实时通讯</Button>";
@@ -746,22 +748,107 @@ function getLouMarkers() {
 
                     this.openInfoWindow(infoWindow,new BMap.Point(this.point.lng,this.point.lat));
                 });
+                marker2.addEventListener("click", function (e) {
+                    console.log(olds);
+                    /**
+                     *
+                     * 获得该楼道的统计信息
+                     */
+                        // alert(this.getTitle());
+                    var opts = {
+                            width : 200,     // 信息窗口宽度
+                            height: 500,     // 信息窗口高度
+                            title : this.getTitle()  // 信息窗口标题
+                        };
+                    var infostr="楼名："+louName+"<br/>";
+
+                    for(var j=0;j<len;j++)
+                    {
+                        alert(olds[j].status);
+                        if(olds[j].status!=2)continue;
+
+                        infostr+=olds[j].oldName;
+                        infostr=infostr+":"+"<div id='test' style='width:10px;height:10px;background:#dd1144;'></div>";
+                        infostr=infostr+"手机："+olds[j].oldPhone+",";
+                        infostr=infostr+"密码："+olds[j].oldPwd+"<br/>";
+                        infostr+="<Button onclick='f1()'>实时通讯</Button>";
+                        infostr+="<button onclick='exec()'>查看室内情况</button>";
+                        infostr+="<br/>"
+                    }
+
+                    var infoWindow = new BMap.InfoWindow(infostr,opts);  // 创建信息窗口对象
+
+                    this.openInfoWindow(infoWindow,new BMap.Point(this.point.lng,this.point.lat));
+                });
+                marker3.addEventListener("click", function (e) {
+                    //console.log(dataR[i]);
+                    /**
+                     *
+                     * 获得该楼道的统计信息
+                     */
+                        // alert(this.getTitle());
+                    var opts = {
+                            width : 200,     // 信息窗口宽度
+                            height: 500,     // 信息窗口高度
+                            title : this.getTitle()  // 信息窗口标题
+                        };
+                    var infostr="楼名："+louName+"<br/>";
+
+                    for(var j=0;j<len;j++)
+                    {
+                        if(olds[j].status!=1)continue;
+                        infostr+=olds[j].oldName;
+                        infostr=infostr+":"+"<div id='test' style='width:10px;height:10px;background:#FFFF00;'></div>";
+                        infostr=infostr+"手机："+olds[j].oldPhone+",";
+                        infostr=infostr+"密码："+olds[j].oldPwd+"<br/>";
+                        infostr+="<Button onclick='f1()'>实时通讯</Button>";
+                        infostr+="<button onclick='exec()'>查看室内情况</button>";
+                        infostr+="<br/>"
+                    }
+
+                    var infoWindow = new BMap.InfoWindow(infostr,opts);  // 创建信息窗口对象
+
+                    this.openInfoWindow(infoWindow,new BMap.Point(this.point.lng,this.point.lat));
+                });
+                if(dataR[i].greenSum)
                 map.addOverlay(marker);
+                if(dataR[i].redSum)
+                map.addOverlay(marker2);
+                if(dataR[i].yellowSum)
+                map.addOverlay(marker3);
 
                 // var lHtml=[];
                 // lHtml.push('<span style="font-size:12px;background-color: #00b5ad">'+data.data[i].qName+":"+data.data[i].sum +'</span><br/>');
 
                 // var label = new BMap.Label(data.data[i].jName+"："+data.data[i].sum,{offset:new BMap.Size(20,-10)});
-                var label = new BMap.Label("2",{offset:new BMap.Size(20,-10)});
+                var label = new BMap.Label(louNumG,{offset:new BMap.Size(5,-20)});
                 label.setStyle({
-                    color:"red",
-                    font:"16px/1.5 Tahoma,Helvetica,Arial,'宋体',sans-serif;",
-                    backgroundColor:"white",
-                    fontWeight:"bold",
-                    padding:"4px 8px"
+                    color: "red",
+                    font: "8px Tahoma,Helvetica,Arial,'宋体',sans-serif;",
+                    backgroundColor: "transparent",
+                    fontWeight: "bold",
+                    border: "none"
+                });
+                var label2 = new BMap.Label(louNumR,{offset:new BMap.Size(5,-20)});
+                label2.setStyle({
+                    color: "red",
+                    font: "8px Tahoma,Helvetica,Arial,'宋体',sans-serif;",
+                    backgroundColor: "transparent",
+                    fontWeight: "bold",
+                    border: "none"
+                });
+                var label3 = new BMap.Label(louNumY,{offset:new BMap.Size(5,-20)});
+                label3.setStyle({
+                    color: "red",
+                    font: "8px Tahoma,Helvetica,Arial,'宋体',sans-serif;",
+                    backgroundColor: "transparent",
+                    fontWeight: "bold",
+                    border: "none"
                 });
                 marker.setLabel(label);
-                map.addOverlay(marker);
+                marker2.setLabel(label2);
+                marker3.setLabel(label3);
+
                 // }
 
 
@@ -782,66 +869,66 @@ function isGreen(oid){
     return 0;
 }
 function getLouMarkers_label() {
-    $.ajax({
-        type: "GET",
-        url: pathJs + "/map/getLouMarkers",
-        dataType: "json",
-        async:false,
-        success: function (data) {
-
-
-            for(var i=0;i<data.data.length;i++) {
-                // if(data.data[i].greenSum!=0){
-                var icon = BMapLib.MarkerTool.SYS_ICONS[6];
-                var point = new BMap.Point(data.data[i].xG, data.data[i].yG);
-                var marker = new BMap.Marker(point, {icon: icon});
-                marker.setTitle(data.data[i].info + "："+data.data[i].greenSum);
-                map.addOverlay(marker);
-                var label = new BMap.Label(data.data[i].greenSum,{offset:new BMap.Size(3,-18)});
-                label.setStyle({
-                    color:"red",
-                    font:"8px Tahoma,Helvetica,Arial,'宋体',sans-serif;",
-                    backgroundColor:"transparent",
-                    fontWeight:"bold",
-                    border:"none"
-                });
-                marker.setLabel(label);
-                // }
-                if(data.data[i].yellowSum!=0){
-                    var icon = BMapLib.MarkerTool.SYS_ICONS[9];
-                    var point = new BMap.Point(data.data[i].xY, data.data[i].yY);
-                    var marker = new BMap.Marker(point, {icon: icon});
-                    marker.setTitle(data.data[i].info + "："+data.data[i].yellowSum);
-                    map.addOverlay(marker);
-                    var label = new BMap.Label(data.data[i].yellowSum,{offset:new BMap.Size(3,-18)});
-                    label.setStyle({
-                        color:"red",
-                        font:"8px Tahoma,Helvetica,Arial,'宋体',sans-serif;",
-                        backgroundColor:"transparent",
-                        fontWeight:"bold",
-                        border:"none"
-                    });
-                    marker.setLabel(label);
-                }
-                if(data.data[i].redSum!=0){
-                    var icon = BMapLib.MarkerTool.SYS_ICONS[8];
-                    var point = new BMap.Point(data.data[i].xR, data.data[i].yR);
-                    var marker = new BMap.Marker(point, {icon: icon});
-                    marker.setTitle(data.data[i].info + "："+data.data[i].redSum);
-                    map.addOverlay(marker);
-                    var label = new BMap.Label(data.data[i].redSum,{offset:new BMap.Size(3,-18)});
-                    label.setStyle({
-                        color:"red",
-                        font:"8px Tahoma,Helvetica,Arial,'宋体',sans-serif;",
-                        backgroundColor:"transparent",
-                        fontWeight:"bold",
-                        border:"none"
-                    });
-                    marker.setLabel(label);
-                }
-            }
-        }
-    });
+    // $.ajax({
+    //     type: "GET",
+    //     url: pathJs + "/map/getLouMarkers",
+    //     dataType: "json",
+    //     async:false,
+    //     success: function (data) {
+    //
+    //
+    //         for(var i=0;i<data.data.length;i++) {
+    //             // if(data.data[i].greenSum!=0){
+    //             var icon = BMapLib.MarkerTool.SYS_ICONS[6];
+    //             var point = new BMap.Point(data.data[i].xG, data.data[i].yG);
+    //             var marker = new BMap.Marker(point, {icon: icon});
+    //             marker.setTitle(data.data[i].info + "："+data.data[i].greenSum);
+    //             map.addOverlay(marker);
+    //             var label = new BMap.Label(data.data[i].greenSum,{offset:new BMap.Size(3,-18)});
+    //             label.setStyle({
+    //                 color:"red",
+    //                 font:"8px Tahoma,Helvetica,Arial,'宋体',sans-serif;",
+    //                 backgroundColor:"transparent",
+    //                 fontWeight:"bold",
+    //                 border:"none"
+    //             });
+    //             marker.setLabel(label);
+    //             // }
+    //             if(data.data[i].yellowSum!=0){
+    //                 var icon = BMapLib.MarkerTool.SYS_ICONS[9];
+    //                 var point = new BMap.Point(data.data[i].xY, data.data[i].yY);
+    //                 var marker = new BMap.Marker(point, {icon: icon});
+    //                 marker.setTitle(data.data[i].info + "："+data.data[i].yellowSum);
+    //                 map.addOverlay(marker);
+    //                 var label = new BMap.Label(data.data[i].yellowSum,{offset:new BMap.Size(3,-18)});
+    //                 label.setStyle({
+    //                     color:"red",
+    //                     font:"8px Tahoma,Helvetica,Arial,'宋体',sans-serif;",
+    //                     backgroundColor:"transparent",
+    //                     fontWeight:"bold",
+    //                     border:"none"
+    //                 });
+    //                 marker.setLabel(label);
+    //             }
+    //             if(data.data[i].redSum!=0){
+    //                 var icon = BMapLib.MarkerTool.SYS_ICONS[8];
+    //                 var point = new BMap.Point(data.data[i].xR, data.data[i].yR);
+    //                 var marker = new BMap.Marker(point, {icon: icon});
+    //                 marker.setTitle(data.data[i].info + "："+data.data[i].redSum);
+    //                 map.addOverlay(marker);
+    //                 var label = new BMap.Label(data.data[i].redSum,{offset:new BMap.Size(3,-18)});
+    //                 label.setStyle({
+    //                     color:"red",
+    //                     font:"8px Tahoma,Helvetica,Arial,'宋体',sans-serif;",
+    //                     backgroundColor:"transparent",
+    //                     fontWeight:"bold",
+    //                     border:"none"
+    //                 });
+    //                 marker.setLabel(label);
+    //             }
+    //         }
+    //     }
+    // });
 }
 
 //html 显示 初始化

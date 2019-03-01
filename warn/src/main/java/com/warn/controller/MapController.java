@@ -109,6 +109,13 @@ public class MapController {
         dg.setRows(quMarkerList);
         return dg;
     }
+    @ResponseBody
+    @RequestMapping(value ="/getLouMarkersAndOlds",method = RequestMethod.GET)
+    public Result getLouAndOld(){
+        List<LouMarker> louMarkerList =  mapService.getLousAndOlds();
+        return new Result(true,louMarkerList);
+    }
+
     /**
      * 获得街道标注  POST
      * @return
