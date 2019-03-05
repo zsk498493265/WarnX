@@ -20,6 +20,10 @@
   <script type="text/javascript" src="${path}/js/table_oldman.js"></script>
   <script type="text/javascript" src="${path}/js/common.js"></script>
 
+  <script type='text/javascript' src="${path}/dwr/engine.js"></script>
+  <script type='text/javascript' src="${path}/dwr/util.js"></script>
+  <script type='text/javascript' src="${path}/dwr/interface/Remote.js"></script>
+
   <style type="text/css">
 
 
@@ -94,7 +98,14 @@
   <%--<div id='test' style='width:500px;height:200px;background:#00F;'>--%>
   <%--测试的div1--%>
   <%--</div>--%>
-  <div id='test' style='width:500px;height:200px;background:#aa00aa;'></div>
+  <div id='test' style='width:500px;height:200px;background:#aa00aa;'>
+    <p id="warnMessage" style="font-size: 15px">报警信息</p>
+    <p id="oldId" style="font-size: 15px">老人ID：</p>
+    <p id="oldName" style="font-size: 15px">老人姓名：</p>
+    <p id="oldPhone" style="font-size: 15px">老人电话：</p>
+    <p id="oldAddress" style="font-size: 15px">老人地址：</p>
+
+  </div>
   <div id="main_bar" style='width:500px;height:150px;position: relative;top:-10px'></div>
 
     <%--测试的div2<br>--%>

@@ -4,6 +4,11 @@
  * Created by netlab606 on 2017/7/7.
  */
 
+//alert
+//这个方法用来启动该页面的ReverseAjax功能
+dwr.engine.setActiveReverseAjax(true);
+//设置在页面关闭时，通知服务端销毁会话
+dwr.engine.setNotifyServerOnPageUnload(true);
 
 /**
  * 存储新建的标注的信息
@@ -28,6 +33,274 @@ var selectStreet=[];//存储添加标注时  街道的选择  实时更新
 var selectDistrict=[];//存储添加标注时  区的选择  实时更新
 // var selectOldMan=[];//存储添加标注时  人员的选择  实时更新
 
+//warn
+var oldName,oldId,oldAddress,oldPhone;
+function warn2(data){
+    // getNoReadSum();
+    //紧急报警
+    if(data.type=="urgency"){
+        var wdid=data.id;
+        var urgencyMessage="<div class='eauip'><span class='messageT'>报警设备信息：" +
+            "</span><br><p>设备ID：<span class='messageD'>"+data.urgency.equip.eid+"</span></p>"+
+            "<p>设备所在房间：<span class='messageD'>"+data.urgency.room.roomName+"</span></p></div>"+
+            "<div class='oldMan'><span class='messageT'>老人信息：</span><br><p>" +
+            "老人ID：<span class='messageD'>"+data.urgency.oldMan.oid+"</span></p><p>" +
+            "老人姓名：<span class='messageD'>"+ data.urgency.oldMan.oldName+"</span></p><p>" +
+            "老人电话：<span class='messageD'>"+ data.urgency.oldMan.oldPhone+"</span></p><p>" +
+            "老人住址：<span class='messageD'>"+ data.urgency.oldMan.oldAddress+"</span></p></div>";
+        $.messager.alert('紧急报警！',urgencyMessage,'danger');
+        playSound("urgency");
+        oldId=data.urgency.oldMan.oid;
+        oldName=data.urgency.oldMan.oldName;
+        oldPhone=data.urgency.oldMan.oldPhone;
+        oldAddress=data.urgency.oldMan.oldAddress;
+    }else if(data.type=="gatewayDown"){
+        var downid=data.downid;
+        //网关故障
+        var gatewayDownMessage="<div class='eauip'><span class='messageT'>网关故障信息：" +
+            "</span><br><p>网关：<span class='messageD'>"+data.oldMan.gatewayID+"</span></p></div>"+
+            "<div class='oldMan'><span class='messageT'>老人信息：</span><br><p>" +
+            "老人ID：<span class='messageD'>"+data.oldMan.oid+"</span></p><p>" +
+            "老人姓名：<span class='messageD'>"+ data.oldMan.oldName+"</span></p><p>" +
+            "老人电话：<span class='messageD'>"+ data.oldMan.oldPhone+"</span></p><p>" +
+            "老人住址：<span class='messageD'>"+ data.oldMan.oldAddress+"</span></p></div>";
+        oldId=data.oldMan.oid;
+        oldName=data.oldMan.oldName;
+        oldPhone=data.oldMan.oldPhone;
+        oldAddress=data.oldMan.oldAddress;
+        $.messager.alert('网关故障！',gatewayDownMessage,'danger',function(){
+            // 该网关故障消息已读
+            $.ajax({
+                type: "POST",
+                url: pathJs + "/downHistory/messageRead",
+                dataType: "json",
+                data:{
+                    downid:downid
+                },
+                async:false,
+                success: function (data) {
+                    getNoReadSum();
+                }
+            });
+        });
+        playSound("urgency");
+    } else if(data.type=="equipDown"){
+        //设备故障
+        var downid=data.downid;
+        var type;
+        switch(data.equipDown.type){
+            case 2:
+                type="温度";
+                break;
+            case 3:
+                type="湿度";
+                break;
+            case 4:
+                type="光强";
+                break;
+            default:
+                break;
+        }
+        var gatewayDownMessage="<div class='eauip'><span class='messageT'>设备故障信息：" +
+            "</span><br><p>设备ID：<span class='messageD'>"+data.equipDown.eid+"</span></p>"+
+            "<p>设备种类：<span class='messageD'>"+type+"</span></p></div>"+
+            "<div class='oldMan'><span class='messageT'>老人信息：</span><br><p>" +
+            "老人ID：<span class='messageD'>"+data.oldMan.oid+"</span></p><p>" +
+            "老人姓名：<span class='messageD'>"+ data.oldMan.oldName+"</span></p><p>" +
+            "老人电话：<span class='messageD'>"+ data.oldMan.oldPhone+"</span></p><p>" +
+            "老人住址：<span class='messageD'>"+ data.oldMan.oldAddress+"</span></p></div>";
+            oldId=data.oldMan.oid;
+            oldName=data.oldMan.oldName;
+            oldPhone=data.oldMan.oldPhone;
+            oldAddress=data.oldMan.oldAddress;
+        $.messager.alert('设备故障！',gatewayDownMessage,'danger',function(){
+            //该网关故障消息已读
+            $.ajax({
+                type: "POST",
+                url: pathJs + "/downHistory/messageRead",
+                dataType: "json",
+                data:{
+                    downid:downid
+                },
+                async:false,
+                success: function (data) {
+                    getNoReadSum();
+                }
+            });
+        });
+        playSound("urgency");
+    }else {
+        //预警信息
+        var warnMessage = "";
+        var title = "";
+        if (data.type == "warn_move") {
+            //行为预警
+            title="行为预警";
+            warnMessage = "<div class='oldMan'><span class='messageT'>老人信息：</span><br><p>" +
+                "老人ID：<span class='messageD'>" + data.warn.oldMan.oid + "</span></p><p>" +
+                "老人姓名：<span class='messageD'>" + data.warn.oldMan.oldName + "</span></p><p>" +
+                "老人电话：<span class='messageD'>" + data.warn.oldMan.oldPhone + "</span></p><p>" +
+                "老人住址：<span class='messageD'>" + data.warn.oldMan.oldAddress + "</span></p></div>" +
+                "<div class='detail'><span class='messageT'>行为信息：</span><br><p>" +
+                "预警级别：<span class='messageD read'>" + data.warn.warnLevel + "</span></p><p>" +
+                "已经不动：<span class='messageD read'>" + data.warn.noMoveTime + " </span>分钟</p><p>" +
+                "所处房间：<span class='messageD'>" + data.warn.room.roomName + "</span></p><p>" +
+                "最初不动的时间：<span class='messageD'>" + data.warn.time + "</span></p><p>" +
+                "是否在该房间的生活规律模型中：<span class='messageD'>" + (data.warn.inTime == 'true' ? "在<p>模型所在时间段：<span class='messageD'>" + data.warn.times + "</span></p><p>" +
+                    "规律类型：<span class='messageD'>" + (data.warn.flag == "a" ? "活动" : ((data.warn.flag == "r") ? "休息" : "活动、休息")) + "</span></p>" :
+                    "不在") + "</span></p></div><input name="+data.id+" type='button' value='已读' onclick='readA(event)'/>";
+            oldId=data.warn.oldMan.oid;
+            oldName=data.warn.oldMan.oldName;
+            oldPhone=data.warn.oldMan.oldPhone;
+            oldAddress=data.warn.oldMan.oldAddress;
+        } else if (data.type == "warn_wendu") {
+            //温度预警
+            title="温度预警";
+            warnMessage = "<div class='oldMan'><span class='messageT'>老人信息：</span><br><p>" +
+                "老人ID：<span class='messageD'>" + data.warn_wendu.oldMan.oid + "</span></p><p>" +
+                "老人姓名：<span class='messageD'>" + data.warn_wendu.oldMan.oldName + "</span></p><p>" +
+                "老人电话：<span class='messageD'>" + data.warn_wendu.oldMan.oldPhone + "</span></p><p>" +
+                "老人住址：<span class='messageD'>" + data.warn_wendu.oldMan.oldAddress + "</span></p></div>" +
+                "<div class='detail'><span class='messageT'>温度信息：</span><br><p>" +
+                "报警房间：<span class='messageD read'>" + data.warn_wendu.threshold_wendu.room.roomName + "</span></p><p>" +
+                "当前温度：<span class='messageD read'>" + data.warn_wendu.wendu + "</span></p><p>" +
+                "该房间温度阈值：<span class='messageD'>" + data.warn_wendu.threshold_wendu.wThreshold + "</span></p><p></div><input name="+data.id+" type='button' value='已读' onclick='readA(event)'/>";
+            oldId=data.warn_wendu.oldMan.oid;
+            oldName=data.warn_wendu.oldMan.oldName;
+            oldPhone=data.warn_wendu.oldMan.oldPhone;
+            oldAddress=data.warn_wendu.oldMan.oldAddress;
+        } else if (data.type == "warn_light") {
+            //光强预警
+            title="光强预警";
+
+            warnMessage = "<div class='oldMan'><span class='messageT'>老人信息：</span><br><p>" +
+                "老人ID：<span class='messageD'>" + data.warn_light.oldMan.oid + "</span></p><p>" +
+                "老人姓名：<span class='messageD'>" + data.warn_light.oldMan.oldName + "</span></p><p>" +
+                "老人电话：<span class='messageD'>" + data.warn_light.oldMan.oldPhone + "</span></p><p>" +
+                "老人住址：<span class='messageD'>" + data.warn_light.oldMan.oldAddress + "</span></p></div>" +
+                "<div class='detail'><span class='messageT'>光强信息：</span><br><p>" +
+                "报警房间：<span class='messageD read'>" + data.warn_light.threshold_light.room.roomName + "</span></p><p>" +
+                "当前光强：<span class='messageD read'>" + data.warn_light.light+ "</span></p><p>" +
+                "起止时间：<span class='messageD'>" + data.warn_light.time+ "</span></p><p>" +
+                "当前持续时间：<span class='messageD'>" + data.warn_light.value + "</span></p><p>" +
+                "该房间光强阈值：：<span class='messageD'>" + data.warn_light.threshold_light.lThreshold + "</span></p><p>" +
+                "检测时间段：<span class='messageD'>" + data.warn_light.threshold_light.times + "</span></p><p></div>";
+            "持续超过：<span class='messageD'>" + data.warn_light.threshold_light.continueTime + " 分钟报警</span></p><p></div><input name="+data.id+" type='button' value='已读' onclick='readA(event)'/>";
+            oldId=data.warn_light.oldMan.oid;
+            oldName=data.warn_light.oldMan.oldName;
+            oldPhone=data.warn_light.oldMan.oldPhone;
+            oldAddress=data.warn_light.oldMan.oldAddress;
+        }else if(data.type=="outdoor_out"){
+            //没有了  不用再进行提示了  代码先保留
+            title="老人出门";
+            warnMessage = "<div class='oldMan'><span class='messageT'>老人信息：</span><br><p>" +
+                "老人ID：<span class='messageD'>" + data.outdoor.oldMan.oid + "</span></p><p>" +
+                "老人姓名：<span class='messageD'>" + data.outdoor.oldMan.oldName + "</span></p><p>" +
+                "老人电话：<span class='messageD'>" + data.outdoor.oldMan.oldPhone + "</span></p><p>" +
+                "老人住址：<span class='messageD'>" + data.outdoor.oldMan.oldAddress + "</span></p></div>" +
+                "<div class='detail'><span class='messageT'>出门信息：</span><br><p>" +
+                "出门时刻：<span class='messageD read'>" + data.outdoor.out + "</span></p><p>" +
+                "出门阈值：超过<span class='messageD red'>" + data.outdoor.threshold_out.outThreshold+ "</span>分钟为出门</p><p></div><input name="+data.id+" type='button' value='已读' onclick='readB(event)'/>"
+            oldId=data.outdoor.oldMan.oid;
+            oldName=data.outdoor.oldMan.oldName;
+            oldPhone=data.outdoor.oldMan.oldPhone;
+            oldAddress=data.outdoor.oldMan.oldAddress;
+
+        }else if(data.type=="outdoor_nocome"){
+            title="老人出门未归预警";
+            warnMessage = "<div class='oldMan'><span class='messageT'>老人信息：</span><br><p>" +
+                "老人ID：<span class='messageD'>" + data.outdoor.oldMan.oid + "</span></p><p>" +
+                "老人姓名：<span class='messageD'>" + data.outdoor.oldMan.oldName + "</span></p><p>" +
+                "老人电话：<span class='messageD'>" + data.outdoor.oldMan.oldPhone + "</span></p><p>" +
+                "老人住址：<span class='messageD'>" + data.outdoor.oldMan.oldAddress + "</span></p></div>" +
+                "<div class='detail'><span class='messageT'>未归信息：</span><br><p>" +
+                "出门时刻：<span class='messageD read'>" + data.outdoor.out + "</span></p><p>" +
+                "未归阈值：<span class='messageD'>" + data.outdoor.threshold_out.noComeThreshold+ "分钟</span></p><p></div><input name="+data.id+" type='button' value='已读' onclick='readA(event)'/>"
+            oldId=data.outdoor.oldMan.oid;
+            oldName=data.outdoor.oldMan.oldName;
+            oldPhone=data.outdoor.oldMan.oldPhone;
+            oldAddress=data.outdoor.oldMan.oldAddress;
+        }else if(data.type=="outdoor_come"){
+            //没有了  不用再进行提示了  代码先保留
+            title="老人回来";
+            warnMessage = "<div class='oldMan'><span class='messageT'>老人信息：</span><br><p>" +
+                "老人ID：<span class='messageD'>" + data.outdoor.oldMan.oid + "</span></p><p>" +
+                "老人姓名：<span class='messageD'>" + data.outdoor.oldMan.oldName + "</span></p><p>" +
+                "老人电话：<span class='messageD'>" + data.outdoor.oldMan.oldPhone + "</span></p><p>" +
+                "老人住址：<span class='messageD'>" + data.outdoor.oldMan.oldAddress + "</span></p></div>" +
+                "<div class='detail'><span class='messageT'>回来信息：</span><br><p>" +
+                "出门时间段：<span class='messageD read'>" + data.outdoor.dataD + "</span></p><p></div><input name="+data.id+" type='button' value='已读' onclick='readB(event)'/>"
+            oldId=data.outdoor.oldMan.oid;
+            oldName=data.outdoor.oldMan.oldName;
+            oldPhone=data.outdoor.oldMan.oldPhone;
+            oldAddress=data.outdoor.oldMan.oldAddress;
+        }
+        $.messager.show({
+            title:title,
+            msg:warnMessage,
+            showType:'fade',
+            width:"15%",
+            height:'38%',
+            timeout:15000,
+            style:{
+                right:'',
+                top:document.body.scrollTop+document.documentElement.scrollTop,
+                bottom:''
+            }
+        });
+        playSound("warn");
+    }
+
+    document.getElementById("oldId").innerText ="老人ID："+oldId ;
+    document.getElementById("oldName").innerText ="老人姓名："+oldName ;
+    document.getElementById("oldPhone").innerText ="老人电话："+oldPhone ;
+    document.getElementById("oldAddress").innerText ="老人地址："+oldAddress ;
+
+}
+function mapUpdate() {
+
+    //当前frame 是地图页面  则进行实时更新  不是的话就不用更新了
+    // if($("#iframe_ifr").attr("src").indexOf("map")!=-1){
+    //     //调用map.jsp 子页面的 函数
+    //     document.getElementById("iframe_ifr").contentWindow.louChange();
+    // }
+}
+function playSound(type)
+{
+    var borswer = window.navigator.userAgent.toLowerCase();
+    if ( borswer.indexOf( "ie" ) >= 0 )
+    {
+        //IE内核浏览器
+        var strEmbed;
+        if(type=="warn") {
+            strEmbed = '<embed name="embedPlay" src="' + pathJs + '/wav/warn.wav" autostart="true" hidden="true" loop="false"></embed>';
+        }else{
+            strEmbed = '<embed name="embedPlay" src="' + pathJs + '/wav/urgency.wav" autostart="true" hidden="true" loop="false"></embed>';
+        }
+        if ( $( "body" ).find( "embed" ).length <= 0 )
+            $( "body" ).append( strEmbed );
+        var embed = document.embedPlay;
+
+        //浏览器不支持 audion，则使用 embed 播放
+        embed.volume = 100;
+        //embed.play();这个不需要
+    } else
+    {
+        //非IE内核浏览器
+        var strAudio;
+        if(type=="warn") {
+            strAudio = "<audio id='audioPlay' src='" + pathJs + "/wav/warn.wav' hidden='true'>";
+        }else{
+            strAudio = "<audio id='audioPlay' src='" + pathJs + "/wav/urgency.wav' hidden='true'>";
+        }
+        if ( $( "body" ).find( "audio" ).length <= 0 )
+            $( "body" ).append( strAudio );
+        var audio = document.getElementById( "audioPlay" );
+
+        //浏览器支持 audion
+        audio.play();
+    }
+}
 //老人信息表格内容填充
 var greenNum=0,redNum=0,yellowNum=0;
 // var old_turn_green=new Array();
