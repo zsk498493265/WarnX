@@ -4,6 +4,11 @@
  * Created by netlab606 on 2017/7/7.
  */
 
+//alert
+//这个方法用来启动该页面的ReverseAjax功能
+dwr.engine.setActiveReverseAjax(true);
+//设置在页面关闭时，通知服务端销毁会话
+dwr.engine.setNotifyServerOnPageUnload(true);
 
 /**
  * 存储新建的标注的信息
@@ -28,27 +33,299 @@ var selectStreet=[];//存储添加标注时  街道的选择  实时更新
 var selectDistrict=[];//存储添加标注时  区的选择  实时更新
 // var selectOldMan=[];//存储添加标注时  人员的选择  实时更新
 
+//warn
+var oldName,oldId,oldAddress,oldPhone;
+function warn2(data){
+    // getNoReadSum();
+    //紧急报警
+    if(data.type=="urgency"){
+        var wdid=data.id;
+        var urgencyMessage="<div class='eauip'><span class='messageT'>报警设备信息：" +
+            "</span><br><p>设备ID：<span class='messageD'>"+data.urgency.equip.eid+"</span></p>"+
+            "<p>设备所在房间：<span class='messageD'>"+data.urgency.room.roomName+"</span></p></div>"+
+            "<div class='oldMan'><span class='messageT'>老人信息：</span><br><p>" +
+            "老人ID：<span class='messageD'>"+data.urgency.oldMan.oid+"</span></p><p>" +
+            "老人姓名：<span class='messageD'>"+ data.urgency.oldMan.oldName+"</span></p><p>" +
+            "老人电话：<span class='messageD'>"+ data.urgency.oldMan.oldPhone+"</span></p><p>" +
+            "老人住址：<span class='messageD'>"+ data.urgency.oldMan.oldAddress+"</span></p></div>";
+        $.messager.alert('紧急报警！',urgencyMessage,'danger');
+        // document.getElementById("oldId").innerText ="老人ID："+oldId ;
+        // document.getElementById("oldName").innerText ="老人姓名："+oldName ;
+        // document.getElementById("oldPhone").innerText ="老人电话："+oldPhone ;
+        // document.getElementById("oldAddress").innerText ="老人地址："+oldAddress ;
+        playSound("urgency");
+        oldId=data.urgency.oldMan.oid;
+        oldName=data.urgency.oldMan.oldName;
+        oldPhone=data.urgency.oldMan.oldPhone;
+        oldAddress=data.urgency.oldMan.oldAddress;
+    }else if(data.type=="gatewayDown"){
+        var downid=data.downid;
+        //网关故障
+        var gatewayDownMessage="<div class='eauip'><span class='messageT'>网关故障信息：" +
+            "</span><br><p>网关：<span class='messageD'>"+data.oldMan.gatewayID+"</span></p></div>"+
+            "<div class='oldMan'><span class='messageT'>老人信息：</span><br><p>" +
+            "老人ID：<span class='messageD'>"+data.oldMan.oid+"</span></p><p>" +
+            "老人姓名：<span class='messageD'>"+ data.oldMan.oldName+"</span></p><p>" +
+            "老人电话：<span class='messageD'>"+ data.oldMan.oldPhone+"</span></p><p>" +
+            "老人住址：<span class='messageD'>"+ data.oldMan.oldAddress+"</span></p></div>";
+        oldId=data.oldMan.oid;
+        oldName=data.oldMan.oldName;
+        oldPhone=data.oldMan.oldPhone;
+        oldAddress=data.oldMan.oldAddress;
+        $.messager.alert('网关故障！',gatewayDownMessage,'danger',function(){
+            // 该网关故障消息已读
+            $.ajax({
+                type: "POST",
+                url: pathJs + "/downHistory/messageRead",
+                dataType: "json",
+                data:{
+                    downid:downid
+                },
+                async:false,
+                success: function (data) {
+                    getNoReadSum();
+                }
+            });
+        });
+        playSound("urgency");
+    } else if(data.type=="equipDown"){
+        //设备故障
+        var downid=data.downid;
+        var type;
+        switch(data.equipDown.type){
+            case 2:
+                type="温度";
+                break;
+            case 3:
+                type="湿度";
+                break;
+            case 4:
+                type="光强";
+                break;
+            default:
+                break;
+        }
+        var gatewayDownMessage="<div class='eauip'><span class='messageT'>设备故障信息：" +
+            "</span><br><p>设备ID：<span class='messageD'>"+data.equipDown.eid+"</span></p>"+
+            "<p>设备种类：<span class='messageD'>"+type+"</span></p></div>"+
+            "<div class='oldMan'><span class='messageT'>老人信息：</span><br><p>" +
+            "老人ID：<span class='messageD'>"+data.oldMan.oid+"</span></p><p>" +
+            "老人姓名：<span class='messageD'>"+ data.oldMan.oldName+"</span></p><p>" +
+            "老人电话：<span class='messageD'>"+ data.oldMan.oldPhone+"</span></p><p>" +
+            "老人住址：<span class='messageD'>"+ data.oldMan.oldAddress+"</span></p></div>";
+            oldId=data.oldMan.oid;
+            oldName=data.oldMan.oldName;
+            oldPhone=data.oldMan.oldPhone;
+            oldAddress=data.oldMan.oldAddress;
+        $.messager.alert('设备故障！',gatewayDownMessage,'danger',function(){
+            //该网关故障消息已读
+            $.ajax({
+                type: "POST",
+                url: pathJs + "/downHistory/messageRead",
+                dataType: "json",
+                data:{
+                    downid:downid
+                },
+                async:false,
+                success: function (data) {
+                    getNoReadSum();
+                }
+            });
+        });
+        playSound("urgency");
+    }else {
+        //预警信息
+        var warnMessage = "";
+        var title = "";
+        if (data.type == "warn_move") {
+            //行为预警
+            title="行为预警";
+            warnMessage = "<div class='oldMan'><span class='messageT'>老人信息：</span><br><p>" +
+                "老人ID：<span class='messageD'>" + data.warn.oldMan.oid + "</span></p><p>" +
+                "老人姓名：<span class='messageD'>" + data.warn.oldMan.oldName + "</span></p><p>" +
+                "老人电话：<span class='messageD'>" + data.warn.oldMan.oldPhone + "</span></p><p>" +
+                "老人住址：<span class='messageD'>" + data.warn.oldMan.oldAddress + "</span></p></div>" +
+                "<div class='detail'><span class='messageT'>行为信息：</span><br><p>" +
+                "预警级别：<span class='messageD read'>" + data.warn.warnLevel + "</span></p><p>" +
+                "已经不动：<span class='messageD read'>" + data.warn.noMoveTime + " </span>分钟</p><p>" +
+                "所处房间：<span class='messageD'>" + data.warn.room.roomName + "</span></p><p>" +
+                "最初不动的时间：<span class='messageD'>" + data.warn.time + "</span></p><p>" +
+                "是否在该房间的生活规律模型中：<span class='messageD'>" + (data.warn.inTime == 'true' ? "在<p>模型所在时间段：<span class='messageD'>" + data.warn.times + "</span></p><p>" +
+                    "规律类型：<span class='messageD'>" + (data.warn.flag == "a" ? "活动" : ((data.warn.flag == "r") ? "休息" : "活动、休息")) + "</span></p>" :
+                    "不在") + "</span></p></div><input name="+data.id+" type='button' value='已读' onclick='readA(event)'/>";
+            oldId=data.warn.oldMan.oid;
+            oldName=data.warn.oldMan.oldName;
+            oldPhone=data.warn.oldMan.oldPhone;
+            oldAddress=data.warn.oldMan.oldAddress;
+        } else if (data.type == "warn_wendu") {
+            //温度预警
+            title="温度预警";
+            warnMessage = "<div class='oldMan'><span class='messageT'>老人信息：</span><br><p>" +
+                "老人ID：<span class='messageD'>" + data.warn_wendu.oldMan.oid + "</span></p><p>" +
+                "老人姓名：<span class='messageD'>" + data.warn_wendu.oldMan.oldName + "</span></p><p>" +
+                "老人电话：<span class='messageD'>" + data.warn_wendu.oldMan.oldPhone + "</span></p><p>" +
+                "老人住址：<span class='messageD'>" + data.warn_wendu.oldMan.oldAddress + "</span></p></div>" +
+                "<div class='detail'><span class='messageT'>温度信息：</span><br><p>" +
+                "报警房间：<span class='messageD read'>" + data.warn_wendu.threshold_wendu.room.roomName + "</span></p><p>" +
+                "当前温度：<span class='messageD read'>" + data.warn_wendu.wendu + "</span></p><p>" +
+                "该房间温度阈值：<span class='messageD'>" + data.warn_wendu.threshold_wendu.wThreshold + "</span></p><p></div><input name="+data.id+" type='button' value='已读' onclick='readA(event)'/>";
+            oldId=data.warn_wendu.oldMan.oid;
+            oldName=data.warn_wendu.oldMan.oldName;
+            oldPhone=data.warn_wendu.oldMan.oldPhone;
+            oldAddress=data.warn_wendu.oldMan.oldAddress;
+        } else if (data.type == "warn_light") {
+            //光强预警
+            title="光强预警";
+
+            warnMessage = "<div class='oldMan'><span class='messageT'>老人信息：</span><br><p>" +
+                "老人ID：<span class='messageD'>" + data.warn_light.oldMan.oid + "</span></p><p>" +
+                "老人姓名：<span class='messageD'>" + data.warn_light.oldMan.oldName + "</span></p><p>" +
+                "老人电话：<span class='messageD'>" + data.warn_light.oldMan.oldPhone + "</span></p><p>" +
+                "老人住址：<span class='messageD'>" + data.warn_light.oldMan.oldAddress + "</span></p></div>" +
+                "<div class='detail'><span class='messageT'>光强信息：</span><br><p>" +
+                "报警房间：<span class='messageD read'>" + data.warn_light.threshold_light.room.roomName + "</span></p><p>" +
+                "当前光强：<span class='messageD read'>" + data.warn_light.light+ "</span></p><p>" +
+                "起止时间：<span class='messageD'>" + data.warn_light.time+ "</span></p><p>" +
+                "当前持续时间：<span class='messageD'>" + data.warn_light.value + "</span></p><p>" +
+                "该房间光强阈值：：<span class='messageD'>" + data.warn_light.threshold_light.lThreshold + "</span></p><p>" +
+                "检测时间段：<span class='messageD'>" + data.warn_light.threshold_light.times + "</span></p><p></div>";
+            "持续超过：<span class='messageD'>" + data.warn_light.threshold_light.continueTime + " 分钟报警</span></p><p></div><input name="+data.id+" type='button' value='已读' onclick='readA(event)'/>";
+            oldId=data.warn_light.oldMan.oid;
+            oldName=data.warn_light.oldMan.oldName;
+            oldPhone=data.warn_light.oldMan.oldPhone;
+            oldAddress=data.warn_light.oldMan.oldAddress;
+        }else if(data.type=="outdoor_out"){
+            //没有了  不用再进行提示了  代码先保留
+            title="老人出门";
+            warnMessage = "<div class='oldMan'><span class='messageT'>老人信息：</span><br><p>" +
+                "老人ID：<span class='messageD'>" + data.outdoor.oldMan.oid + "</span></p><p>" +
+                "老人姓名：<span class='messageD'>" + data.outdoor.oldMan.oldName + "</span></p><p>" +
+                "老人电话：<span class='messageD'>" + data.outdoor.oldMan.oldPhone + "</span></p><p>" +
+                "老人住址：<span class='messageD'>" + data.outdoor.oldMan.oldAddress + "</span></p></div>" +
+                "<div class='detail'><span class='messageT'>出门信息：</span><br><p>" +
+                "出门时刻：<span class='messageD read'>" + data.outdoor.out + "</span></p><p>" +
+                "出门阈值：超过<span class='messageD red'>" + data.outdoor.threshold_out.outThreshold+ "</span>分钟为出门</p><p></div><input name="+data.id+" type='button' value='已读' onclick='readB(event)'/>"
+            oldId=data.outdoor.oldMan.oid;
+            oldName=data.outdoor.oldMan.oldName;
+            oldPhone=data.outdoor.oldMan.oldPhone;
+            oldAddress=data.outdoor.oldMan.oldAddress;
+
+        }else if(data.type=="outdoor_nocome"){
+            title="老人出门未归预警";
+            warnMessage = "<div class='oldMan'><span class='messageT'>老人信息：</span><br><p>" +
+                "老人ID：<span class='messageD'>" + data.outdoor.oldMan.oid + "</span></p><p>" +
+                "老人姓名：<span class='messageD'>" + data.outdoor.oldMan.oldName + "</span></p><p>" +
+                "老人电话：<span class='messageD'>" + data.outdoor.oldMan.oldPhone + "</span></p><p>" +
+                "老人住址：<span class='messageD'>" + data.outdoor.oldMan.oldAddress + "</span></p></div>" +
+                "<div class='detail'><span class='messageT'>未归信息：</span><br><p>" +
+                "出门时刻：<span class='messageD read'>" + data.outdoor.out + "</span></p><p>" +
+                "未归阈值：<span class='messageD'>" + data.outdoor.threshold_out.noComeThreshold+ "分钟</span></p><p></div><input name="+data.id+" type='button' value='已读' onclick='readA(event)'/>"
+            oldId=data.outdoor.oldMan.oid;
+            oldName=data.outdoor.oldMan.oldName;
+            oldPhone=data.outdoor.oldMan.oldPhone;
+            oldAddress=data.outdoor.oldMan.oldAddress;
+        }else if(data.type=="outdoor_come"){
+            //没有了  不用再进行提示了  代码先保留
+            title="老人回来";
+            warnMessage = "<div class='oldMan'><span class='messageT'>老人信息：</span><br><p>" +
+                "老人ID：<span class='messageD'>" + data.outdoor.oldMan.oid + "</span></p><p>" +
+                "老人姓名：<span class='messageD'>" + data.outdoor.oldMan.oldName + "</span></p><p>" +
+                "老人电话：<span class='messageD'>" + data.outdoor.oldMan.oldPhone + "</span></p><p>" +
+                "老人住址：<span class='messageD'>" + data.outdoor.oldMan.oldAddress + "</span></p></div>" +
+                "<div class='detail'><span class='messageT'>回来信息：</span><br><p>" +
+                "出门时间段：<span class='messageD read'>" + data.outdoor.dataD + "</span></p><p></div><input name="+data.id+" type='button' value='已读' onclick='readB(event)'/>"
+            oldId=data.outdoor.oldMan.oid;
+            oldName=data.outdoor.oldMan.oldName;
+            oldPhone=data.outdoor.oldMan.oldPhone;
+            oldAddress=data.outdoor.oldMan.oldAddress;
+        }
+        $.messager.show({
+            title:title,
+            msg:warnMessage,
+            showType:'fade',
+            width:"15%",
+            height:'38%',
+            timeout:15000,
+            style:{
+                right:'',
+                top:document.body.scrollTop+document.documentElement.scrollTop,
+                bottom:''
+            }
+        });
+        playSound("warn");
+    }
+
+    document.getElementById("oldId").innerText ="老人ID："+oldId ;
+    document.getElementById("oldName").innerText ="老人姓名："+oldName ;
+    document.getElementById("oldPhone").innerText ="老人电话："+oldPhone ;
+    document.getElementById("oldAddress").innerText ="老人地址："+oldAddress ;
+
+}
+function mapUpdate() {
+
+    //当前frame 是地图页面  则进行实时更新  不是的话就不用更新了
+    // if($("#iframe_ifr").attr("src").indexOf("map")!=-1){
+    //     //调用map.jsp 子页面的 函数
+    //     document.getElementById("iframe_ifr").contentWindow.louChange();
+    // }
+}
+function playSound(type)
+{
+    var borswer = window.navigator.userAgent.toLowerCase();
+    if ( borswer.indexOf( "ie" ) >= 0 )
+    {
+        //IE内核浏览器
+        var strEmbed;
+        if(type=="warn") {
+            strEmbed = '<embed name="embedPlay" src="' + pathJs + '/wav/warn.wav" autostart="true" hidden="true" loop="false"></embed>';
+        }else{
+            strEmbed = '<embed name="embedPlay" src="' + pathJs + '/wav/urgency.wav" autostart="true" hidden="true" loop="false"></embed>';
+        }
+        if ( $( "body" ).find( "embed" ).length <= 0 )
+            $( "body" ).append( strEmbed );
+        var embed = document.embedPlay;
+
+        //浏览器不支持 audion，则使用 embed 播放
+        embed.volume = 100;
+        //embed.play();这个不需要
+    } else
+    {
+        //非IE内核浏览器
+        var strAudio;
+        if(type=="warn") {
+            strAudio = "<audio id='audioPlay' src='" + pathJs + "/wav/warn.wav' hidden='true'>";
+        }else{
+            strAudio = "<audio id='audioPlay' src='" + pathJs + "/wav/urgency.wav' hidden='true'>";
+        }
+        if ( $( "body" ).find( "audio" ).length <= 0 )
+            $( "body" ).append( strAudio );
+        var audio = document.getElementById( "audioPlay" );
+
+        //浏览器支持 audion
+        audio.play();
+    }
+}
 //老人信息表格内容填充
 var greenNum=0,redNum=0,yellowNum=0;
-var old_turn_green=new Array();
+// var old_turn_green=new Array();
+// $.ajax({
+//     type: "GET",
+//     url: "/patrol/getOldIds",
+//     dataType: "json",
+//     async: false,
+//     success: function (data) {
+//
+//
+//         for (var i = 0; i < data.data.length; i++) {
+//             old_turn_green.push(data.data[i]);
+//
+//         }
+//
+//     }
+// });
+// //!!!
 $.ajax({
     type: "GET",
-    url: "/patrol/getOldIds",
-    dataType: "json",
-    async: false,
-    success: function (data) {
-
-
-        for (var i = 0; i < data.data.length; i++) {
-            old_turn_green.push(data.data[i]);
-
-        }
-
-    }
-});
-$.ajax({
-    type: "GET",
-    // url: pathJs + "/map/getLouMarkersAndOlds",
     url: "/map/getLouMarkersAndOlds",
     dataType: "json",
     async: false,
@@ -65,10 +342,55 @@ $.ajax({
             }
         }
         var tempAll=greenNum+redNum+yellowNum;
-        document.getElementById("greenNum").innerText = "已接受服务老人数量：" + greenNum;
-        document.getElementById("redNum").innerText = "未接受服务老人数量：" + redNum;
-        document.getElementById("yellowNum").innerText = "正在接受服务老人数量：" + yellowNum;
-        document.getElementById("allNum").innerText = "老人总数：" + tempAll;
+        // document.getElementById("greenNum").innerText = "已接受服务老人数量：" + greenNum;
+        // document.getElementById("redNum").innerText = "未接受服务老人数量：" + redNum;
+        // document.getElementById("yellowNum").innerText = "正在接受服务老人数量：" + yellowNum;
+        // document.getElementById("allNum").innerText = "老人总数：" + tempAll;
+        $(".main_bar").css('width',500);
+        $(".main_bar").css( 'height',200);
+        var main_bar = echarts.init(document.getElementById('main_bar'));
+        var option_bar = {
+            // color: ['#56c078'],
+            tooltip : {
+                trigger: 'axis',
+                axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                    type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                }
+            },
+            label:{
+                normal:{
+                    show: true,
+                    position: 'top'}
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis : [
+                {
+                    type : 'category',
+                    data : ['正常', '正在服务','预警'],
+                    axisTick: {
+                        alignWithLabel: true
+                    }
+                }
+            ],
+            yAxis : [
+                {
+                    type : 'value'
+                }
+            ],
+            series : [
+                {
+                    type:'bar',
+                    barWidth: '20%',
+                    data:[greenNum, yellowNum,redNum]
+                }
+            ]
+        };
+        main_bar.setOption(option_bar);
     }
 });
 //
@@ -83,7 +405,7 @@ if(getCookie("zoom")!=null&&getCookie("zoom")!=""){
         getLouMarkers();
         getWorkerMarkers();
     }else if(getCookie("zoom")==19){
-        getLouMarkers_label();
+        getLouMarkers();
         getWorkerMarkers();
     }else{
         getJieDaoMarkers();
@@ -118,7 +440,7 @@ map.addEventListener("zoomend", function(){
     }else if(this.getZoom()==19){
         map.clearOverlays();
         //房屋级别 且 上一个地图级别不是房屋级别   有label
-        getLouMarkers_label();
+        getLouMarkers();
         getWorkerMarkers();
     }
     preZoom=this.getZoom();
@@ -654,7 +976,7 @@ function getJieDaoMarkers() {
 }
 
 //获得楼数据
-var olds,len,louName;
+var len,louName=new Array(),oldss=new Array(),marker=new Array(),marker2=new Array(),marker3=new Array();
 function getLouMarkers() {
     $.ajax({
         type: "GET",
@@ -666,21 +988,84 @@ function getLouMarkers() {
 
             for(var i=0;i<data.data.length;i++) {
                 var dataR=data.data;
-
                 // if(data.data[i].greenSum!=0){
+                var louNumG,louNumR,louNumY;
+                louNumG=dataR[i].greenSum,louNumR=dataR[i].redSum,louNumY=dataR[i].yellowSum;
                 var icon = BMapLib.MarkerTool.SYS_ICONS[6];
                 var point = new BMap.Point(data.data[i].xG, data.data[i].yG);
-                var marker = new BMap.Marker(point, {icon: icon});
+                marker[i] = new BMap.Marker(point, {icon: icon});
                 var oldNum=data.data[i].greenSum+data.data[i].yellowSum+data.data[i].redSum;
-                marker.setTitle(data.data[i].info);
+                marker[i].setTitle(data.data[i].info);
 
+                //newPoint
+                var icon2 = BMapLib.MarkerTool.SYS_ICONS[8];
+                var icon3 = BMapLib.MarkerTool.SYS_ICONS[9];
+                var point2 = new BMap.Point(data.data[i].xR, data.data[i].yR);
+                var point3 = new BMap.Point(data.data[i].xY, data.data[i].yY);
+                marker2[i] = new BMap.Marker(point2, {icon: icon2});
+                marker3[i] = new BMap.Marker(point3, {icon: icon3});
+                marker2[i].setTitle(data.data[i].info);
+                marker3[i].setTitle(data.data[i].info);
                 // if(typeof(data.data[i].oldMan)=="undefined")continue;
 
-                len=dataR[i].oldMan.length,louName=dataR[i].info;
-                olds=dataR[i].oldMan;
-                //new
-                marker.addEventListener("click", function (e) {
-                    console.log(dataR[i]);
+                louName[i]=dataR[i].info;
+                oldss[i]=new Array();
+                oldss[i]=dataR[i].oldMan;
+                //new remove listener
+
+                if(dataR[i].greenSum)
+                map.addOverlay(marker[i]);
+                if(dataR[i].redSum)
+                map.addOverlay(marker2[i]);
+                if(dataR[i].yellowSum)
+                map.addOverlay(marker3[i]);
+
+                // var lHtml=[];
+                // lHtml.push('<span style="font-size:12px;background-color: #00b5ad">'+data.data[i].qName+":"+data.data[i].sum +'</span><br/>');
+
+                // var label = new BMap.Label(data.data[i].jName+"："+data.data[i].sum,{offset:new BMap.Size(20,-10)});
+                var label = new BMap.Label(louNumG,{offset:new BMap.Size(5,-20)});
+                label.setStyle({
+                    color: "red",
+                    font: "8px Tahoma,Helvetica,Arial,'宋体',sans-serif;",
+                    backgroundColor: "transparent",
+                    fontWeight: "bold",
+                    border: "none"
+                });
+                var label2 = new BMap.Label(louNumR,{offset:new BMap.Size(5,-20)});
+                label2.setStyle({
+                    color: "red",
+                    font: "8px Tahoma,Helvetica,Arial,'宋体',sans-serif;",
+                    backgroundColor: "transparent",
+                    fontWeight: "bold",
+                    border: "none"
+                });
+                var label3 = new BMap.Label(louNumY,{offset:new BMap.Size(5,-20)});
+                label3.setStyle({
+                    color: "red",
+                    font: "8px Tahoma,Helvetica,Arial,'宋体',sans-serif;",
+                    backgroundColor: "transparent",
+                    fontWeight: "bold",
+                    border: "none"
+                });
+                marker[i].setLabel(label);
+                marker2[i].setLabel(label2);
+                marker3[i].setLabel(label3);
+
+                // }
+
+
+
+            }
+            //move out
+            var tempOlds;
+            for(var i=0;i<dataR.length;i++)
+            {
+                marker[i].oldsInfo=oldss[i];
+                marker2[i].oldsInfo=oldss[i];
+                marker3[i].oldsInfo=oldss[i];
+                marker[i].addEventListener("click", function (e) {
+
                     /**
                      *
                      * 获得该楼道的统计信息
@@ -691,36 +1076,28 @@ function getLouMarkers() {
                             height: 500,     // 信息窗口高度
                             title : this.getTitle()  // 信息窗口标题
                         };
-                    var jName=this.getTitle().split("：")[1];
-                    var varQname="";
-                    var varSum=2;
-                    var varGreenSum=1;
-                    var varYellowSum=3;
-                    var varRedSum=1;
-                    //alert(data.data[i].info);
-                    var infostr="楼名："+louName+"<br/>";
+                    var infostr="";
 
-                    for(var j=0;j<len;j++)
+                    for(var j=0;j<this.oldsInfo.length;j++)
                     {
-                        infostr+=olds[j].oldName;
-                        //infostr=infostr+":"+olds[j].status+",";
-                        //alert(isGreen(olds[j].oid));
-                        if(isGreen(olds[j].oid)){
-                            infostr=infostr+":"+"<div id='test' style='width:10px;height:10px;background:#00ee00;'></div>";
-
-                        }
-                        else
-                        {
-                            if(olds[j].status==0)
-                                infostr=infostr+":"+"<div id='test' style='width:10px;height:10px;background:#00ee00;'></div>";
-                            else if(olds[j].status==1)
-                                infostr=infostr+":"+"<div id='test' style='width:10px;height:10px;background:#FFFF00;'></div>";
-                            else if(olds[j].status==2)
-                                infostr=infostr+":"+"<div id='test' style='width:10px;height:10px;background:#dd1144;'></div>";
-                        }
-
-                        infostr=infostr+"手机："+olds[j].oldPhone+",";
-                        infostr=infostr+"密码："+olds[j].oldPwd+"<br/>";
+                        if(this.oldsInfo[j].status!=0)continue;
+                        infostr+=this.oldsInfo[j].oldName;
+                        infostr=infostr+":"+"<div id='test' style='width:10px;height:10px;background:#00ee00;'></div>";
+                        // if(isGreen(olds[j].oid)){
+                        //     infostr=infostr+":"+"<div id='test' style='width:10px;height:10px;background:#00ee00;'></div>";
+                        //
+                        // }
+                        // else
+                        // {
+                        //     if(olds[j].status==0)
+                        //         infostr=infostr+":"+"<div id='test' style='width:10px;height:10px;background:#00ee00;'></div>";
+                        //     else if(olds[j].status==1)
+                        //         infostr=infostr+":"+"<div id='test' style='width:10px;height:10px;background:#FFFF00;'></div>";
+                        //     else if(olds[j].status==2)
+                        //         infostr=infostr+":"+"<div id='test' style='width:10px;height:10px;background:#dd1144;'></div>";
+                        // }
+                        infostr=infostr+"手机："+this.oldsInfo[j].oldPhone+",";
+                        infostr=infostr+"密码："+this.oldsInfo[j].oldPwd+"<br/>";
                         infostr+="<Button onclick='f1()'>实时通讯</Button>";
                         infostr+="<button onclick='exec()'>查看室内情况</button>";
                         infostr+="<br/>"
@@ -746,27 +1123,68 @@ function getLouMarkers() {
 
                     this.openInfoWindow(infoWindow,new BMap.Point(this.point.lng,this.point.lat));
                 });
-                map.addOverlay(marker);
+                marker2[i].addEventListener("click", function (e) {
+                    /**
+                     *
+                     * 获得该楼道的统计信息
+                     */
+                        // alert(this.getTitle());
+                    var opts = {
+                            width : 200,     // 信息窗口宽度
+                            height: 500,     // 信息窗口高度
+                            title : this.getTitle()  // 信息窗口标题
+                        };
+                    var infostr="";
 
-                // var lHtml=[];
-                // lHtml.push('<span style="font-size:12px;background-color: #00b5ad">'+data.data[i].qName+":"+data.data[i].sum +'</span><br/>');
+                    for(var j=0;j<this.oldsInfo.length;j++)
+                    {
+                        if(this.oldsInfo[j].status!=2)continue;
 
-                // var label = new BMap.Label(data.data[i].jName+"："+data.data[i].sum,{offset:new BMap.Size(20,-10)});
-                var label = new BMap.Label("2",{offset:new BMap.Size(20,-10)});
-                label.setStyle({
-                    color:"red",
-                    font:"16px/1.5 Tahoma,Helvetica,Arial,'宋体',sans-serif;",
-                    backgroundColor:"white",
-                    fontWeight:"bold",
-                    padding:"4px 8px"
+                        infostr+=this.oldsInfo[j].oldName;
+                        infostr=infostr+":"+"<div id='test' style='width:10px;height:10px;background:#dd1144;'></div>";
+                        infostr=infostr+"手机："+this.oldsInfo[j].oldPhone+",";
+                        infostr=infostr+"密码："+this.oldsInfo[j].oldPwd+"<br/>";
+                        infostr+="<Button onclick='f1()'>实时通讯</Button>";
+                        infostr+="<button onclick='exec()'>查看室内情况</button>";
+                        infostr+="<br/>"
+                    }
+
+                    var infoWindow = new BMap.InfoWindow(infostr,opts);  // 创建信息窗口对象
+
+                    this.openInfoWindow(infoWindow,new BMap.Point(this.point.lng,this.point.lat));
                 });
-                marker.setLabel(label);
-                map.addOverlay(marker);
-                // }
+                marker3[i].addEventListener("click", function (e) {
 
+                    /**
+                     *
+                     * 获得该楼道的统计信息
+                     */
+                        // alert(this.getTitle());
+                    var opts = {
+                            width : 200,     // 信息窗口宽度
+                            height: 500,     // 信息窗口高度
+                            title : this.getTitle()  // 信息窗口标题
+                        };
+                    var infostr="";
 
+                    for(var j=0;j<this.oldsInfo.length;j++)
+                    {
+                        if(this.oldsInfo[j].status!=1)continue;
+                        infostr+=this.oldsInfo[j].oldName;
+                        infostr=infostr+":"+"<div id='test' style='width:10px;height:10px;background:#FFFF00;'></div>";
+                        infostr=infostr+"手机："+this.oldsInfo[j].oldPhone+",";
+                        infostr=infostr+"密码："+this.oldsInfo[j].oldPwd+"<br/>";
+                        infostr+="<Button onclick='f1()'>实时通讯</Button>";
+                        infostr+="<button onclick='exec()'>查看室内情况</button>";
+                        infostr+="<br/>"
+                    }
 
+                    var infoWindow = new BMap.InfoWindow(infostr,opts);  // 创建信息窗口对象
+
+                    this.openInfoWindow(infoWindow,new BMap.Point(this.point.lng,this.point.lat));
+                });
             }
+
         }
     });
 }
@@ -782,109 +1200,72 @@ function isGreen(oid){
     return 0;
 }
 function getLouMarkers_label() {
-    $.ajax({
-        type: "GET",
-        url: pathJs + "/map/getLouMarkers",
-        dataType: "json",
-        async:false,
-        success: function (data) {
-
-
-            for(var i=0;i<data.data.length;i++) {
-                // if(data.data[i].greenSum!=0){
-                var icon = BMapLib.MarkerTool.SYS_ICONS[6];
-                var point = new BMap.Point(data.data[i].xG, data.data[i].yG);
-                var marker = new BMap.Marker(point, {icon: icon});
-                marker.setTitle(data.data[i].info + "："+data.data[i].greenSum);
-                map.addOverlay(marker);
-                var label = new BMap.Label(data.data[i].greenSum,{offset:new BMap.Size(3,-18)});
-                label.setStyle({
-                    color:"red",
-                    font:"8px Tahoma,Helvetica,Arial,'宋体',sans-serif;",
-                    backgroundColor:"transparent",
-                    fontWeight:"bold",
-                    border:"none"
-                });
-                marker.setLabel(label);
-                // }
-                if(data.data[i].yellowSum!=0){
-                    var icon = BMapLib.MarkerTool.SYS_ICONS[9];
-                    var point = new BMap.Point(data.data[i].xY, data.data[i].yY);
-                    var marker = new BMap.Marker(point, {icon: icon});
-                    marker.setTitle(data.data[i].info + "："+data.data[i].yellowSum);
-                    map.addOverlay(marker);
-                    var label = new BMap.Label(data.data[i].yellowSum,{offset:new BMap.Size(3,-18)});
-                    label.setStyle({
-                        color:"red",
-                        font:"8px Tahoma,Helvetica,Arial,'宋体',sans-serif;",
-                        backgroundColor:"transparent",
-                        fontWeight:"bold",
-                        border:"none"
-                    });
-                    marker.setLabel(label);
-                }
-                if(data.data[i].redSum!=0){
-                    var icon = BMapLib.MarkerTool.SYS_ICONS[8];
-                    var point = new BMap.Point(data.data[i].xR, data.data[i].yR);
-                    var marker = new BMap.Marker(point, {icon: icon});
-                    marker.setTitle(data.data[i].info + "："+data.data[i].redSum);
-                    map.addOverlay(marker);
-                    var label = new BMap.Label(data.data[i].redSum,{offset:new BMap.Size(3,-18)});
-                    label.setStyle({
-                        color:"red",
-                        font:"8px Tahoma,Helvetica,Arial,'宋体',sans-serif;",
-                        backgroundColor:"transparent",
-                        fontWeight:"bold",
-                        border:"none"
-                    });
-                    marker.setLabel(label);
-                }
-            }
-        }
-    });
+    // $.ajax({
+    //     type: "GET",
+    //     url: pathJs + "/map/getLouMarkers",
+    //     dataType: "json",
+    //     async:false,
+    //     success: function (data) {
+    //
+    //
+    //         for(var i=0;i<data.data.length;i++) {
+    //             // if(data.data[i].greenSum!=0){
+    //             var icon = BMapLib.MarkerTool.SYS_ICONS[6];
+    //             var point = new BMap.Point(data.data[i].xG, data.data[i].yG);
+    //             var marker = new BMap.Marker(point, {icon: icon});
+    //             marker.setTitle(data.data[i].info + "："+data.data[i].greenSum);
+    //             map.addOverlay(marker);
+    //             var label = new BMap.Label(data.data[i].greenSum,{offset:new BMap.Size(3,-18)});
+    //             label.setStyle({
+    //                 color:"red",
+    //                 font:"8px Tahoma,Helvetica,Arial,'宋体',sans-serif;",
+    //                 backgroundColor:"transparent",
+    //                 fontWeight:"bold",
+    //                 border:"none"
+    //             });
+    //             marker.setLabel(label);
+    //             // }
+    //             if(data.data[i].yellowSum!=0){
+    //                 var icon = BMapLib.MarkerTool.SYS_ICONS[9];
+    //                 var point = new BMap.Point(data.data[i].xY, data.data[i].yY);
+    //                 var marker = new BMap.Marker(point, {icon: icon});
+    //                 marker.setTitle(data.data[i].info + "："+data.data[i].yellowSum);
+    //                 map.addOverlay(marker);
+    //                 var label = new BMap.Label(data.data[i].yellowSum,{offset:new BMap.Size(3,-18)});
+    //                 label.setStyle({
+    //                     color:"red",
+    //                     font:"8px Tahoma,Helvetica,Arial,'宋体',sans-serif;",
+    //                     backgroundColor:"transparent",
+    //                     fontWeight:"bold",
+    //                     border:"none"
+    //                 });
+    //                 marker.setLabel(label);
+    //             }
+    //             if(data.data[i].redSum!=0){
+    //                 var icon = BMapLib.MarkerTool.SYS_ICONS[8];
+    //                 var point = new BMap.Point(data.data[i].xR, data.data[i].yR);
+    //                 var marker = new BMap.Marker(point, {icon: icon});
+    //                 marker.setTitle(data.data[i].info + "："+data.data[i].redSum);
+    //                 map.addOverlay(marker);
+    //                 var label = new BMap.Label(data.data[i].redSum,{offset:new BMap.Size(3,-18)});
+    //                 label.setStyle({
+    //                     color:"red",
+    //                     font:"8px Tahoma,Helvetica,Arial,'宋体',sans-serif;",
+    //                     backgroundColor:"transparent",
+    //                     fontWeight:"bold",
+    //                     border:"none"
+    //                 });
+    //                 marker.setLabel(label);
+    //             }
+    //         }
+    //     }
+    // });
 }
 
 //html 显示 初始化
 function divInit() {
-    var main_gauge = echarts.init(document.getElementById('main_gauge'));
-    var option_gaugge = {
-        title: {
-            text: '养老院床位数',
-            x:'center',
-            y: '90%',
-            textStyle: {
-                fontSize: '12',
-                fontWeight: 'bold',
-                color:'red'
-            }
-        },
-        tooltip : {
-            formatter: "{a} : {c}"
-        },
-        series: [
-            {
-                name: '已入住人数',
-                type: 'gauge',
-                //半径
-                radius: 100,
-                //起始角度。圆心 正右手侧为0度，正上方为90度，正左手侧为180度。
-                startAngle: 180,
-                //结束角度。
-                endAngle: 0,
-                center: ['50%', '80%'],
-                min: 0,
-                max: 50,
-                detail: {formatter:'{value}',
-                    textStyle: {
-                        fontSize: 18
-                    },
-                    offsetCenter: [0, '15%']},
-                data: [{value: 30, name: '已入住人数'}]
-            }
-        ]
-    };
-    main_gauge.setOption(option_gaugge);
-
+    $(".main_bar").css('width',500);
+    $(".main_bar").css( 'height',200);
     var main_bar = echarts.init(document.getElementById('main_bar'));
     var option_bar = {
         // color: ['#56c078'],
@@ -908,7 +1289,7 @@ function divInit() {
         xAxis : [
             {
                 type : 'category',
-                data : ['剩余床位数', '预计入住人数'],
+                data : ['正常', '正在服务','预警'],
                 axisTick: {
                     alignWithLabel: true
                 }
@@ -923,170 +1304,12 @@ function divInit() {
             {
                 type:'bar',
                 barWidth: '20%',
-                data:[22, 31]
+                data:[greenNum, yellowNum,redNum]
             }
         ]
     };
     main_bar.setOption(option_bar);
-
-    var main_pie = echarts.init(document.getElementById('main_pie'));
-    var option_pie = {
-        tooltip: {
-            trigger: 'item',
-            formatter: function(params){
-                if(params['value']==30){
-                    return params['name']+":"+params['value']+' （'+(params['value']/100*100).toFixed(2)+'%）'
-                }else {
-                    return params['name']+":"+params['value']+' （100%）'
-                }
-            }
-        },
-        legend: {
-            orient: 'vertical',
-            left: '10%',
-            bottom: '0%',
-            data:['已参加居家养老人数','老年人总数']
-        },
-        series: [
-            {
-                center: ['50%', '55%'],
-                type:'pie',
-                radius: ['40%', '70%'],
-                // avoidLabelOverlap: false,
-                label: {
-                    normal: {
-                        show:true,
-                        position: 'inside',
-                        formatter:function(params){
-                            return params['value'];
-                        }
-                    },
-                    emphasis: {
-                        show: true,
-                        textStyle: {
-                            fontSize: '16',
-                            fontWeight: 'bold'
-                        }
-                    }
-
-                },
-                labelLine: {
-                    normal: {
-                        show: true
-                    }
-                },
-                data:[
-                    {value:30, name:'已参加居家养老人数'},
-                    {value:100,name:"老年人总数"}
-                ]
-            }
-        ]
-    };
-    main_pie.setOption(option_pie);
-
-    var main_pie_2 = echarts.init(document.getElementById('main_pie_2'));
-    var option_pie_2 = {
-        tooltip: {
-            trigger: 'item',
-            formatter: function(params){
-                if(params['value']==10){
-                    return params['name']+":"+params['value']+' （'+(params['value']/30*100).toFixed(2)+'%）'
-                }else {
-                    return params['name']+":"+params['value']+' （100%）'
-                }
-            }
-        },
-        legend: {
-            orient: 'vertical',
-            left: '10%',
-            bottom: '-1%',
-            data:['正在被服务人数','已参加居家养老人数']
-        },
-        series: [
-            {
-                type:'pie',
-                radius: ['40%', '70%'],
-                avoidLabelOverlap: false,
-                label: {
-                    normal: {
-                        show:true,
-                        position: 'inside',
-                        formatter:function(params){
-                            return params['value'];
-                        }
-                    },
-                    emphasis: {
-                        show: true,
-                        textStyle: {
-                            fontSize: '16',
-                            fontWeight: 'bold'
-                        }
-                    }
-                },
-                labelLine: {
-                    normal: {
-                        show: true
-                    }
-                },
-                data:[
-                    {value:10, name:'正在被服务人数'},
-                    {value:30,name:"已参加居家养老人数"}
-                ]
-            }
-        ]
-    };
-    main_pie_2.setOption(option_pie_2);
-
-    var main_pie_3 = echarts.init(document.getElementById('main_pie_3'));
-    var option_pie_3 = {
-        tooltip: {
-            trigger: 'item',
-            formatter: function(params){
-                if(params['value']==1){
-                    return params['name']+":"+params['value']+' （'+(params['value']/12*100).toFixed(2)+'%）'
-                }else {
-                    return params['name']+":"+params['value']+' （100%）'
-                }
-            }
-        },
-        legend: {
-            orient: 'vertical',
-            left: '0%',
-            bottom: '-1%',
-            data:['预警人数','已安装智能远程老人关怀系统']
-        },
-        series: [
-            {
-                type:'pie',
-                radius: ['40%', '70%'],
-                avoidLabelOverlap: false,
-                label: {
-                    normal: {
-                        show:true,
-                        position: 'inside',
-                        // textStyle: {
-                        //     fontSize: '16',
-                        //     fontWeight: 'bold'
-                        // },
-                        formatter:function(params){
-                            return params['value'];
-                        }
-                    }
-                },
-                labelLine: {
-                    normal: {
-                        show: true
-                    }
-                },
-                data:[
-                    {value:1, name:'预警人数'},
-                    {value:12, name:'已安装智能远程老人关怀系统'}
-                ]
-            }
-        ]
-    };
-    main_pie_3.setOption(option_pie_3);
-
+    //alert(greenNum,yellowNum,redNum);
 }
 
 

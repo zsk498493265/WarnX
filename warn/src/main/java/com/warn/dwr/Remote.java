@@ -70,6 +70,44 @@ public class Remote {
 //        }
     }
 
+    //new alert
+    public static void noticeNewOrder2(final DwrData dwrData) {
+
+        Runnable run = new Runnable(){
+            private ScriptBuffer script = new ScriptBuffer();
+            public void run() {
+                //设置要调用的 js及参数
+                script.appendCall("warn2",dwrData);
+//                script.appendCall("warn" ,type, obj);
+                //得到所有ScriptSession
+                Collection<ScriptSession> sessions = Browser.getTargetSessions();
+                //遍历每一个ScriptSession
+                for (ScriptSession scriptSession : sessions){
+                    scriptSession.addScript( script);
+                }
+            }
+        };
+        Browser. withAllSessions(run);
+
+//        WebContext wctx = WebContextFactory.get();
+//        //得到当前页面的session
+//        ScriptSession scriptSession = wctx.getScriptSession();
+//        //设置session属性值 用户code
+//        scriptSession.setAttribute("usercode", userCode);
+//        String currentPage = "/main";
+//        ScriptBuffer script = new ScriptBuffer();
+//        script.appendScript("InitMsgBox(").appendData(fileName)
+//                .appendScript(");");
+//        //得到登录此页面的scriptSession的集合
+//        Collection<ScriptSession> pages = wctx.getScriptSessionsByPage(currentPage);
+//        for (ScriptSession session: pages) {
+//            if(session.getAttribute("usercode")!=null){
+//                String usercode=(String)session.getAttribute("usercode");
+//                System.out.println("sessionattri:"+usercode );
+//                session.addScript(script);
+//            }
+//        }
+    }
     //地图更新推送
     public static void noticeMap() {
 

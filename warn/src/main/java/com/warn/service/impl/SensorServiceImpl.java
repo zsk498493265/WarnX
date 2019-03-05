@@ -1330,6 +1330,7 @@ public static Map<OldMan,Boolean> warn1=new HashMap<OldMan,Boolean>();//存储�
             warnHistoryService.addWarnHistory(dwrData);
             SystemController.logger.info("已存入历史消息");
             Remote.noticeNewOrder(dwrData);
+            Remote.noticeNewOrder2(dwrData);
 
             //启动短信定时任务
             smsService.smsSwitch();

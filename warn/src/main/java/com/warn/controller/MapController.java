@@ -109,6 +109,13 @@ public class MapController {
         dg.setRows(quMarkerList);
         return dg;
     }
+    @ResponseBody
+    @RequestMapping(value ="/getLouMarkersAndOlds",method = RequestMethod.GET)
+    public Result getLouAndOld(){
+        List<LouMarker> louMarkerList =  mapService.getLousAndOlds();
+        return new Result(true,louMarkerList);
+    }
+
     /**
      * 获得街道标注  POST
      * @return
@@ -246,5 +253,26 @@ public class MapController {
     @RequestMapping(value="/manager/district", method = RequestMethod.GET)
     public String district() {
         return "map/district";
+    }
+    
+    /**
+     * 获得服务人员位置
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value="/getWorkerMarkers", method = RequestMethod.GET)
+    public Result getWorkerMarkers() {
+        List<WorkerMarker> workerMarkerList = mapService.getWorkerMarkers();
+        return new Result(true, workerMarkerList);
+    }
+    /**
+     * 获得服务人员坐标信息
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value="/{wkid}/getWorkerPosition", method = RequestMethod.GET)
+    public Result getWorkerPosition(@PathVariable("wkid") Integer wkid) {
+        List<WorkerMarker> workerPositionList = mapService.getWorkerPosition(wkid);
+        return new Result(true, workerPositionList);
     }
 }
