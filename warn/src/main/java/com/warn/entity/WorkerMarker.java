@@ -7,6 +7,7 @@ public class WorkerMarker {
     private String cx;//坐标
     private String cy;//坐标
     private Data time;//更新时间
+    private Integer taskid;
 
     public Integer getId() {
         return id;
@@ -38,5 +39,13 @@ public class WorkerMarker {
 
     public void setTime(Data time) {
         this.time = time;
+    }
+    
+    public Integer getTaskid() {
+        return taskid;
+    }
+
+    public void setTaskid(Integer taskid) {
+        this.taskid = taskid;
     }
 }

@@ -209,13 +209,15 @@
     </select>
     
     <select id="getWorkerMarkers" resultType="com.warn.entity.WorkerMarker">
-        SELECT id, cx, cy, time
+        SELECT id, cx, cy, time, taskid
         FROM worker x
         WHERE time = (SELECT max(time) FROM worker y WHERE x.id=y.id);
     </select>
 
     <select id="getWorkerPosition" resultType="com.warn.entity.WorkerMarker">
-        SELECT id, cx, cy, time
-        FROM worker WHERE id = #{id} ORDER BY time
+        SELECT id, cx, cy, time, taskid
+        FROM worker x
+        WHERE id = #{id} AND taskid = (SELECT max(taskid) FROM worker y WHERE x.id=y.id)
+        ORDER BY time
     </select>
 </mapper>
