@@ -49,10 +49,6 @@ function warn2(data){
             "老人电话：<span class='messageD'>"+ data.urgency.oldMan.oldPhone+"</span></p><p>" +
             "老人住址：<span class='messageD'>"+ data.urgency.oldMan.oldAddress+"</span></p></div>";
         $.messager.alert('紧急报警！',urgencyMessage,'danger');
-        // document.getElementById("oldId").innerText ="老人ID："+oldId ;
-        // document.getElementById("oldName").innerText ="老人姓名："+oldName ;
-        // document.getElementById("oldPhone").innerText ="老人电话："+oldPhone ;
-        // document.getElementById("oldAddress").innerText ="老人地址："+oldAddress ;
         playSound("urgency");
         oldId=data.urgency.oldMan.oid;
         oldName=data.urgency.oldMan.oldName;
