@@ -28,6 +28,9 @@ public class OldMan {
     private Integer version;//版本
     private String oldQQ;
     private String oldPwd;
+    private String familyService;
+    private String careSystem;
+    private String camera;
 
     public OldMan() {
     }
@@ -162,6 +165,30 @@ public class OldMan {
 
     public void setOldQQ(String oldQQ) {
         this.oldQQ = oldQQ;
+    }
+
+    public String getFamilyService() {
+        return familyService;
+    }
+
+    public void setFamilyService(String familyService) {
+        this.familyService = familyService;
+    }
+
+    public String getCareSystem() {
+        return careSystem;
+    }
+
+    public void setCareSystem(String careSystem) {
+        this.careSystem = careSystem;
+    }
+
+    public String getCamera() {
+        return camera;
+    }
+
+    public void setCamera(String camera) {
+        this.camera = camera;
     }
 
     public String getOldPwd() {
