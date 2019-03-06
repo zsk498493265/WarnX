@@ -98,7 +98,7 @@
   <%--<div id='test' style='width:500px;height:200px;background:#00F;'>--%>
   <%--测试的div1--%>
   <%--</div>--%>
-  <div id='test' style='width:500px;height:200px;background:#aa00aa;'>
+  <div id='test' style='width:500px;height:160px;background:#aa00aa;position: relative;bottom:16px'>
     <p id="warnMessage" style="font-size: 15px">报警信息</p>
     <p id="oldId" style="font-size: 15px">老人ID：</p>
     <p id="oldName" style="font-size: 15px">老人姓名：</p>
@@ -106,14 +106,14 @@
     <p id="oldAddress" style="font-size: 15px">老人地址：</p>
 
   </div>
-  <div id="main_bar" style='width:500px;height:150px;position: relative;top:-10px'></div>
+  <div id="main_bar" style='width:500px;height:150px;position: relative;bottom:25px'></div>
 
     <%--测试的div2<br>--%>
     <%--<p id="greenNum" style="font-size: 20px">已接受服务老人数量：1</p>--%>
     <%--<p id="yellowNum" style="font-size: 20px">正在接受服务老人数量：0</p>--%>
     <%--<p id="redNum" style="font-size: 20px">未接受服务老人数量：1</p>--%>
     <%--<p id="allNum" style="font-size: 20px">老人总数：1</p>--%>
-  <table id="datagrid2" class="easyui-datagrid"  style='width:200px;height:150px;'fit="true" url="${path}/data/datagrid" title=""
+  <table id="datagrid2" class="easyui-datagrid"  style='width:200px;height:150px;position: relative;bottom:250px'fit="true" url="${path}/data/datagrid" title=""
            toolbar="#toolbar"
            pagination="true"
            fitColumns="true"
@@ -121,7 +121,10 @@
            rownumbers="true"
            striped="true"
            border="false"
-           nowrap="false">
+           nowrap="false"
+           pageList="[3]"
+         pageSize="3"
+         pagePosition="top">
       <thead>
       <tr>
         <th data-options="field:'oldName',width:fixWidth(0.05),align:'center'" rowspan="2">姓名</th>
