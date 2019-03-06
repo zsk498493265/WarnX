@@ -94,7 +94,7 @@
 
     <select id="datagridMap" resultType="com.warn.entity.OldMan">
         SELECT
-        oid,oldName,oldQQ,oldPwd,status
+        oid,oldName,oldQQ,oldPwd,status,family_service,care_system,camera
         from oldman
         where louID = #{id}
     </select>

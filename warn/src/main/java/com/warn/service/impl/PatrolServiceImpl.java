@@ -1,9 +1,12 @@
 package com.warn.service.impl;
 
 import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
+import com.warn.dao.DataDao;
 import com.warn.dao.PatrolDao;
 import com.warn.dto.Urgency;
+import com.warn.entity.AutoValue;
 import com.warn.entity.Cookie;
+import com.warn.entity.OldMan;
 import com.warn.entity.Patrol;
 import com.warn.service.PatrolService;
 import com.warn.util.common.Const;
@@ -28,6 +31,8 @@ public class PatrolServiceImpl implements PatrolService {
 
     @Autowired
     PatrolDao patrolDao;
+    @Autowired
+    DataDao dataDao;
 
     @Transactional
     public void addPatrolRecords() throws IOException{
@@ -126,6 +131,31 @@ public class PatrolServiceImpl implements PatrolService {
             oldIds.add(id);
         }
         return oldIds;
+    }
+    @Transactional
+    public List<AutoValue> getOldsStatus(){
+        List<AutoValue> oldS = new ArrayList<>();
+        List<Integer> points = patrolDao.getPoints();
+        for(Integer point:points){
+            Integer oid = patrolDao.getOidByPoint(point);
+            AutoValue autoValue = new AutoValue();
+            autoValue.setNum(oid);
+            Long num = patrolDao.getSizeOfPoint(point);
+            OldMan oldMan = new OldMan();
+            oldMan.setOid(oid);
+            if(num % 2 == 0){
+                autoValue.setInfo("0");
+                oldMan.setStatus(0);
+                dataDao.editOldManStatus(oldMan);
+            }
+            else{
+                autoValue.setInfo("1");
+                oldMan.setStatus(1);
+                dataDao.editOldManStatus(oldMan);
+            }
+            oldS.add(autoValue);
+        }
+        return oldS;
     }
 }
 

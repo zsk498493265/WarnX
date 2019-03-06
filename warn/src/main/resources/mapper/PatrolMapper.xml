@@ -25,4 +25,16 @@
         SELECT old_id from point_to_oldman
         where point = #{point}
     </select>
+
+    <select id="getPoints" resultType="java.lang.Integer">
+        select distinct point from xun_geng where 1=1
+    </select>
+
+    <select id="getSizeOfPoint" resultType="java.lang.Long">
+        select count(1) from xun_geng where point = #{point}
+    </select>
+
+    <select id="getOidByPoint" resultType="java.lang.Integer">
+        select old_id from point_to_oldman where point = #{point}
+    </select>
 </mapper>

@@ -15,4 +15,12 @@ public interface PatrolDao {
     List<Patrol> getAllRecords();
 
     Integer getOldIdByRecord(Integer point);
+
+    List<Integer> getPoints();
+
+    Long getSizeOfPoint(Integer point);
+
+    Integer getOidByPoint(Integer point);
+
+
 }

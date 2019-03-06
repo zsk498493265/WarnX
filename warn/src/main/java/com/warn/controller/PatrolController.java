@@ -1,6 +1,7 @@
 package com.warn.controller;
 
 import com.warn.dto.Result;
+import com.warn.entity.AutoValue;
 import com.warn.service.PatrolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,6 +30,14 @@ public class PatrolController {
     public Result getOldIds(){
         List<Integer> oldIds =  patrolService.getOldIds();
         return new Result(true,oldIds);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/getOldStatus",method = RequestMethod.GET)
+    public Result getOldStatus(){
+        List<AutoValue> oldS = patrolService.getOldsStatus();
+        return new Result(true,oldS);
+
     }
 
 
