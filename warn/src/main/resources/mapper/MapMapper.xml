@@ -209,13 +209,13 @@
     </select>
     
     <select id="getWorkerMarkers" resultType="com.warn.entity.WorkerMarker">
-        SELECT id, cx, cy, time, taskid
+        SELECT id, cx, cy, time, taskid, name, qq, phone
         FROM worker x
         WHERE time = (SELECT max(time) FROM worker y WHERE x.id=y.id);
     </select>
 
     <select id="getWorkerPosition" resultType="com.warn.entity.WorkerMarker">
-        SELECT id, cx, cy, time, taskid
+        SELECT id, cx, cy, time, taskid, name, qq, phone
         FROM worker x
         WHERE id = #{id} AND taskid = (SELECT max(taskid) FROM worker y WHERE x.id=y.id)
         ORDER BY time
