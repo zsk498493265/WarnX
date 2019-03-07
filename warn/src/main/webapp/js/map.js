@@ -54,6 +54,7 @@ function warn2(data){
         oldName=data.urgency.oldMan.oldName;
         oldPhone=data.urgency.oldMan.oldPhone;
         oldAddress=data.urgency.oldMan.oldAddress;
+        alert(1);
     }else if(data.type=="gatewayDown"){
         var downid=data.downid;
         //网关故障
@@ -782,7 +783,7 @@ function getWorkerMarkers() {
             for(var i=0;i<data.data.length;i++) {
                 // var icon = BMapLib.MarkerTool.SYS_ICONS[6];
                 var json={title:"1",content:"1",point:"121.40195|31.152857",isOpen:0,icon:{w:21,h:21,l:0,t:0,x:6,lb:5}};
-                var icon = new BMap.Icon("http://i2.bvimg.com/647748/150dde320fe5921b.png", new BMap.Size(512,256),{imageOffset: new BMap.Size(-json.l,-json.t),infoWindowOffset:new BMap.Size(json.lb+5,1),offset:new BMap.Size(json.x,json.h)});
+                var icon = new BMap.Icon("http://i2.bvimg.com/647748/f79715aed233ae84.png", new BMap.Size(512,256),{imageOffset: new BMap.Size(-json.l,-json.t),infoWindowOffset:new BMap.Size(json.lb+5,1),offset:new BMap.Size(json.x,json.h)});
 
                 var point = new BMap.Point(data.data[i].cx, data.data[i].cy);
                 var marker = new BMap.Marker(point, {icon: icon});
@@ -806,7 +807,7 @@ function getWorkerMarkers() {
                                 //线路类型(虚线)
                                 strokeStyle : "dashed"});
                             map.addOverlay(path);
-                            var icon = new BMap.Icon("http://i2.bvimg.com/647748/150dde320fe5921b.png", new BMap.Size(512,256),{imageOffset: new BMap.Size(-json.l,-json.t),infoWindowOffset:new BMap.Size(json.lb+5,1),offset:new BMap.Size(json.x,json.h)});
+                            var icon = new BMap.Icon("http://i2.bvimg.com/647748/f79715aed233ae84.png", new BMap.Size(512,256),{imageOffset: new BMap.Size(-json.l,-json.t),infoWindowOffset:new BMap.Size(json.lb+5,1),offset:new BMap.Size(json.x,json.h)});
                             var point = new BMap.Point(data1.data[data1.data.length-1].cx, data1.data[data1.data.length-1].cy);
                             var marker = new BMap.Marker(point, {icon: icon});
                             // marker.setTitle(data1.data[data1.data.length-1].time);
