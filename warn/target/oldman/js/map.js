@@ -54,7 +54,6 @@ function warn2(data){
         oldName=data.urgency.oldMan.oldName;
         oldPhone=data.urgency.oldMan.oldPhone;
         oldAddress=data.urgency.oldMan.oldAddress;
-        alert(1);
     }else if(data.type=="gatewayDown"){
         var downid=data.downid;
         //网关故障
@@ -250,6 +249,7 @@ function warn2(data){
             }
         });
         playSound("warn");
+        addWarnIcon(oldId);
     }
 
     document.getElementById("oldId").innerText ="老人ID："+oldId ;
@@ -257,6 +257,10 @@ function warn2(data){
     document.getElementById("oldPhone").innerText ="老人电话："+oldPhone ;
     document.getElementById("oldAddress").innerText ="老人地址："+oldAddress ;
 
+}
+function addWarnIcon(id) {
+
+    console.log(oldss);
 }
 function mapUpdate() {
 
@@ -781,9 +785,9 @@ function getWorkerMarkers() {
         async: false,
         success: function (data) {
             for(var i=0;i<data.data.length;i++) {
-                // var icon = BMapLib.MarkerTool.SYS_ICONS[6];
+                var icon = BMapLib.MarkerTool.SYS_ICONS[6];
                 var json={icon:{w:21,h:21,l:0,t:0,x:6,lb:5}};
-                var icon = new BMap.Icon("http://i2.bvimg.com/647748/f79715aed233ae84.png", new BMap.Size(512,256),{imageOffset: new BMap.Size(-json.l,-json.t),infoWindowOffset:new BMap.Size(json.lb+5,1),offset:new BMap.Size(json.x,json.h)});
+                var icon = new BMap.Icon("http://i2.bvimg.com/647748/f79715aed233ae84.png", new BMap.Size(60,30),{imageOffset: new BMap.Size(0,0),infoWindowOffset:new BMap.Size(json.lb+5,1),offset:new BMap.Size(0,0)});
 
                 var point = new BMap.Point(data.data[i].cx, data.data[i].cy);
                 var marker = new BMap.Marker(point, {icon: icon});
@@ -812,7 +816,7 @@ function getWorkerMarkers() {
                             var marker = new BMap.Marker(point, {icon: icon});
                             // marker.setTitle(data1.data[data1.data.length-1].time);
                             map.addOverlay(marker);
-                            setInterval(louChange, 60000);      //每60s刷新一次
+                            setInterval(getWorkerMarkers, 60000);      //每60s刷新一次
                             // setInterval("draw_path()", 100);
                         }
                     });
