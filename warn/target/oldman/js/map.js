@@ -35,6 +35,7 @@ var selectDistrict=[];//存储添加标注时  区的选择  实时更新
 
 //warn
 var oldName,oldId,oldAddress,oldPhone;
+var len,louName=new Array(),oldss=new Array(),marker=new Array(),marker2=new Array(),marker3=new Array();
 function warn2(data){
     // getNoReadSum();
     //紧急报警
@@ -249,18 +250,43 @@ function warn2(data){
             }
         });
         playSound("warn");
-        addWarnIcon(oldId);
+
     }
 
     document.getElementById("oldId").innerText ="老人ID："+oldId ;
     document.getElementById("oldName").innerText ="老人姓名："+oldName ;
     document.getElementById("oldPhone").innerText ="老人电话："+oldPhone ;
     document.getElementById("oldAddress").innerText ="老人地址："+oldAddress ;
+    addWarnIcon(oldId);
 
 }
 function addWarnIcon(id) {
+    $.ajax({
+        type: "GET",
+        url: "/map/getLouMarkersAndOlds",
+        dataType: "json",
+        async:false,
+        success: function (data) {
+            for(var i=0;i<data.data.length;i++) {
+                var dataR=data.data;
+                for(var j=0;j<dataR[i].oldMan.length;j++){
+                    if(dataR[i].oldMan[j].oid==1){
+                        var json={icon:{w:21,h:21,l:0,t:0,x:6,lb:5}};
+                        var icon = new BMap.Icon("http://i2.bvimg.com/647748/acd54cb4ff28c095.png", new BMap.Size(128,128),{imageOffset: new BMap.Size(0,0),infoWindowOffset:new BMap.Size(json.lb+5,1),offset:new BMap.Size(0,0)});
+                        var point = new BMap.Point(dataR[i].xR, dataR[i].yR);
+                        marker= new BMap.Marker(point, {icon: icon});
+                        marker.setTitle(dataR[i].info);
+                        map.addOverlay(marker);
 
-    console.log(oldss);
+                        alert("find");
+                    }
+                }
+
+            }
+
+
+        }
+    });
 }
 function mapUpdate() {
 
@@ -408,9 +434,12 @@ if(getCookie("zoom")!=null&&getCookie("zoom")!=""){
     }else if(getCookie("zoom")==19){
         getLouMarkers();
         getWorkerMarkers();
+        //add
     }else{
         getJieDaoMarkers();
         getWorkerMarkers();
+        //add
+        getLouMarkers();
     }
 }else {
     map.centerAndZoom(new BMap.Point(121.481, 31.238), 13);
@@ -418,28 +447,39 @@ if(getCookie("zoom")!=null&&getCookie("zoom")!=""){
 
 map.addEventListener("zoomend", function(){
     //区：<=13  街道：14.15  房屋 >=16
-    // alert("地图缩放至：" + this.getZoom() + "级");
+    //alert("地图缩放至：" + this.getZoom() + "级");
     //区级别 且 上一个地图级别不是区级别
-    if(this.getZoom()<=13&&preZoom!=null&&preZoom>13){
+    // if(this.getZoom()<=13&&preZoom!=null&&preZoom>13){
+
+    if(this.getZoom()<=13){
         //清空覆盖物
-        map.clearOverlays();
+
+        //delete
+        //map.clearOverlays();
         getQuMarkers();
         getWorkerMarkers();
-    }else if((this.getZoom()==14||this.getZoom()==15||this.getZoom()==16)&&preZoom!=14&&preZoom!=15&&preZoom!=16){
+        getLouMarkers();
+    }else if((this.getZoom()==14||this.getZoom()==15||this.getZoom()==16)){
         // console.log(point);
         //清空覆盖物
-        map.clearOverlays();
+
+        //delete
+        //map.clearOverlays();
         //街道级别 且 上一个地图级别不是街道级别
         getJieDaoMarkers();
         getWorkerMarkers();
-    }else if((this.getZoom()>=17&&this.getZoom()<=18)&&(preZoom<17||preZoom>18)){
+        //add
+        getLouMarkers();
+    }else if((this.getZoom()>=17&&this.getZoom()<=18)){
         //清空覆盖物
-        map.clearOverlays();
+        //delete
+        //map.clearOverlays();
         //房屋级别 且 上一个地图级别不是房屋级别   没有label
         getLouMarkers();
         getWorkerMarkers();
     }else if(this.getZoom()==19){
-        map.clearOverlays();
+        //delete
+        //map.clearOverlays();
         //房屋级别 且 上一个地图级别不是房屋级别   有label
         getLouMarkers();
         getWorkerMarkers();
@@ -776,7 +816,7 @@ function getSums() {
         }
     });
 }
-
+setInterval(getWorkerMarkers, 60000);      //每60s刷新一次
 function getWorkerMarkers() {
     $.ajax({
         type: "GET",
@@ -793,9 +833,19 @@ function getWorkerMarkers() {
                 var marker = new BMap.Marker(point, {icon: icon});
                 marker.setTitle(data.data[i].id);
                 map.addOverlay(marker);
+                marker.worker_info=data.data[i];
                 marker.addEventListener("click", function (){
-                    // now_id = this.getTitle();
-                    // draw_path();
+                    var opts = {
+                        width : 200,     // 信息窗口宽度
+                        height: 100,     // 信息窗口高度
+                        title : this.getTitle()  // 信息窗口标题
+                    };
+                    var infostr="";
+                    infostr=infostr+"姓名："+this.worker_info.name+"<br/>";
+                    infostr=infostr+"电话："+this.worker_info.phone+"<br/>";
+                    infostr+="<Button onclick='f1()'>实时通讯</Button>";
+                    var infoWindow = new BMap.InfoWindow(infostr,opts);  // 创建信息窗口对象
+                    this.openInfoWindow(infoWindow,new BMap.Point(this.point.lng,this.point.lat));
                     $.ajax({
                         type: "GET",
                         url: pathJs + "/map/" + this.getTitle() + "/getWorkerPosition",
@@ -811,12 +861,30 @@ function getWorkerMarkers() {
                                 //线路类型(虚线)
                                 strokeStyle : "dashed"});
                             map.addOverlay(path);
+                            //console.log(path);
                             var icon = new BMap.Icon("http://i2.bvimg.com/647748/f79715aed233ae84.png", new BMap.Size(512,256),{imageOffset: new BMap.Size(-json.l,-json.t),infoWindowOffset:new BMap.Size(json.lb+5,1),offset:new BMap.Size(json.x,json.h)});
                             var point = new BMap.Point(data1.data[data1.data.length-1].cx, data1.data[data1.data.length-1].cy);
                             var marker = new BMap.Marker(point, {icon: icon});
                             // marker.setTitle(data1.data[data1.data.length-1].time);
+                            marker.setTitle(data1.data[i].id);
                             map.addOverlay(marker);
-                            setInterval(getWorkerMarkers, 60000);      //每60s刷新一次
+                            //保证每个worker都能不断被点到后显示弹窗
+                            marker.worker_info=data1.data[i];
+                            marker.addEventListener("click", function (){
+                                var opts = {
+                                    width : 200,     // 信息窗口宽度
+                                    height: 100,     // 信息窗口高度
+                                    title : this.getTitle()  // 信息窗口标题
+                                };
+                                var infostr="";
+                                console.log(marker.worker_info);
+                                infostr=infostr+"姓名："+this.worker_info.name+"<br/>";
+                                infostr=infostr+"电话："+this.worker_info.phone+"<br/>";
+                                infostr+="<Button onclick='f1()'>实时通讯</Button>";
+                                var infoWindow = new BMap.InfoWindow(infostr,opts);  // 创建信息窗口对象
+                                this.openInfoWindow(infoWindow,new BMap.Point(this.point.lng,this.point.lat));
+                            });
+                            // setInterval(getWorkerMarkers, 60000);      //每60s刷新一次
                             // setInterval("draw_path()", 100);
                         }
                     });
@@ -888,7 +956,8 @@ function getQuMarkers() {
                 // var lHtml=[];
                 // lHtml.push('<span style="font-size:12px;background-color: #00b5ad">'+data.data[i].qName+":"+data.data[i].sum +'</span><br/>');
 
-                var label = new BMap.Label(data.data[i].qName+"："+data.data[i].sum,{offset:new BMap.Size(20,-10)});
+                // var label = new BMap.Label(data.data[i].qName+"："+data.data[i].sum,{offset:new BMap.Size(20,-10)});
+                var label = new BMap.Label(data.data[i].qName,{offset:new BMap.Size(20,-10)});
                 label.setStyle({
                     color:"red",
                     font:"16px/1.5 Tahoma,Helvetica,Arial,'宋体',sans-serif;",
@@ -958,14 +1027,18 @@ function getJieDaoMarkers() {
                     }
                     //该街道的统计情况
                     var infoWindow = new BMap.InfoWindow("所属区："+varQname+"<br/>购买服务总人数："+varSum+"<br/>正常："+varGreenSum+"<br/>正在接受服务："+varYellowSum+"<br/>预警："+varRedSum,opts);  // 创建信息窗口对象
-                    this.openInfoWindow(infoWindow,new BMap.Point(this.point.lng,this.point.lat));
+
+
+                    //this.openInfoWindow(infoWindow,new BMap.Point(this.point.lng,this.point.lat));
                 });
+
                 map.addOverlay(marker);
 
                 // var lHtml=[];
                 // lHtml.push('<span style="font-size:12px;background-color: #00b5ad">'+data.data[i].qName+":"+data.data[i].sum +'</span><br/>');
 
-                var label = new BMap.Label(data.data[i].jName+"："+data.data[i].sum,{offset:new BMap.Size(20,-10)});
+                 // var label = new BMap.Label(data.data[i].jName+"："+data.data[i].sum,{offset:new BMap.Size(20,-10)});
+                var label = new BMap.Label(data.data[i].jName,{offset:new BMap.Size(20,-10)});
                 label.setStyle({
                     color:"red",
                     font:"16px/1.5 Tahoma,Helvetica,Arial,'宋体',sans-serif;",
@@ -980,7 +1053,7 @@ function getJieDaoMarkers() {
 }
 
 //获得楼数据
-var len,louName=new Array(),oldss=new Array(),marker=new Array(),marker2=new Array(),marker3=new Array();
+// var len,louName=new Array(),oldss=new Array(),marker=new Array(),marker2=new Array(),marker3=new Array();
 function getLouMarkers() {
     $.ajax({
         type: "GET",
