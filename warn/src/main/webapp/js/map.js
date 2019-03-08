@@ -1083,10 +1083,57 @@ function getLouMarkers() {
 
 //add camera
             var json={icon:{w:21,h:21,l:0,t:0,x:6,lb:5}};
-            var icon = new BMap.Icon("http://i2.bvimg.com/647748/f79715aed233ae84.png", new BMap.Size(30,30),{imageOffset: new BMap.Size(0,0),infoWindowOffset:new BMap.Size(json.lb+5,1),offset:new BMap.Size(0,0)});
+            var icon = new BMap.Icon("http://i1.bvimg.com/647748/d7a9b90404effcc3.jpg", new BMap.Size(30,22),{imageOffset: new BMap.Size(0,0),infoWindowOffset:new BMap.Size(json.lb+5,1)});
 
-            var point = new BMap.Point(data.data[i].cx, data.data[i].cy);
+            var point = new BMap.Point(121.388344, 31.156085);
             var marker = new BMap.Marker(point, {icon: icon});
+            map.addOverlay(marker);
+            var label = new BMap.Label(1,{offset:new BMap.Size(5,-20)});
+            label.setStyle({
+                color: "red",
+                font: "8px Tahoma,Helvetica,Arial,'宋体',sans-serif;",
+                backgroundColor: "transparent",
+                fontWeight: "bold",
+                border: "none"
+            });
+            marker.setLabel(label);
+            marker.addEventListener("click", function (e) {
+
+                /**
+                 *
+                 * 获得该楼道的统计信息
+                 */
+                    // alert(this.getTitle());
+                var opts = {
+                        width : 200,     // 信息窗口宽度
+                        height: 500,     // 信息窗口高度
+                        title : '东兰世茗雅苑6号'  // 信息窗口标题
+                    };
+                var infostr="黄铁岳-张慧青";
+                infostr+="<button onclick='exec()'>查看室内情况</button>";
+                infostr+="<br/>"
+
+                //alert(infostr);
+                //alert(olds.length);
+                // for(var i=0;i<Sum.district.length;i++) {
+                //     for(var j=0;j<Sum.district[i].street.length;j++) {
+                //         if (Sum.district[i].street[j].name == jName) {
+                //             varSum = Sum.district[i].street[j].sum;
+                //             varGreenSum = Sum.district[i].street[j].greenSum;
+                //             varYellowSum = Sum.district[i].street[j].yellowSum;
+                //             varRedSum = Sum.district[i].street[j].redSum;
+                //             varQname=Sum.district[i].name;
+                //         }
+                //     }
+                // }
+                //该街道的统计情况
+                //var infoWindow = new BMap.InfoWindow("所属区："+varQname+"<br/>购买服务总人数："+varSum+"<br/>正常："+varGreenSum+"<br/>正在接受服务："+varYellowSum+"<br/>预警："+varRedSum,opts);  // 创建信息窗口对象
+                // var infoWindow = new BMap.InfoWindow("楼名："+varQname+"<br/>购买服务总人数：1<br/>老人1:<div id='test' style='width:10px;height:10px;background:#00ee00;'></div><button onclick='exec()'>btn1</button><Button onclick='f1()'>btn2</Button><br/>老人2:<div id='test' style='width:10px;height:10px;background:#dd1144;'></div><br/>",opts);  // 创建信息窗口对象
+
+                var infoWindow = new BMap.InfoWindow(infostr,opts);  // 创建信息窗口对象
+
+                this.openInfoWindow(infoWindow,new BMap.Point(this.point.lng,this.point.lat));
+            });
             //
             for(var i=0;i<data.data.length;i++) {
                 var dataR=data.data;
@@ -1201,7 +1248,7 @@ function getLouMarkers() {
                         infostr=infostr+"手机："+this.oldsInfo[j].oldPhone+",";
                         infostr=infostr+"密码："+this.oldsInfo[j].oldPwd+"<br/>";
                         // infostr+="<Button onclick='f1()'>实时通讯</Button>";
-                        infostr+="<button onclick='exec()'>查看室内情况</button>";
+                        //infostr+="<button onclick='exec()'>查看室内情况</button>";
                         infostr+="<br/>"
                     }
                     //alert(infostr);
@@ -1247,7 +1294,7 @@ function getLouMarkers() {
                         infostr=infostr+"手机："+this.oldsInfo[j].oldPhone+",";
                         infostr=infostr+"密码："+this.oldsInfo[j].oldPwd+"<br/>";
                         //infostr+="<Button onclick='f1()'>实时通讯</Button>";
-                        infostr+="<button onclick='exec()'>查看室内情况</button>";
+                        //infostr+="<button onclick='exec()'>查看室内情况</button>";
                         infostr+="<br/>"
                     }
 
@@ -1277,7 +1324,7 @@ function getLouMarkers() {
                         infostr=infostr+"手机："+this.oldsInfo[j].oldPhone+",";
                         infostr=infostr+"密码："+this.oldsInfo[j].oldPwd+"<br/>";
                         //infostr+="<Button onclick='f1()'>实时通讯</Button>";
-                        infostr+="<button onclick='exec()'>查看室内情况</button>";
+                        //infostr+="<button onclick='exec()'>查看室内情况</button>";
                         infostr+="<br/>"
                     }
 
