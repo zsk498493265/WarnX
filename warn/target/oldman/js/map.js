@@ -834,7 +834,7 @@ function getSums() {
         }
     });
 }
-setInterval(getWorkerMarkers, 60000);      //每60s刷新一次
+setInterval(louChange, 30000);      //每60s刷新一次
 function getWorkerMarkers() {
     $.ajax({
         type: "GET",
