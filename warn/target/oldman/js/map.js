@@ -36,6 +36,17 @@ var selectDistrict=[];//存储添加标注时  区的选择  实时更新
 //warn
 var oldName,oldId,oldAddress,oldPhone;
 var len,louName=new Array(),oldss=new Array(),marker=new Array(),marker2=new Array(),marker3=new Array();
+//获取巡更数据
+$.ajax({
+    type: "GET",
+    url: pathJs + "/patrol/getOldStatus",
+    dataType: "json",
+    async: false,
+    success: function (data) {
+        console.log(data);
+    }
+});
+//
 function warn2(data){
     // getNoReadSum();
     //紧急报警
@@ -272,13 +283,12 @@ function addWarnIcon(id) {
                 for(var j=0;j<dataR[i].oldMan.length;j++){
                     if(dataR[i].oldMan[j].oid==1){
                         var json={icon:{w:21,h:21,l:0,t:0,x:6,lb:5}};
-                        var icon = new BMap.Icon("http://i2.bvimg.com/647748/acd54cb4ff28c095.png", new BMap.Size(128,128),{imageOffset: new BMap.Size(0,0),infoWindowOffset:new BMap.Size(json.lb+5,1),offset:new BMap.Size(0,0)});
+                        var icon = new BMap.Icon("http://i1.bvimg.com/647748/aef36cd98ed16a9d.png", new BMap.Size(128,128),{imageOffset: new BMap.Size(0,0),infoWindowOffset:new BMap.Size(json.lb+5,1),offset:new BMap.Size(0,0)});
                         var point = new BMap.Point(dataR[i].xR, dataR[i].yR);
                         marker= new BMap.Marker(point, {icon: icon});
                         marker.setTitle(dataR[i].info);
                         map.addOverlay(marker);
 
-                        alert("find");
                     }
                 }
 
@@ -368,13 +378,14 @@ $.ajax({
                     redNum++;
             }
         }
-        var tempAll=greenNum+redNum+yellowNum;
+        greenNum=greenNum+redNum+yellowNum;
+        var allNum=greenNum+redNum+yellowNum;
         // document.getElementById("greenNum").innerText = "已接受服务老人数量：" + greenNum;
         // document.getElementById("redNum").innerText = "未接受服务老人数量：" + redNum;
         // document.getElementById("yellowNum").innerText = "正在接受服务老人数量：" + yellowNum;
         // document.getElementById("allNum").innerText = "老人总数：" + tempAll;
-        $(".main_bar").css('width',500);
-        $(".main_bar").css( 'height',200);
+        $(".main_bar").css('width',50);
+        $(".main_bar").css( 'height',210);
         var main_bar = echarts.init(document.getElementById('main_bar'));
         var option_bar = {
             // color: ['#56c078'],
@@ -391,16 +402,23 @@ $.ajax({
             },
             grid: {
                 left: '3%',
-                right: '4%',
+                right: '14%',
                 bottom: '3%',
                 containLabel: true
             },
             xAxis : [
                 {
                     type : 'category',
-                    data : ['正常', '正在服务','预警'],
+                    data : ['总人数','绿灯数', '黄灯数','红灯数'],
                     axisTick: {
                         alignWithLabel: true
+                    },
+                    axisLabel: {
+                        interval:0,
+                        rotate:40,
+                        textStyle: {
+                            fontSize:8
+                        }
                     }
                 }
             ],
@@ -413,7 +431,7 @@ $.ajax({
                 {
                     type:'bar',
                     barWidth: '20%',
-                    data:[greenNum, yellowNum,redNum]
+                    data:[allNum,greenNum, yellowNum,redNum]
                 }
             ]
         };
@@ -1175,7 +1193,7 @@ function getLouMarkers() {
                         // }
                         infostr=infostr+"手机："+this.oldsInfo[j].oldPhone+",";
                         infostr=infostr+"密码："+this.oldsInfo[j].oldPwd+"<br/>";
-                        infostr+="<Button onclick='f1()'>实时通讯</Button>";
+                        // infostr+="<Button onclick='f1()'>实时通讯</Button>";
                         infostr+="<button onclick='exec()'>查看室内情况</button>";
                         infostr+="<br/>"
                     }
@@ -1221,7 +1239,7 @@ function getLouMarkers() {
                         infostr=infostr+":"+"<div id='test' style='width:10px;height:10px;background:#dd1144;'></div>";
                         infostr=infostr+"手机："+this.oldsInfo[j].oldPhone+",";
                         infostr=infostr+"密码："+this.oldsInfo[j].oldPwd+"<br/>";
-                        infostr+="<Button onclick='f1()'>实时通讯</Button>";
+                        //infostr+="<Button onclick='f1()'>实时通讯</Button>";
                         infostr+="<button onclick='exec()'>查看室内情况</button>";
                         infostr+="<br/>"
                     }
@@ -1251,7 +1269,7 @@ function getLouMarkers() {
                         infostr=infostr+":"+"<div id='test' style='width:10px;height:10px;background:#FFFF00;'></div>";
                         infostr=infostr+"手机："+this.oldsInfo[j].oldPhone+",";
                         infostr=infostr+"密码："+this.oldsInfo[j].oldPwd+"<br/>";
-                        infostr+="<Button onclick='f1()'>实时通讯</Button>";
+                        //infostr+="<Button onclick='f1()'>实时通讯</Button>";
                         infostr+="<button onclick='exec()'>查看室内情况</button>";
                         infostr+="<br/>"
                     }
@@ -1266,7 +1284,7 @@ function getLouMarkers() {
     });
 }
 function f1(){
-    window.location.href='tencent://Message/?uin=1091793549';
+    window.location.href='tencent://Message/?uin=359547720';
 }
 function isGreen(oid){
     for(var i=0;i<old_turn_green.length;i++){
@@ -1366,7 +1384,7 @@ function divInit() {
         xAxis : [
             {
                 type : 'category',
-                data : ['正常', '正在服务','预警'],
+                data : ['总人数','绿灯数', '黄灯数','红灯数'],
                 axisTick: {
                     alignWithLabel: true
                 }
@@ -1381,7 +1399,7 @@ function divInit() {
             {
                 type:'bar',
                 barWidth: '20%',
-                data:[greenNum, yellowNum,redNum]
+                data:[allNum,greenNum, yellowNum,redNum]
             }
         ]
     };

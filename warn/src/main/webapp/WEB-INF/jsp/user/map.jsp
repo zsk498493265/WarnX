@@ -113,7 +113,7 @@
     <%--<p id="yellowNum" style="font-size: 20px">正在接受服务老人数量：0</p>--%>
     <%--<p id="redNum" style="font-size: 20px">未接受服务老人数量：1</p>--%>
     <%--<p id="allNum" style="font-size: 20px">老人总数：1</p>--%>
-  <table id="datagrid2" class="easyui-datagrid"  style='width:200px;height:150px;position: relative;bottom:250px'fit="true" url="${path}/data/datagrid" title=""
+  <table id="datagrid2" class="easyui-datagrid"  style='width:200px;height:150px;position: relative;'fit="true" url="${path}/data/datagrid" title=""
            toolbar="#toolbar"
            pagination="true"
            fitColumns="true"
@@ -122,8 +122,8 @@
            striped="true"
            border="false"
            nowrap="false"
-           pageList="[3]"
-         pageSize="3"
+           pageList="[5]"
+         pageSize="5"
          pagePosition="top">
       <thead>
       <tr>
@@ -159,7 +159,6 @@
       </tr>
       </thead>
     </table>
-
 
 </div>
 
