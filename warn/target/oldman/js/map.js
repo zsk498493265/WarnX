@@ -121,10 +121,10 @@ function warn2(data){
             "老人姓名：<span class='messageD'>"+ data.oldMan.oldName+"</span></p><p>" +
             "老人电话：<span class='messageD'>"+ data.oldMan.oldPhone+"</span></p><p>" +
             "老人住址：<span class='messageD'>"+ data.oldMan.oldAddress+"</span></p></div>";
-            oldId=data.oldMan.oid;
-            oldName=data.oldMan.oldName;
-            oldPhone=data.oldMan.oldPhone;
-            oldAddress=data.oldMan.oldAddress;
+        oldId=data.oldMan.oid;
+        oldName=data.oldMan.oldName;
+        oldPhone=data.oldMan.oldPhone;
+        oldAddress=data.oldMan.oldAddress;
         $.messager.alert('设备故障！',gatewayDownMessage,'danger',function(){
             //该网关故障消息已读
             $.ajax({
@@ -834,7 +834,11 @@ function getSums() {
         }
     });
 }
-setInterval(getWorkerMarkers, 60000);      //每60s刷新一次
+
+
+setInterval(louChange, 30000);      //每30s刷新一次
+
+
 function getWorkerMarkers() {
     $.ajax({
         type: "GET",
@@ -1055,7 +1059,7 @@ function getJieDaoMarkers() {
                 // var lHtml=[];
                 // lHtml.push('<span style="font-size:12px;background-color: #00b5ad">'+data.data[i].qName+":"+data.data[i].sum +'</span><br/>');
 
-                 // var label = new BMap.Label(data.data[i].jName+"："+data.data[i].sum,{offset:new BMap.Size(20,-10)});
+                // var label = new BMap.Label(data.data[i].jName+"："+data.data[i].sum,{offset:new BMap.Size(20,-10)});
                 var label = new BMap.Label(data.data[i].jName,{offset:new BMap.Size(20,-10)});
                 label.setStyle({
                     color:"red",
@@ -1163,11 +1167,11 @@ function getLouMarkers() {
                 //new remove listener
 
                 if(dataR[i].greenSum)
-                map.addOverlay(marker[i]);
+                    map.addOverlay(marker[i]);
                 if(dataR[i].redSum)
-                map.addOverlay(marker2[i]);
+                    map.addOverlay(marker2[i]);
                 if(dataR[i].yellowSum)
-                map.addOverlay(marker3[i]);
+                    map.addOverlay(marker3[i]);
 
                 // var lHtml=[];
                 // lHtml.push('<span style="font-size:12px;background-color: #00b5ad">'+data.data[i].qName+":"+data.data[i].sum +'</span><br/>');
@@ -1760,5 +1764,3 @@ function tuChange(id,type,qid) {
     });
 
 }
-
-
