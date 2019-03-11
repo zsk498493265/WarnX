@@ -834,15 +834,11 @@ function getSums() {
         }
     });
 }
-<<<<<<< HEAD
 
 
 setInterval(louChange, 30000);      //每30s刷新一次
 
-
-=======
-setInterval(louChange, 30000);      //每60s刷新一次
->>>>>>> af534e3ab6f18dd355131686af49ed8e1a0cdb97
+var strQQ="init";
 function getWorkerMarkers() {
     $.ajax({
         type: "GET",
@@ -866,7 +862,8 @@ function getWorkerMarkers() {
                         height: 100,     // 信息窗口高度
                         title : this.getTitle()  // 信息窗口标题
                     };
-                    var infostr="";
+                    var infostr="";console.log(this.worker_info);
+                    strQQ=this.worker_info.qq;
                     infostr=infostr+"姓名："+this.worker_info.name+"<br/>";
                     infostr=infostr+"电话："+this.worker_info.phone+"<br/>";
                     infostr+="<Button onclick='f1()'>实时通讯</Button>";
@@ -896,6 +893,7 @@ function getWorkerMarkers() {
                             map.addOverlay(marker);
                             //保证每个worker都能不断被点到后显示弹窗
                             marker.worker_info=data1.data[i];
+                            marker.qq=data1.data[i].qq;
                             marker.addEventListener("click", function (){
                                 var opts = {
                                     width : 200,     // 信息窗口宽度
@@ -906,6 +904,7 @@ function getWorkerMarkers() {
                                 console.log(marker.worker_info);
                                 infostr=infostr+"姓名："+this.worker_info.name+"<br/>";
                                 infostr=infostr+"电话："+this.worker_info.phone+"<br/>";
+                                strQQ=this.qq;
                                 infostr+="<Button onclick='f1()'>实时通讯</Button>";
                                 var infoWindow = new BMap.InfoWindow(infostr,opts);  // 创建信息窗口对象
                                 this.openInfoWindow(infoWindow,new BMap.Point(this.point.lng,this.point.lat));
@@ -1346,7 +1345,10 @@ function getLouMarkers() {
     });
 }
 function f1(){
-    window.location.href='tencent://Message/?uin=359547720';
+alert(strQQ);
+    var url='tencent://Message/?uin='+strQQ;
+    // window.location.href='tencent://Message/?uin=359547720';
+    window.location.href=url;
 }
 function isGreen(oid){
     for(var i=0;i<old_turn_green.length;i++){
