@@ -92,6 +92,8 @@ INSERT INTO `sysmenu` VALUES ('1102', '出门信息', '11', '1102', 'icon-nav', 
 INSERT INTO `sysmenu` VALUES ('902', '预警开关', '9', '902', 'icon-nav', '/threshold/switch', '1');
 
 
+
+
 INSERT INTO `sysmenu` VALUES ('602', '日志记录', '6', '602', 'icon-nav', '/log/user/list', '1');
 INSERT INTO `sysmenu` VALUES ('1103', '报警信息', '11', '1103', 'icon-nav', '/warnHistory/user/warn', '1');
 INSERT INTO `sysmenu` VALUES ('1104', '出门信息', '11', '1104', 'icon-nav', '/outHistory/user/out', '1');
@@ -175,6 +177,8 @@ INSERT INTO `role_menu` VALUES ('37', '3', '104','0');
 INSERT INTO `role_menu` VALUES ('38', '3', '803','1');
 INSERT INTO `role_menu` VALUES ('86', '3', '1105','1');
 INSERT INTO `role_menu` VALUES ('87', '3', '1106','0');
+
+
 
 --管理人员
 INSERT INTO `role_menu` VALUES ('39', '1', '1','0');
