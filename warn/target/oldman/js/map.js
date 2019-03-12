@@ -35,8 +35,17 @@ var selectDistrict=[];//存储添加标注时  区的选择  实时更新
 
 //warn
 var oldName,oldId,oldAddress,oldPhone;
-var len,louName=new Array(),oldss=new Array(),marker=new Array(),marker2=new Array(),marker3=new Array();
-//获取巡更数据
+var len,louName=new Array(),oldss=new Array(),marker=new Array(),marker2=new Array(),marker3=new Array(),markerC=new Array();
+//获取巡更数据并更新老人状态
+$.ajax({
+    type: "GET",
+    url: pathJs + "/patrol/addRecords",
+    dataType: "json",
+    async: false,
+    success: function (data) {
+        console.log(data);
+    }
+});
 $.ajax({
     type: "GET",
     url: pathJs + "/patrol/getOldStatus",
@@ -885,7 +894,7 @@ function getWorkerMarkers() {
                                 strokeStyle : "dashed"});
                             map.addOverlay(path);
                             //console.log(path);
-                            var icon = new BMap.Icon("http://i2.bvimg.com/647748/f79715aed233ae84.png", new BMap.Size(512,256),{imageOffset: new BMap.Size(-json.l,-json.t),infoWindowOffset:new BMap.Size(json.lb+5,1),offset:new BMap.Size(json.x,json.h)});
+                            var icon = new BMap.Icon("http://i2.bvimg.com/647748/f79715aed233ae84.png", new BMap.Size(60,30),{imageOffset: new BMap.Size(0,0),infoWindowOffset:new BMap.Size(json.lb+5,1),offset:new BMap.Size(0,0)});
                             var point = new BMap.Point(data1.data[data1.data.length-1].cx, data1.data[data1.data.length-1].cy);
                             var marker = new BMap.Marker(point, {icon: icon});
                             // marker.setTitle(data1.data[data1.data.length-1].time);
@@ -894,6 +903,7 @@ function getWorkerMarkers() {
                             //保证每个worker都能不断被点到后显示弹窗
                             marker.worker_info=data1.data[i];
                             marker.qq=data1.data[i].qq;
+                            //暂时删除
                             marker.addEventListener("click", function (){
                                 var opts = {
                                     width : 200,     // 信息窗口宽度
@@ -908,6 +918,7 @@ function getWorkerMarkers() {
                                 infostr+="<Button onclick='f1()'>实时通讯</Button>";
                                 var infoWindow = new BMap.InfoWindow(infostr,opts);  // 创建信息窗口对象
                                 this.openInfoWindow(infoWindow,new BMap.Point(this.point.lng,this.point.lat));
+                                //this.openInfoWindow(infoWindow,new BMap.Point(this.worker_info.cx,this.worker_info.cy));
                             });
                             // setInterval(getWorkerMarkers, 60000);      //每60s刷新一次
                             // setInterval("draw_path()", 100);
@@ -1090,58 +1101,41 @@ function getLouMarkers() {
 
 //add camera
             var json={icon:{w:21,h:21,l:0,t:0,x:6,lb:5}};
-            var icon = new BMap.Icon("http://i1.bvimg.com/647748/d7a9b90404effcc3.jpg", new BMap.Size(30,22),{imageOffset: new BMap.Size(0,0),infoWindowOffset:new BMap.Size(json.lb+5,1)});
-
-            var point = new BMap.Point(121.388344, 31.156085);
-            var marker = new BMap.Marker(point, {icon: icon});
-            map.addOverlay(marker);
-            var label = new BMap.Label(1,{offset:new BMap.Size(5,-20)});
-            label.setStyle({
-                color: "red",
-                font: "8px Tahoma,Helvetica,Arial,'宋体',sans-serif;",
-                backgroundColor: "transparent",
-                fontWeight: "bold",
-                border: "none"
-            });
-            marker.setLabel(label);
-            marker.addEventListener("click", function (e) {
-
-                /**
-                 *
-                 * 获得该楼道的统计信息
-                 */
-                    // alert(this.getTitle());
-                var opts = {
-                        width : 200,     // 信息窗口宽度
-                        height: 500,     // 信息窗口高度
-                        title : '东兰世茗雅苑6号'  // 信息窗口标题
-                    };
-                var infostr="黄铁岳-张慧青";
-                infostr+="<button onclick='exec()'>查看室内情况</button>";
-                infostr+="<br/>"
-
-                //alert(infostr);
-                //alert(olds.length);
-                // for(var i=0;i<Sum.district.length;i++) {
-                //     for(var j=0;j<Sum.district[i].street.length;j++) {
-                //         if (Sum.district[i].street[j].name == jName) {
-                //             varSum = Sum.district[i].street[j].sum;
-                //             varGreenSum = Sum.district[i].street[j].greenSum;
-                //             varYellowSum = Sum.district[i].street[j].yellowSum;
-                //             varRedSum = Sum.district[i].street[j].redSum;
-                //             varQname=Sum.district[i].name;
-                //         }
-                //     }
-                // }
-                //该街道的统计情况
-                //var infoWindow = new BMap.InfoWindow("所属区："+varQname+"<br/>购买服务总人数："+varSum+"<br/>正常："+varGreenSum+"<br/>正在接受服务："+varYellowSum+"<br/>预警："+varRedSum,opts);  // 创建信息窗口对象
-                // var infoWindow = new BMap.InfoWindow("楼名："+varQname+"<br/>购买服务总人数：1<br/>老人1:<div id='test' style='width:10px;height:10px;background:#00ee00;'></div><button onclick='exec()'>btn1</button><Button onclick='f1()'>btn2</Button><br/>老人2:<div id='test' style='width:10px;height:10px;background:#dd1144;'></div><br/>",opts);  // 创建信息窗口对象
-
-                var infoWindow = new BMap.InfoWindow(infostr,opts);  // 创建信息窗口对象
-
-                this.openInfoWindow(infoWindow,new BMap.Point(this.point.lng,this.point.lat));
-            });
+            // var icon = new BMap.Icon("http://i1.bvimg.com/647748/d7a9b90404effcc3.jpg", new BMap.Size(30,22),{imageOffset: new BMap.Size(0,0),infoWindowOffset:new BMap.Size(json.lb+5,1)});
             //
+            // var point = new BMap.Point(121.388344, 31.156085);
+            // var marker = new BMap.Marker(point, {icon: icon});
+            // map.addOverlay(marker);
+            // var label = new BMap.Label(1,{offset:new BMap.Size(5,-20)});
+            // label.setStyle({
+            //     color: "red",
+            //     font: "8px Tahoma,Helvetica,Arial,'宋体',sans-serif;",
+            //     backgroundColor: "transparent",
+            //     fontWeight: "bold",
+            //     border: "none"
+            // });
+            // marker.setLabel(label);
+            // marker.addEventListener("click", function (e) {
+            //
+            //     /**
+            //      *
+            //      * 获得该楼道的统计信息
+            //      */
+            //         // alert(this.getTitle());
+            //     var opts = {
+            //             width : 200,     // 信息窗口宽度
+            //             height: 500,     // 信息窗口高度
+            //             title : '东兰世茗雅苑6号'  // 信息窗口标题
+            //         };
+            //     var infostr="黄铁岳-张慧青";
+            //     infostr+="<button onclick='exec()'>查看室内情况</button>";
+            //     infostr+="<br/>"
+            //
+            //     var infoWindow = new BMap.InfoWindow(infostr,opts);  // 创建信息窗口对象
+            //
+            //     this.openInfoWindow(infoWindow,new BMap.Point(this.point.lng,this.point.lat));
+            // });
+            //finish add temp camera
             for(var i=0;i<data.data.length;i++) {
                 var dataR=data.data;
                 // if(data.data[i].greenSum!=0){
@@ -1156,12 +1150,17 @@ function getLouMarkers() {
                 //newPoint
                 var icon2 = BMapLib.MarkerTool.SYS_ICONS[8];
                 var icon3 = BMapLib.MarkerTool.SYS_ICONS[9];
+                var iconC = new BMap.Icon("http://i2.bvimg.com/647748/4a599d66c85a5d0a.jpg", new BMap.Size(30,30),{imageOffset: new BMap.Size(0,0),infoWindowOffset:new BMap.Size(json.lb+5,1)});
+
                 var point2 = new BMap.Point(data.data[i].xR, data.data[i].yR);
                 var point3 = new BMap.Point(data.data[i].xY, data.data[i].yY);
+                var pointC = new BMap.Point(data.data[i].xR, data.data[i].yR);
                 marker2[i] = new BMap.Marker(point2, {icon: icon2});
                 marker3[i] = new BMap.Marker(point3, {icon: icon3});
+                markerC[i] = new BMap.Marker(pointC, {icon: iconC});
                 marker2[i].setTitle(data.data[i].info);
                 marker3[i].setTitle(data.data[i].info);
+                markerC[i].setTitle(data.data[i].info);
                 // if(typeof(data.data[i].oldMan)=="undefined")continue;
 
                 louName[i]=dataR[i].info;
@@ -1169,12 +1168,22 @@ function getLouMarkers() {
                 oldss[i]=dataR[i].oldMan;
                 //new remove listener
 
+                var camera_num=0;
                 if(dataR[i].greenSum)
                     map.addOverlay(marker[i]);
                 if(dataR[i].redSum)
                     map.addOverlay(marker2[i]);
                 if(dataR[i].yellowSum)
                     map.addOverlay(marker3[i]);
+                for(var j=0;j<dataR[i].oldMan.length;j++)
+                {
+                    if(dataR[i].oldMan[j].camera)
+                        camera_num++;
+                }
+
+                if(camera_num){
+                    map.addOverlay(markerC[i]);
+                }
 
                 // var lHtml=[];
                 // lHtml.push('<span style="font-size:12px;background-color: #00b5ad">'+data.data[i].qName+":"+data.data[i].sum +'</span><br/>');
@@ -1204,9 +1213,18 @@ function getLouMarkers() {
                     fontWeight: "bold",
                     border: "none"
                 });
+                var labelC = new BMap.Label(camera_num,{offset:new BMap.Size(5,-20)});
+                labelC.setStyle({
+                    color: "red",
+                    font: "8px Tahoma,Helvetica,Arial,'宋体',sans-serif;",
+                    backgroundColor: "transparent",
+                    fontWeight: "bold",
+                    border: "none"
+                });
                 marker[i].setLabel(label);
                 marker2[i].setLabel(label2);
                 marker3[i].setLabel(label3);
+                //markerC[i].setLabel(labelC);
 
                 // }
 
@@ -1220,6 +1238,7 @@ function getLouMarkers() {
                 marker[i].oldsInfo=oldss[i];
                 marker2[i].oldsInfo=oldss[i];
                 marker3[i].oldsInfo=oldss[i];
+                markerC[i].oldsInfo=oldss[i];
                 marker[i].addEventListener("click", function (e) {
 
                     /**
@@ -1339,6 +1358,39 @@ function getLouMarkers() {
 
                     this.openInfoWindow(infoWindow,new BMap.Point(this.point.lng,this.point.lat));
                 });
+                //markerC listener
+                markerC[i].addEventListener("click", function (e) {
+
+                    /**
+                     *
+                     * 获得该楼道的统计信息
+                     */
+                        // alert(this.getTitle());
+                    var opts = {
+                            width : 200,     // 信息窗口宽度
+                            height: 500,     // 信息窗口高度
+                            title : this.getTitle()  // 信息窗口标题
+                        };
+                    var infostr="";
+
+                    for(var j=0;j<this.oldsInfo.length;j++)
+                    {
+                        if(this.oldsInfo[j].camera!=1)continue;
+                        infostr+=this.oldsInfo[j].oldName;
+                        // infostr=infostr+":"+"<div id='test' style='width:10px;height:10px;background:#FFFF00;'></div>";
+                        infostr+="<br/>";
+                        infostr=infostr+"手机："+this.oldsInfo[j].oldPhone+",";
+                        infostr=infostr+"密码："+this.oldsInfo[j].oldPwd+"<br/>";
+                        //infostr+="<Button onclick='f1()'>实时通讯</Button>";
+                        infostr+="<button onclick='exec()'>查看室内情况</button>";
+                        infostr+="<br/>"
+                    }
+
+                    var infoWindow = new BMap.InfoWindow(infostr,opts);  // 创建信息窗口对象
+
+                    this.openInfoWindow(infoWindow,new BMap.Point(this.point.lng,this.point.lat));
+                });
+                //
             }
 
         }

@@ -1,3 +1,4 @@
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@page language="java" import="java.util.*" pageEncoding="utf-8" %>
 <%@include file="/WEB-INF/jsp/common/easyui.jsp" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -196,5 +197,15 @@
         $("#index + li + li",parent.document).addClass("active");
     });
 </script>
+<style>
+  .BMap_cpyCtrl{
+    display:none;
+  }
+  .anchorBL{
+    display:none;
+  }
+</style>
 <script type="text/javascript" src="${path}/js/map.js"></script>
+
+
 </html>
