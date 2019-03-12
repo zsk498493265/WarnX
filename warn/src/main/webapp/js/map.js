@@ -1120,23 +1120,6 @@ function getLouMarkers() {
                 infostr+="<button onclick='exec()'>查看室内情况</button>";
                 infostr+="<br/>"
 
-                //alert(infostr);
-                //alert(olds.length);
-                // for(var i=0;i<Sum.district.length;i++) {
-                //     for(var j=0;j<Sum.district[i].street.length;j++) {
-                //         if (Sum.district[i].street[j].name == jName) {
-                //             varSum = Sum.district[i].street[j].sum;
-                //             varGreenSum = Sum.district[i].street[j].greenSum;
-                //             varYellowSum = Sum.district[i].street[j].yellowSum;
-                //             varRedSum = Sum.district[i].street[j].redSum;
-                //             varQname=Sum.district[i].name;
-                //         }
-                //     }
-                // }
-                //该街道的统计情况
-                //var infoWindow = new BMap.InfoWindow("所属区："+varQname+"<br/>购买服务总人数："+varSum+"<br/>正常："+varGreenSum+"<br/>正在接受服务："+varYellowSum+"<br/>预警："+varRedSum,opts);  // 创建信息窗口对象
-                // var infoWindow = new BMap.InfoWindow("楼名："+varQname+"<br/>购买服务总人数：1<br/>老人1:<div id='test' style='width:10px;height:10px;background:#00ee00;'></div><button onclick='exec()'>btn1</button><Button onclick='f1()'>btn2</Button><br/>老人2:<div id='test' style='width:10px;height:10px;background:#dd1144;'></div><br/>",opts);  // 创建信息窗口对象
-
                 var infoWindow = new BMap.InfoWindow(infostr,opts);  // 创建信息窗口对象
 
                 this.openInfoWindow(infoWindow,new BMap.Point(this.point.lng,this.point.lat));
