@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
 
 @Controller
@@ -20,7 +21,7 @@ public class PatrolController {
 
     @RequestMapping(value = "/addRecords",method = RequestMethod.GET)
     @ResponseBody
-    public Result addRecords() throws IOException{
+    public Result addRecords() throws IOException, ParseException {
         patrolService.addPatrolRecords();
         return new Result(true);
     }

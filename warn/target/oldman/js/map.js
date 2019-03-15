@@ -55,10 +55,22 @@ $.ajax({
         console.log(data);
     }
 });
-//
+// 报警cookie
+setCookie("warn_sum",parseInt(document.getElementById("warn_sum").innerText.split(":")[1]),1800*1000);
+//setCookie("warn_sum",(parseInt(getCookie("warn_sum"))+1).toString(),1800*1000);
+// alert(getCookie("warn_sum"));
+
 function warn2(data){
     // getNoReadSum();
     //紧急报警
+    //累计报警数
+    //setCookie("warn_sum",getCookie("warn_sum")+1,1800*1000);
+    //alert(getCookie("warn_sum"));
+    alert(parseInt(document.getElementById("warn_sum").innerText.split(":")[1]));
+    document.getElementById("warn_instant").innerText ="实时报警:1";
+    var num_curr=parseInt(document.getElementById("warn_sum").innerText.split(":")[1]);
+    num_curr++;
+    document.getElementById("warn_sum").innerText ="累计报警:"+num_curr;
     if(data.type=="urgency"){
         var wdid=data.id;
         var urgencyMessage="<div class='eauip'><span class='messageT'>报警设备信息：" +
@@ -1822,3 +1834,153 @@ function tuChange(id,type,qid) {
     });
 
 }
+$('#main_pie').highcharts({
+    chart: {
+        type: 'pie',
+        options3d: {
+            enabled: true,
+            alpha: 45,
+            beta: 0
+        }
+    },
+    colors:[
+        '#56c078',//第一个颜色，欢迎加入Highcharts学习交流群294191384
+        '#EEEE00',//第二个颜色
+        '#d53a35'//第三个颜色
+    ],
+    credits: {
+        enabled: false
+    },
+    title: {
+        text:"参加居家养老老人比例"
+    },
+    tooltip: {
+        pointFormat: '{series.name}（{point.y}）: <b>{point.percentage:.1f}%</b>'
+    },
+    plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            depth: 35,
+            dataLabels: {
+                enabled: true,
+                format: '{point.name}：'+'{point.percentage:.1f}%'
+            }
+        }
+    },
+    series: [{
+        type: 'pie',
+        name: '人数占比',
+        data: [
+            {
+                name: '正常',
+                y:1,
+                sliced: true,
+                selected: true
+            },
+            ['正在服务',2],
+            ['预警',3]
+        ],
+        center:["50%","18%"]
+    }]
+});
+$('#main_pie2').highcharts({
+    chart: {
+        type: 'pie',
+        options3d: {
+            enabled: true,
+            alpha: 45,
+            beta: 0
+        }
+    },
+    colors:[
+        '#56c078',//第一个颜色，欢迎加入Highcharts学习交流群294191384
+        '#EEEE00',//第二个颜色
+        '#d53a35'//第三个颜色
+    ],
+    credits: {
+        enabled: false
+    },
+    title: {
+        text:"正在被服务老人比例"
+    },
+    tooltip: {
+        pointFormat: '{series.name}（{point.y}）: <b>{point.percentage:.1f}%</b>'
+    },
+    plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            depth: 35,
+            dataLabels: {
+                enabled: true,
+                format: '{point.name}：'+'{point.percentage:.1f}%'
+            }
+        }
+    },
+    series: [{
+        type: 'pie',
+        name: '人数占比',
+        data: [
+            {
+                name: '正常',
+                y:1,
+                sliced: true,
+                selected: true
+            },
+            ['正在服务',2],
+            ['预警',3]
+        ],
+        center:["50%","18%"]
+    }]
+});
+$('#main_pie3').highcharts({
+    chart: {
+        type: 'pie',
+        options3d: {
+            enabled: true,
+            alpha: 45,
+            beta: 0
+        }
+    },
+    colors:[
+        '#56c078',//第一个颜色，欢迎加入Highcharts学习交流群294191384
+        '#EEEE00',//第二个颜色
+        '#d53a35'//第三个颜色
+    ],
+    credits: {
+        enabled: false
+    },
+    title: {
+        text:"安装关怀设备老人总数、安装摄像头老人总数比例"
+    },
+    tooltip: {
+        pointFormat: '{series.name}（{point.y}）: <b>{point.percentage:.1f}%</b>'
+    },
+    plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            depth: 35,
+            dataLabels: {
+                enabled: true,
+                format: '{point.name}：'+'{point.percentage:.1f}%'
+            }
+        }
+    },
+    series: [{
+        type: 'pie',
+        name: '人数占比',
+        data: [
+            {
+                name: '正常',
+                y:1,
+                sliced: true,
+                selected: true
+            },
+            ['正在服务',2],
+            ['预警',3]
+        ],
+        center:["50%","18%"]
+    }]
+});

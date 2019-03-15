@@ -21,10 +21,10 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.net.URLEncoder;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 public class PatrolServiceImpl implements PatrolService {
@@ -35,28 +35,45 @@ public class PatrolServiceImpl implements PatrolService {
     DataDao dataDao;
 
     @Transactional
-    public void addPatrolRecords() throws IOException{
+    public void addPatrolRecords() throws IOException,ParseException{
         URL url = new URL("http://www.5ixun.com/exun/checkpointLog/query");
         String errorStr = "";
         String status = "";
         String response = "";
-        PrintWriter out = null;
+        DataOutputStream out = null;
         BufferedReader in = null;
         StringBuffer buffer = new StringBuffer();
         Cookie cookie = patrolDao.getCookie();
+        Date d = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try{
             URLConnection conn = url.openConnection();
             HttpURLConnection httpUrlConnection = (HttpURLConnection) conn;
+            httpUrlConnection.setRequestProperty("Content-Type","application/x-www-form-urlencoded");
             httpUrlConnection.addRequestProperty("Cookie","from=" + cookie.getFrom());
             httpUrlConnection.addRequestProperty("Cookie","secret=" + cookie.getSecret());
             httpUrlConnection.addRequestProperty("Cookie","smuser=" + cookie.getSmuser());
+            sdf.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
+            String today = sdf.format(d);
+            String morning = today.split(" ")[0] + " " + "00:00:00";
+            String night= today.split(" ")[0] + " "+ "23:59:59";
+            Long startTime = sdf.parse(morning).getTime();
+            Long endTime = sdf.parse(night).getTime();
+            String content = "startTime="+URLEncoder.encode(startTime.toString(),"UTF-8");
+            content+= "&endTime="+URLEncoder.encode(endTime.toString(),"UTF-8");
+            content+= "&limit="+URLEncoder.encode("100","UTF-8");
             httpUrlConnection.setDoOutput(true);
             httpUrlConnection.setDoInput(true);
-            out = new PrintWriter(httpUrlConnection.getOutputStream());
+            httpUrlConnection.setRequestMethod("POST");
+            httpUrlConnection.setUseCaches(false);
+            httpUrlConnection.connect();
+            out =  new DataOutputStream(httpUrlConnection
+                    .getOutputStream());
+            out.writeBytes(content);
             // 发送请求参数
             // flush输出流的缓冲
             out.flush();
-            httpUrlConnection.connect();
+
             // 定义BufferedReader输入流来读取URL的响应
             in = new BufferedReader(new InputStreamReader(httpUrlConnection.getInputStream(),"utf-8"));
             String line;
@@ -97,8 +114,9 @@ public class PatrolServiceImpl implements PatrolService {
         else
             for(int i=0;i<json.size();i++){
                 Patrol patrol = new Patrol();
-                String time = Const.longToDate(new Long(json.getJSONObject(i).getString("createTime")));
-                if(patrol1.getTime().equals(time))
+                Long time = new Long(json.getJSONObject(i).getString("createTime"));
+                Long ptime  = sdf.parse(patrol1.getTime()).getTime();
+                if(ptime < time)
                     key = 0;
                 if(key == 0)
                 {

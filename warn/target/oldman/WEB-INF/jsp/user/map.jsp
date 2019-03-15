@@ -99,15 +99,20 @@
   <%--<div id='test' style='width:500px;height:200px;background:#00F;'>--%>
   <%--测试的div1--%>
   <%--</div>--%>
-  <div id='test' style='width:500px;height:160px;background:#aa00aa;position: relative;bottom:16px'>
-    <p id="warnMessage" style="font-size: 15px">报警信息</p>
-    <p id="oldId" style="font-size: 15px">老人ID：</p>
+  <div id='test' style='width:600px;height:200px;background:#aa00aa;position: relative;bottom:16px;'>
+    <p id="warnMessage" style="font-size: 15px;float: left">报警信息&nbsp;&nbsp;&nbsp;&nbsp;</p>
+    <p id="warn_instant" style="font-size: 15px;float: left">实时报警：0</p>
+    <p id="warn_sum" style="font-size: 15px;float: left" onclick="alertOldman()">累计报警:5</p>
+    <p id="oldId" style="font-size: 15px;clear: both">老人ID：</p>
     <p id="oldName" style="font-size: 15px">老人姓名：</p>
     <p id="oldPhone" style="font-size: 15px">老人电话：</p>
     <p id="oldAddress" style="font-size: 15px">老人地址：</p>
 
   </div>
   <div id="main_bar" style='width:500px;height:150px;position: relative;bottom:25px'></div>
+  <div id="main_pie" style='width:500px;height:150px;position: relative;top:30px;left:0px'></div>
+    <div id="main_pie2" style='width:500px;height:150px;position: relative;top:30px'></div>
+    <div id="main_pie3" style='width:500px;height:150px;position: relative;top:30px'></div>
 
     <%--测试的div2<br>--%>
     <%--<p id="greenNum" style="font-size: 20px">已接受服务老人数量：1</p>--%>
@@ -162,6 +167,68 @@
     </table>
 
 </div>
+<%--弹出信息框--%>
+<div id="dlg_addOldMan" class="easyui-dialog"
+     style="width:400px;height:200px;padding:10px 20px" closed="true"
+     buttons="#dlg_addOldMan_buttons">
+  <form id="addOldMan" method="post">
+    <table>
+      <tr>
+        <td><span class="addButton">老人信息</span></td>
+      </tr>
+      <tr>
+        <td><span class="addButton">姓名：</span></td>
+      </tr>
+      <%--<tr>--%>
+      <%--<td><span class="addButton">网关：</span></td>--%>
+      <%--<td><input name="gatewayTwo_Ten" value="2" type="radio"/>二进制<input name="gatewayTwo_Ten" value="10" type="radio">十进制</td>--%>
+      <%--</tr>--%>
+      <tr>
+        <td><span class="addButton">性别：</span></td>
+      </tr>
+      <tr>
+        <td><span class="addButton">年龄：</span></td>
+      </tr>
+      <tr>
+        <td><span class="addButton">电话：</span></td>
+      </tr>
+      <tr>
+        <td><span class="addButton">住址：</span></td>
+      </tr>
+    </table>
+    <input type="hidden" name="oid"/>
+  </form>
+</div>
+<div id="dlg_alertOldMan" class="easyui-dialog"
+     style="width:400px;height:400px;padding:10px 20px" closed="true"
+     buttons="#dlg_addOldMan_buttons">
+  <form id="alertOldMan" method="post">
+    <table>
+      <tr>
+        <td><span class="addButton">老人报警信息</span></td>
+      </tr>
+      <tr>
+        <td><span class="addButton">姓名：老人1</span></td>
+      </tr>
+      <tr>
+        <td><span class="addButton">电话：</span></td>
+      </tr>
+      <tr>
+        <td><span class="addButton">住址：</span></td>
+      </tr>
+      <tr>
+        <td><span class="addButton">姓名：老人2</span></td>
+      </tr>
+      <tr>
+        <td><span class="addButton">电话：</span></td>
+      </tr>
+      <tr>
+        <td><span class="addButton">住址：</span></td>
+      </tr>
+    </table>
+    <input type="hidden" name="oid"/>
+  </form>
+</div>
 
 <%--<div id="divAdd">--%>
   <%--&lt;%&ndash;<input type="button" class="btn" value="选择标注样式" onclick="openStylePnl()" />&ndash;%&gt;--%>
@@ -192,6 +259,12 @@
 <%--</div>--%>
 </body>
 <script type="text/javascript">
+  $("#datagrid2").datagrid({onClickRow : function(index, row){
+      $('#dlg_addOldMan').dialog('open').dialog('setTitle', '老人信息');
+    }});
+  function alertOldman(){
+    $('#dlg_alertOldMan').dialog('open').dialog('setTitle', '老人报警信息');
+  }
     $(function(){
         $(".active",parent.document).removeClass("active");
         $("#index + li + li",parent.document).addClass("active");
