@@ -99,27 +99,35 @@
   <%--<div id='test' style='width:500px;height:200px;background:#00F;'>--%>
   <%--测试的div1--%>
   <%--</div>--%>
-  <div id='test' style='width:600px;height:200px;background:#aa00aa;position: relative;bottom:16px;'>
-    <p id="warnMessage" style="font-size: 15px;float: left">报警信息&nbsp;&nbsp;&nbsp;&nbsp;</p>
-    <p id="warn_instant" style="font-size: 15px;float: left">实时报警：0</p>
-    <p id="warn_sum" style="font-size: 15px;float: left" onclick="alertOldman()">累计报警:5</p>
-    <p id="oldId" style="font-size: 15px;clear: both">老人ID：</p>
-    <p id="oldName" style="font-size: 15px">老人姓名：</p>
-    <p id="oldPhone" style="font-size: 15px">老人电话：</p>
-    <p id="oldAddress" style="font-size: 15px">老人地址：</p>
+  <div id='test' style='width:1450px;height:600px;background:#aa00aa;position: relative;left: 65%'>
+    <%--<p id="warnMessage" style="font-size: 15px;float: left">报警信息&nbsp;&nbsp;&nbsp;&nbsp;</p>--%>
+    <p id="warn_instant" style="font-size:55px;float: left;position:absolute;">实时报警：0</p>
+    <p id="warn_sum" style="font-size: 55px;float: left;position:absolute;top:60px" onclick="alertOldman()">累计报警:5</p>
+    <p id="oldId" style="font-size:55px;float: left;position:absolute;top: 125px">老人ID：</p>
+      <p id="oldName" style="font-size:55px;float: left;position:absolute;top: 185px">老人姓名：</p>
+      <p id="oldPhone" style="font-size:55px;float: left;position:absolute;top: 245px">老人电话：</p>
+      <p id="oldAddress" style="font-size:55px;float: left;position:absolute;top: 305px">老人地址：</p>
+      <input type="button" style="float: left;position: relative;top:-1600px;font-size: 55px" value="确认" onclick="recover_info()" />
+
+
+    <%--<p id="oldId" style="font-size: 15px;clear: both;position:absolute;top:110px">老人ID：</p>--%>
+    <%--<p id="oldName" style="font-size: 15px;position:absolute;">老人姓名：</p>--%>
+    <%--<p id="oldPhone" style="font-size: 15px;position:absolute;">老人电话：</p>--%>
+    <%--<p id="oldAddress" style="font-size: 15px;position:absolute;">老人地址：</p>--%>
 
   </div>
-  <div id="main_bar" style='width:500px;height:150px;position: relative;bottom:25px'></div>
-  <div id="main_pie" style='width:500px;height:150px;position: relative;top:30px;left:0px'></div>
-    <div id="main_pie2" style='width:500px;height:150px;position: relative;top:30px'></div>
-    <div id="main_pie3" style='width:500px;height:150px;position: relative;top:30px'></div>
+  <div id="main_bar" style='width:500px;height:150px;position: relative;bottom:25px;display: none'></div>
+  <div id="main_pie" style='width:500px;height:500px;position: relative;top:100px;left:0px'></div>
+    <div id="main_pie2" style='width:500px;height:500px;position: relative;top:-300px;left:600px'></div>
+    <div id="main_pie3" style='width:500px;height:500px;position: relative;top:-550px'></div>
 
     <%--测试的div2<br>--%>
     <%--<p id="greenNum" style="font-size: 20px">已接受服务老人数量：1</p>--%>
     <%--<p id="yellowNum" style="font-size: 20px">正在接受服务老人数量：0</p>--%>
     <%--<p id="redNum" style="font-size: 20px">未接受服务老人数量：1</p>--%>
     <%--<p id="allNum" style="font-size: 20px">老人总数：1</p>--%>
-  <table id="datagrid2" class="easyui-datagrid"  style='width:200px;height:150px;position: relative;'fit="true" url="${path}/data/datagrid" title=""
+    <div data-options="" style="height:500px;width:35%;position: absolute;left:65%;top:65%">
+  <table id="datagrid2" class="easyui-datagrid"  style='position: relative;'fit="true" url="${path}/data/datagrid" title=""
            toolbar="#toolbar"
            pagination="true"
            fitColumns="true"
@@ -128,9 +136,9 @@
            striped="true"
            border="false"
            nowrap="false"
-           pageList="[5]"
-         pageSize="5"
-         pagePosition="top">
+           pageList="[10]"
+         pageSize="10"
+         pagePosition="bottom">
       <thead>
       <tr>
         <th data-options="field:'oldName',width:fixWidth(0.05),align:'center'" rowspan="2">姓名</th>
@@ -165,7 +173,7 @@
       </tr>
       </thead>
     </table>
-
+    </div>
 </div>
 <%--弹出信息框--%>
 <div id="dlg_addOldMan" class="easyui-dialog"
@@ -177,23 +185,20 @@
         <td><span class="addButton">老人信息</span></td>
       </tr>
       <tr>
-        <td><span class="addButton">姓名：</span></td>
-      </tr>
-      <%--<tr>--%>
-      <%--<td><span class="addButton">网关：</span></td>--%>
-      <%--<td><input name="gatewayTwo_Ten" value="2" type="radio"/>二进制<input name="gatewayTwo_Ten" value="10" type="radio">十进制</td>--%>
-      <%--</tr>--%>
-      <tr>
-        <td><span class="addButton">性别：</span></td>
+        <p id="info_name">姓名:</p>
       </tr>
       <tr>
-        <td><span class="addButton">年龄：</span></td>
+        <p id="info_sex">性别:</p>
       </tr>
       <tr>
-        <td><span class="addButton">电话：</span></td>
+        <p id="info_age">年龄:</p>
       </tr>
       <tr>
-        <td><span class="addButton">住址：</span></td>
+        <%--<td><span class="addButton">电话：</span></td>--%>
+        <p id="info_phone">电话:</p>
+      </tr>
+      <tr>
+        <p id="info_address">住址:</p>
       </tr>
     </table>
     <input type="hidden" name="oid"/>
@@ -209,6 +214,7 @@
       </tr>
       <tr>
         <td><span class="addButton">姓名：老人1</span></td>
+        <%--<p style="font-size: 20px">姓名：老人1</p>--%>
       </tr>
       <tr>
         <td><span class="addButton">电话：</span></td>
@@ -217,7 +223,34 @@
         <td><span class="addButton">住址：</span></td>
       </tr>
       <tr>
+        <td><span class="addButton">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td>
+      </tr>
+      <tr>
         <td><span class="addButton">姓名：老人2</span></td>
+      </tr>
+      <tr>
+        <td><span class="addButton">电话：</span></td>
+      </tr>
+      <tr>
+        <td><span class="addButton">住址：</span></td>
+      </tr>
+      <tr>
+        <td><span class="addButton">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td>
+      </tr>
+      <tr>
+        <td><span class="addButton">姓名：老人3</span></td>
+      </tr>
+      <tr>
+        <td><span class="addButton">电话：</span></td>
+      </tr>
+      <tr>
+        <td><span class="addButton">住址：</span></td>
+      </tr>
+      <tr>
+        <td><span class="addButton">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td>
+      </tr>
+      <tr>
+        <td><span class="addButton">姓名：老人4</span></td>
       </tr>
       <tr>
         <td><span class="addButton">电话：</span></td>
@@ -260,10 +293,25 @@
 </body>
 <script type="text/javascript">
   $("#datagrid2").datagrid({onClickRow : function(index, row){
+
+    //alert(row["oldName"]);
+    //   document.getElementById("info_id").innerText ="ID:"+row["oid"];
+      document.getElementById("info_name").innerText ="姓名:"+row["oldName"];
+      document.getElementById("info_phone").innerText ="电话:"+row["oldPhone"];
+      document.getElementById("info_address").innerText ="地址:"+row["oldAddress"];
+
       $('#dlg_addOldMan').dialog('open').dialog('setTitle', '老人信息');
     }});
   function alertOldman(){
     $('#dlg_alertOldMan').dialog('open').dialog('setTitle', '老人报警信息');
+  }
+  function recover_info(){
+    document.getElementById("oldId").innerText ="老人ID:";
+    document.getElementById("oldName").innerText ="老人姓名:";
+    document.getElementById("oldPhone").innerText ="老人电话:";
+    document.getElementById("oldAddress").innerText ="老人地址:";
+    document.getElementById("warn_instant").innerText ="实时报警:0";
+
   }
     $(function(){
         $(".active",parent.document).removeClass("active");

@@ -56,7 +56,8 @@ $.ajax({
     }
 });
 // 报警cookie
-setCookie("warn_sum",parseInt(document.getElementById("warn_sum").innerText.split(":")[1]),1800*1000);
+if(getCookie("warn_sum")!="")
+document.getElementById("warn_sum").innerText ="累计报警:"+getCookie("warn_sum");
 //setCookie("warn_sum",(parseInt(getCookie("warn_sum"))+1).toString(),1800*1000);
 // alert(getCookie("warn_sum"));
 
@@ -71,6 +72,7 @@ function warn2(data){
     var num_curr=parseInt(document.getElementById("warn_sum").innerText.split(":")[1]);
     num_curr++;
     document.getElementById("warn_sum").innerText ="累计报警:"+num_curr;
+    setCookie("warn_sum",num_curr.toString(),1800*1000);
     if(data.type=="urgency"){
         var wdid=data.id;
         var urgencyMessage="<div class='eauip'><span class='messageT'>报警设备信息：" +
@@ -1872,14 +1874,8 @@ $('#main_pie').highcharts({
         type: 'pie',
         name: '人数占比',
         data: [
-            {
-                name: '正常',
-                y:1,
-                sliced: true,
-                selected: true
-            },
-            ['正在服务',2],
-            ['预警',3]
+            ['参加居家养老老人总数',43],
+            ['街道老人总数',1200]
         ],
         center:["50%","18%"]
     }]
@@ -1922,14 +1918,8 @@ $('#main_pie2').highcharts({
         type: 'pie',
         name: '人数占比',
         data: [
-            {
-                name: '正常',
-                y:1,
-                sliced: true,
-                selected: true
-            },
-            ['正在服务',2],
-            ['预警',3]
+            ['正在被服务老人总数',yellowNum],
+            ['参加居家养老老人总数',50]
         ],
         center:["50%","18%"]
     }]
@@ -1972,14 +1962,9 @@ $('#main_pie3').highcharts({
         type: 'pie',
         name: '人数占比',
         data: [
-            {
-                name: '正常',
-                y:1,
-                sliced: true,
-                selected: true
-            },
-            ['正在服务',2],
-            ['预警',3]
+            ['安装关怀设备老人总数',43],
+            ['安装摄像头',37],
+            ['居家养老总人数',49]
         ],
         center:["50%","18%"]
     }]
