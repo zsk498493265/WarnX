@@ -1930,7 +1930,7 @@ $('#main_pie3').highcharts({
         options3d: {
             enabled: true,
             alpha: 45,
-            beta: 0
+            beta: 0,
         }
     },
     colors:[

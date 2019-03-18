@@ -118,15 +118,15 @@
   </div>
   <div id="main_bar" style='width:500px;height:150px;position: relative;bottom:25px;display: none'></div>
   <div id="main_pie" style='width:500px;height:500px;position: relative;top:100px;left:0px'></div>
-    <div id="main_pie2" style='width:500px;height:500px;position: relative;top:-300px;left:600px'></div>
-    <div id="main_pie3" style='width:500px;height:500px;position: relative;top:-550px'></div>
+    <div id="main_pie2" style='width:500px;height:500px;position: relative;top:-300px;left:700px'></div>
+    <div id="main_pie3" style='width:500px;height:500px;position: relative;top:-550px;left:250px'></div>
 
     <%--测试的div2<br>--%>
     <%--<p id="greenNum" style="font-size: 20px">已接受服务老人数量：1</p>--%>
     <%--<p id="yellowNum" style="font-size: 20px">正在接受服务老人数量：0</p>--%>
     <%--<p id="redNum" style="font-size: 20px">未接受服务老人数量：1</p>--%>
     <%--<p id="allNum" style="font-size: 20px">老人总数：1</p>--%>
-    <div data-options="" style="height:500px;width:35%;position: absolute;left:65%;top:65%">
+    <div data-options="" style="height:720px;width:35%;position: absolute;left:65%;top:65%">
   <table id="datagrid2" class="easyui-datagrid"  style='position: relative;'fit="true" url="${path}/data/datagrid" title=""
            toolbar="#toolbar"
            pagination="true"
@@ -136,14 +136,16 @@
            striped="true"
            border="false"
            nowrap="false"
-           pageList="[10]"
-         pageSize="10"
+           pageList="[23]"
+         pageSize="23"
          pagePosition="bottom">
       <thead>
       <tr>
         <th data-options="field:'oldName',width:fixWidth(0.05),align:'center'" rowspan="2">姓名</th>
         <th data-options="field:'oldPhone',width:fixWidth(0.08),align:'center'" rowspan="2">电话</th>
         <th data-options="field:'oldAddress',width:fixWidth(0.11),align:'center'" rowspan="2">住址</th>
+        <th data-options="field:'sex',width:fixWidth(0.11),align:'center'" rowspan="2">性别</th>
+        <th data-options="field:'age',width:fixWidth(0.11),align:'center'" rowspan="2">年龄</th>
       </tr>
       <tr>
         <th data-options="field:'rName',width:fixWidth(0.08),align:'center',
@@ -182,7 +184,7 @@
   <form id="addOldMan" method="post">
     <table>
       <tr>
-        <td><span class="addButton">老人信息</span></td>
+        <td><span class="addButton"></span></td>
       </tr>
       <tr>
         <p id="info_name">姓名:</p>
@@ -199,6 +201,12 @@
       </tr>
       <tr>
         <p id="info_address">住址:</p>
+      </tr>
+      <tr>
+        <p id="info_regTime">注册时间:</p>
+      </tr>
+      <tr>
+        <p id="info_warn">报警次数:</p>
       </tr>
     </table>
     <input type="hidden" name="oid"/>
@@ -299,6 +307,10 @@
       document.getElementById("info_name").innerText ="姓名:"+row["oldName"];
       document.getElementById("info_phone").innerText ="电话:"+row["oldPhone"];
       document.getElementById("info_address").innerText ="地址:"+row["oldAddress"];
+      document.getElementById("info_sex").innerText ="性别:"+row["sex"];
+      document.getElementById("info_age").innerText ="年龄:"+row["age"];
+      document.getElementById("info_regTime").innerText ="注册时间:"+row["oldRegtime"];
+      document.getElementById("info_warn").innerText ="报警次数:1次";
 
       $('#dlg_addOldMan').dialog('open').dialog('setTitle', '老人信息');
     }});

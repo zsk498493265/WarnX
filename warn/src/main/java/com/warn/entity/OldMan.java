@@ -32,6 +32,26 @@ public class OldMan {
     private String careSystem;
     private String camera;
 
+    private String sex;
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    private Integer age;
+
     public OldMan() {
     }
 
