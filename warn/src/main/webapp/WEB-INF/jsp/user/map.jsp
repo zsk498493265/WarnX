@@ -99,15 +99,15 @@
   <%--<div id='test' style='width:500px;height:200px;background:#00F;'>--%>
   <%--测试的div1--%>
   <%--</div>--%>
-  <div id='test' style='width:1450px;height:600px;background:#aa00aa;position: relative;left: 65%'>
+  <div id='test' style='width:35%;height:30%;background:#aa00aa;position: relative;left: 65%'>
     <%--<p id="warnMessage" style="font-size: 15px;float: left">报警信息&nbsp;&nbsp;&nbsp;&nbsp;</p>--%>
-    <p id="warn_instant" style="font-size:55px;float: left;position:absolute;">实时报警：0</p>
-    <p id="warn_sum" style="font-size: 55px;float: left;position:absolute;top:60px" onclick="alertOldman()">累计报警:5</p>
-    <p id="oldId" style="font-size:55px;float: left;position:absolute;top: 125px">老人ID：</p>
-      <p id="oldName" style="font-size:55px;float: left;position:absolute;top: 185px">老人姓名：</p>
-      <p id="oldPhone" style="font-size:55px;float: left;position:absolute;top: 245px">老人电话：</p>
-      <p id="oldAddress" style="font-size:55px;float: left;position:absolute;top: 305px">老人地址：</p>
-      <input type="button" style="float: left;position: relative;top:-1600px;font-size: 55px" value="确认" onclick="recover_info()" />
+    <p id="warn_instant" style="font-size:25px;float: left;position:absolute;">实时报警：0</p>
+    <p id="warn_sum" style="font-size: 25px;float: left;position:absolute;top:60px" onclick="alertOldman()">累计报警:5</p>
+    <p id="oldId" style="font-size:25px;float: left;position:absolute;top: 125px;display: none">老人ID：</p>
+      <p id="oldName" style="font-size:25px;float: left;position:absolute;top: 125px">老人姓名：</p>
+      <p id="oldPhone" style="font-size:25px;float: left;position:absolute;top: 185px">老人电话：</p>
+      <p id="oldAddress" style="font-size:25px;float: left;position:absolute;top: 245px">老人地址：</p>
+      <input type="button" style="float: left;position: relative;top:-1600px;font-size: 25px" value="确认" onclick="recover_info()" />
 
 
     <%--<p id="oldId" style="font-size: 15px;clear: both;position:absolute;top:110px">老人ID：</p>--%>
@@ -116,17 +116,17 @@
     <%--<p id="oldAddress" style="font-size: 15px;position:absolute;">老人地址：</p>--%>
 
   </div>
-  <div id="main_bar" style='width:500px;height:150px;position: relative;bottom:25px;display: none'></div>
-  <div id="main_pie" style='width:500px;height:500px;position: relative;top:100px;left:0px'></div>
-    <div id="main_pie2" style='width:500px;height:500px;position: relative;top:-300px;left:700px'></div>
-    <div id="main_pie3" style='width:500px;height:500px;position: relative;top:-550px;left:250px'></div>
+  <div id="main_bar" style='width:300px;height:150px;position: relative;bottom:25px;display: none'></div>
+  <div id="main_pie" style='width:300px;height:15%;position: relative;top:50px;left:0px'></div>
+    <div id="main_pie2" style='width:15%;height:15%;position: relative;top:-110px;left:350px'></div>
+    <div id="main_pie3" style='width:500px;height:15%;position: relative;top:-100px;left:40px'></div>
 
     <%--测试的div2<br>--%>
     <%--<p id="greenNum" style="font-size: 20px">已接受服务老人数量：1</p>--%>
     <%--<p id="yellowNum" style="font-size: 20px">正在接受服务老人数量：0</p>--%>
     <%--<p id="redNum" style="font-size: 20px">未接受服务老人数量：1</p>--%>
     <%--<p id="allNum" style="font-size: 20px">老人总数：1</p>--%>
-    <div data-options="" style="height:720px;width:35%;position: absolute;left:65%;top:65%">
+    <div data-options="" style="height:33%;width:35%;position: absolute;left:65%;top:65%">
   <table id="datagrid2" class="easyui-datagrid"  style='position: relative;'fit="true" url="${path}/data/datagrid" title=""
            toolbar="#toolbar"
            pagination="true"
@@ -136,8 +136,8 @@
            striped="true"
            border="false"
            nowrap="false"
-           pageList="[23]"
-         pageSize="23"
+           pageList="[8]"
+         pageSize="8"
          pagePosition="bottom">
       <thead>
       <tr>
