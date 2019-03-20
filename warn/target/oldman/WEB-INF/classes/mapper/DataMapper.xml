@@ -104,9 +104,9 @@
     <!--参数只有一个的话 可以直接用对象的属性值，但是有两个以上的话 就要 对象名.属性名-->
     <select id="datagridUser" resultMap="resultOldMan">
         select
-        old.oid,old.gatewayID,old.segment,old.oldName,old.oldPhone,old.oldAddress,old.oldRegtime,rel.relid,rel.rName,rel.rPhone,rel.rAddress,rel.oldId,old.sex,old.age
-        FROM oldman old,relatives rel
-        WHERE rel.oldId=old.oid
+        old.oid,old.gatewayID,old.segment,old.oldName,old.oldPhone,old.oldAddress,old.oldRegtime,old.sex,old.age
+        FROM oldman old
+        WHERE 1=1
         <if test="oldMan.oid != null and oldMan.oid != ''">
             and oid=#{oldMan.oid}
         </if>
