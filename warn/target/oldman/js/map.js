@@ -1854,7 +1854,10 @@ $('#main_pie').highcharts({
         enabled: false
     },
     title: {
-        text:"参加居家养老老人比例"
+        text:"参加居家养老老人比例",
+        style:{
+            fontSize:10,
+        },
     },
     tooltip: {
         pointFormat: '{series.name}（{point.y}）: <b>{point.percentage:.1f}%</b>'
@@ -1866,7 +1869,10 @@ $('#main_pie').highcharts({
             depth: 35,
             dataLabels: {
                 enabled: true,
-                format: '{point.name}：'+'{point.percentage:.1f}%'
+                format: '{point.name}：'+'{point.percentage:.1f}%',
+                style:{
+                    fontSize:6,
+                }
             }
         }
     },
@@ -1898,7 +1904,10 @@ $('#main_pie2').highcharts({
         enabled: false
     },
     title: {
-        text:"正在被服务老人比例"
+        text:"正在被服务老人比例",
+        style:{
+            fontSize:10,
+        },
     },
     tooltip: {
         pointFormat: '{series.name}（{point.y}）: <b>{point.percentage:.1f}%</b>'
@@ -1910,7 +1919,10 @@ $('#main_pie2').highcharts({
             depth: 35,
             dataLabels: {
                 enabled: true,
-                format: '{point.name}：'+'{point.percentage:.1f}%'
+                format: '{point.name}：'+'{point.percentage:.1f}%',
+                style:{
+                    fontSize:6,
+                }
             }
         }
     },
@@ -1942,7 +1954,10 @@ $('#main_pie3').highcharts({
         enabled: false
     },
     title: {
-        text:"安装关怀设备老人总数、安装摄像头老人总数比例"
+        text:"安装关怀设备老人总数、安装摄像头老人总数比例",
+        style:{
+            fontSize:10,
+        },
     },
     tooltip: {
         pointFormat: '{series.name}（{point.y}）: <b>{point.percentage:.1f}%</b>'
@@ -1954,7 +1969,10 @@ $('#main_pie3').highcharts({
             depth: 35,
             dataLabels: {
                 enabled: true,
-                format: '{point.name}：'+'{point.percentage:.1f}%'
+                format: '{point.name}：'+'{point.percentage:.1f}%',
+                style:{
+                    fontSize:6,
+                }
             }
         }
     },

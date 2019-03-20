@@ -59,38 +59,38 @@
       /*display: none;*/
     }
     #main_pie{
-      position: absolute;
-      top:-11%;
-      right: 18%;
-      width: 15%;
-      height:46%;
+      /*position: absolute;*/
+      /*top:-11%;*/
+      /*right: 18%;*/
+      /*width: 15%;*/
+      /*height:46%;*/
       /*z-index: 999;*/
 
     }
     #main_pie_2{
-      position: absolute;
-      top:-6%;
-      right: 2%;
-      width: 15%;
-      height:40%;
+      /*position: absolute;*/
+      /*top:-6%;*/
+      /*right: 2%;*/
+      /*width: 15%;*/
+      /*height:40%;*/
       /*margin-right: -2%;*/
     }
     #main_pie_3{
-      width: 15%;
-      height:40%;
-      position: absolute;
-      top:25%;
-      right: 12%;
-      /*margin-right: -9%;*/
-      margin-top: 1%;
+      /*width: 15%;*/
+      /*height:40%;*/
+      /*position: absolute;*/
+      /*top:25%;*/
+      /*right: 12%;*/
+      /*!*margin-right: -9%;*!*/
+      /*margin-top: 1%;*/
 
     }
   </style>
 </head>
-<body style="overflow-x: hidden">
+<body style="overflow-x: hidden;border: #9d0006">
 
-<div class="map" id="container" style="margin-top: 38px;margin-left: 35px;height: 1165px;width: 1700px"></div>
-<div>
+<div class="map" id="container" style="margin-top: 10px;margin-left: 10px;height: 730px;width: 940px"></div>
+<div style="height: 100%;width: 100%">
   <%--<div id="main_gauge"></div>--%>
 
   <%--<div id="main_pie"></div>--%>
@@ -99,15 +99,15 @@
   <%--<div id='test' style='width:500px;height:200px;background:#00F;'>--%>
   <%--测试的div1--%>
   <%--</div>--%>
-  <div id='test' style='width:23%;height:30%;background:#fec418;position: relative;left: 95%;top:45px'>
+  <div id='test' style='width:26%;height:28%;background:#fec418;position: relative;left: 74%;top:10px'>
     <%--<p id="warnMessage" style="font-size: 15px;float: left">报警信息&nbsp;&nbsp;&nbsp;&nbsp;</p>--%>
-    <p id="warn_instant" style="font-size:25px;float: left;position:absolute;font-weight:bold;">实时报警：0</p>
-    <p id="warn_sum" style="font-size: 25px;font-weight:bold;float: left;position:absolute;top:60px" onclick="alertOldman()">累计报警：5</p>
-    <p id="oldId" style="font-size:25px;float: left;position:absolute;top: 125px;display: none">&nbsp;&nbsp;老人ID：</p>
-      <p id="oldName" style="font-size:25px;float: left;position:absolute;top: 125px">&nbsp;&nbsp;老人姓名：</p>
-      <p id="oldPhone" style="font-size:25px;float: left;position:absolute;top: 175px">&nbsp;&nbsp;老人电话：</p>
-      <p id="oldAddress" style="font-size:25px;float: left;position:absolute;top: 225px">&nbsp;&nbsp;老人地址：</p>
-      <input type="button" style="float: right;position: relative;top:-950px;font-size: 25px" value="确认" onclick="recover_info()" />
+    <p id="warn_instant" style="font-size:10px;float: left;position:absolute;font-weight:bold;">实时报警：0</p>
+    <p id="warn_sum" style="font-size: 10px;font-weight:bold;float: left;position:absolute;top:30px" onclick="alertOldman()">累计报警：5</p>
+    <p id="oldId" style="font-size:10px;float: left;position:absolute;top: 60px;display: none">&nbsp;&nbsp;老人ID：</p>
+      <p id="oldName" style="font-size:10px;float: left;position:absolute;top: 60px">&nbsp;&nbsp;老人姓名：</p>
+      <p id="oldPhone" style="font-size:10px;float: left;position:absolute;top: 90px">&nbsp;&nbsp;老人电话：</p>
+      <p id="oldAddress" style="font-size:10px;float: left;position:absolute;top: 120px">&nbsp;&nbsp;老人地址：</p>
+      <input type="button" style="float: right;position: relative;top:-600px;font-size: 10px" value="确认" onclick="recover_info()" />
 
 
     <%--<p id="oldId" style="font-size: 15px;clear: both;position:absolute;top:110px">老人ID：</p>--%>
@@ -117,19 +117,19 @@
 
   </div>
   <div id="main_bar" style='width:5%;height:150px;position: relative;bottom:25px;display: none'></div>
-  <div id="main_pie" style='width:15%;height:15%;position: relative;top:-820px;left:100%'></div>
-    <div id="main_pie2" style='width:15%;height:15%;position: relative;top:-800px;left:100%'></div>
-    <div id="main_pie3" style='width:15%;height:15%;position: relative;top:-790px;left:100%'></div>
+  <div id="main_pie" style='width:250px;height:100px;position: relative;top:10px;left:60px'></div>
+    <div id="main_pie2" style='width:250px;height:100px;position: relative;top:10px;left:60px'></div>
+    <div id="main_pie3" style='width:250px;height:100px;position: relative;top:10px;left:60px'></div>
 
     <%--测试的div2<br>--%>
     <%--<p id="greenNum" style="font-size: 20px">已接受服务老人数量：1</p>--%>
     <%--<p id="yellowNum" style="font-size: 20px">正在接受服务老人数量：0</p>--%>
     <%--<p id="redNum" style="font-size: 20px">未接受服务老人数量：1</p>--%>
     <%--<p id="allNum" style="font-size: 20px">老人总数：1</p>--%>
-    <div data-options="" style="height:28%;width:450px;position: absolute;left:94%;top:85%">
+    <div data-options="" style="height:23%;width:380px;position: absolute;left:73%;top:74%">
   <table id="datagrid2" class="easyui-datagrid"  style='position: relative;'fit="true" url="${path}/data/datagrid" title=""
            toolbar="#toolbar"
-           pagination="true"
+           pagination="false"
            fitColumns="true"
            singleSelect="true"
            rownumbers="true"

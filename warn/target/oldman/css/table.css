@@ -119,8 +119,8 @@ table.tableOldMan tbody tr:nth-child(even){
 
 .map{
     margin-left: 0em;
-    width:80%;
-    height: 100%;
+    width:60%;
+    height: 95%;
     text-align: left;
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
     float: left;
