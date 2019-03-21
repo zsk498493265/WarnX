@@ -106,7 +106,7 @@
         select
         old.oid,old.gatewayID,old.segment,old.oldName,old.oldPhone,old.oldAddress,old.oldRegtime,old.sex,old.age
         FROM oldman old
-        WHERE 1=1
+        WHERE is_map=1
         <if test="oldMan.oid != null and oldMan.oid != ''">
             and oid=#{oldMan.oid}
         </if>
