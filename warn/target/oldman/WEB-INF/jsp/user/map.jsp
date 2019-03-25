@@ -85,6 +85,12 @@
       /*margin-top: 1%;*/
 
     }
+    .datagrid-header-row{
+      background-color:orange;
+    }
+    .datagrid-td-rownumber{
+      background-color:orange;
+    }
   </style>
 </head>
 <body style="overflow-x: hidden;border: #9d0006">
@@ -99,7 +105,7 @@
   <%--<div id='test' style='width:500px;height:200px;background:#00F;'>--%>
   <%--测试的div1--%>
   <%--</div>--%>
-  <div id='test' style='width:26%;height:28%;background:#fec418;position: relative;left: 74%;top:10px'>
+  <div id='test' style='width:26%;height:28%;background:#EE9A00;position: relative;left: 74%;top:10px'>
     <%--<p id="warnMessage" style="font-size: 15px;float: left">报警信息&nbsp;&nbsp;&nbsp;&nbsp;</p>--%>
     <p id="warn_instant" style="font-size:15px;float: left;position:absolute;font-weight:bold;">实时报警：0</p>
     <p id="warn_sum" style="font-size: 15px;font-weight:bold;float: left;position:absolute;top:30px" onclick="alertOldman()">累计报警：5</p>
@@ -126,13 +132,13 @@
     <%--<p id="yellowNum" style="font-size: 20px">正在接受服务老人数量：0</p>--%>
     <%--<p id="redNum" style="font-size: 20px">未接受服务老人数量：1</p>--%>
     <%--<p id="allNum" style="font-size: 20px">老人总数：1</p>--%>
-    <div data-options="" style="height:23%;width:380px;position: absolute;left:73%;top:74%">
-  <table id="datagrid2" class="easyui-datagrid"  style='position: relative;'fit="true" url="${path}/data/datagrid" title=""
+    <div data-options="" style="height:23%;width:380px;position: absolute;left:73%;top:74%;background-color: orange">
+  <table id="datagrid2" class="easyui-datagrid"  style='position: relative;background-color: orange'fit="true" url="${path}/data/datagrid" title=""
            toolbar="#toolbar"
            pagination="false"
            fitColumns="true"
            singleSelect="true"
-           rownumbers="true"
+           rownumbers="false"
            striped="true"
            border="false"
            nowrap="false"
@@ -140,38 +146,12 @@
          pageSize="6"
          pagePosition="bottom">
       <thead>
-      <tr>
+      <tr  style="background-color: orange">
         <th data-options="field:'oldName',width:fixWidth(0.05),align:'center'" rowspan="2">姓名</th>
         <th data-options="field:'oldPhone',width:fixWidth(0.08),align:'center'" rowspan="2">电话</th>
         <th data-options="field:'oldAddress',width:fixWidth(0.11),align:'center'" rowspan="2">住址</th>
         <th data-options="field:'sex',width:fixWidth(0.05),align:'center'" rowspan="2">性别</th>
         <th data-options="field:'age',width:fixWidth(0.05),align:'center'" rowspan="2">年龄</th>
-      </tr>
-      <tr>
-        <th data-options="field:'rName',width:fixWidth(0.08),align:'center',
-      formatter: function(value,row,index){
-                if (row.relatives.rName){
-                    return row.relatives.rName;
-                } else {
-                    return '';
-                }
-           }"></th>
-        <th data-options="field:'rPhone',width:fixWidth(0.08),align:'center',
-      formatter: function(value,row,index){
-                if (row.relatives.rPhone){
-                    return row.relatives.rPhone;
-                } else {
-                    return '';
-                }
-           }"></th>
-        <th data-options="field:'rAddress',width:fixWidth(0.11),align:'center',
-      formatter: function(value,row,index){
-                if (row.relatives.rAddress){
-                    return row.relatives.rAddress;
-                } else {
-                    return '';
-                }
-           }"></th>
       </tr>
       </thead>
     </table>
@@ -179,7 +159,7 @@
 </div>
 <%--弹出信息框--%>
 <div id="dlg_addOldMan" class="easyui-dialog"
-     style="width:400px;height:200px;padding:10px 20px" closed="true"
+     style="width:400px;height:200px;padding:10px 20px;display: none;" closed="true"
      buttons="#dlg_addOldMan_buttons">
   <form id="addOldMan" method="post">
     <table>
@@ -213,7 +193,7 @@
   </form>
 </div>
 <div id="dlg_alertOldMan" class="easyui-dialog"
-     style="width:400px;height:400px;padding:10px 20px" closed="true"
+     style="width:400px;height:400px;padding:10px 20px;display: none;" closed="true"
      buttons="#dlg_addOldMan_buttons">
   <form id="alertOldMan" method="post">
     <table>
@@ -314,6 +294,15 @@
 
       $('#dlg_addOldMan').dialog('open').dialog('setTitle', '老人信息');
     }});
+  $('#datagrid2').datagrid({
+    rowStyler:function(index,row){
+      if (index%2==0){
+        return 'background-color:orange;';
+      }else{
+          return 'background-color:white;';
+      }
+    }
+  });
   function alertOldman(){
     $('#dlg_alertOldMan').dialog('open').dialog('setTitle', '老人报警信息');
   }
