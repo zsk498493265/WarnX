@@ -89,8 +89,9 @@
       background-color:orange;
     }
     .datagrid-td-rownumber{
-      background-color:orange;
+      background-color:white;
     }
+
   </style>
 </head>
 <body style="overflow-x: hidden;border: #9d0006">
@@ -133,123 +134,54 @@
     <%--<p id="redNum" style="font-size: 20px">未接受服务老人数量：1</p>--%>
     <%--<p id="allNum" style="font-size: 20px">老人总数：1</p>--%>
     <div data-options="" style="height:23%;width:380px;position: absolute;left:73%;top:74%;background-color: orange">
-  <table id="datagrid2" class="easyui-datagrid"  style='position: relative;background-color: orange'fit="true" url="${path}/data/datagrid" title=""
-           toolbar="#toolbar"
-           pagination="false"
-           fitColumns="true"
-           singleSelect="true"
-           rownumbers="false"
-           striped="true"
-           border="false"
-           nowrap="false"
-           pageList="[6]"
-         pageSize="6"
-         pagePosition="bottom">
-      <thead>
-      <tr  style="background-color: orange">
-        <th data-options="field:'oldName',width:fixWidth(0.05),align:'center'" rowspan="2">姓名</th>
-        <th data-options="field:'oldPhone',width:fixWidth(0.08),align:'center'" rowspan="2">电话</th>
-        <th data-options="field:'oldAddress',width:fixWidth(0.11),align:'center'" rowspan="2">住址</th>
-        <th data-options="field:'sex',width:fixWidth(0.05),align:'center'" rowspan="2">性别</th>
-        <th data-options="field:'age',width:fixWidth(0.05),align:'center'" rowspan="2">年龄</th>
-      </tr>
-      </thead>
-    </table>
+      <table id="datagrid2" class="easyui-datagrid"  style='width:200px;height:150px;background-color: orange'fit="true" url="${path}/data/datagrid" title=""
+             toolbar="#toolbar"
+             pagination="true"
+             fitColumns="true"
+             singleSelect="true"
+             rownumbers="false"
+             striped="true"
+             border="false"
+             nowrap="false">
+        <thead>
+        <tr>
+          <th data-options="field:'oldName',width:fixWidth(0.05),align:'center'" rowspan="2">姓名</th>
+          <th data-options="field:'oldPhone',width:fixWidth(0.08),align:'center'" rowspan="2">电话</th>
+          <th data-options="field:'oldAddress',width:fixWidth(0.11),align:'center'" rowspan="2">住址</th>
+          <th data-options="field:'sex',width:fixWidth(0.05),align:'center'" rowspan="2">性别</th>
+          <th data-options="field:'age',width:fixWidth(0.05),align:'center'" rowspan="2">年龄</th>
+        </tr>
+        <tr hidden="true">
+          <th data-options="field:'rName',width:fixWidth(0.08),align:'center',hidden:'true',
+      formatter: function(value,row,index){
+                if (row.relatives.rName){
+                    return row.relatives.rName;
+                } else {
+                    return '';
+                }
+           }"></th>
+          <th data-options="field:'rPhone',width:fixWidth(0.08),align:'center',hidden:'true',
+      formatter: function(value,row,index){
+                if (row.relatives.rPhone){
+                    return row.relatives.rPhone;
+                } else {
+                    return '';
+                }
+           }"></th>
+          <th data-options="field:'rAddress',width:fixWidth(0.11),align:'center',hidden:'true',
+      formatter: function(value,row,index){
+                if (row.relatives.rAddress){
+                    return row.relatives.rAddress;
+                } else {
+                    return '';
+                }
+           }"></th>
+        </tr>
+        </thead>
+      </table>
     </div>
 </div>
 <%--弹出信息框--%>
-<div id="dlg_addOldMan" class="easyui-dialog"
-     style="width:400px;height:200px;padding:10px 20px;display: none;" closed="true"
-     buttons="#dlg_addOldMan_buttons">
-  <form id="addOldMan" method="post">
-    <table>
-      <tr>
-        <td><span class="addButton"></span></td>
-      </tr>
-      <tr>
-        <p id="info_name">姓名:</p>
-      </tr>
-      <tr>
-        <p id="info_sex">性别:</p>
-      </tr>
-      <tr>
-        <p id="info_age">年龄:</p>
-      </tr>
-      <tr>
-        <%--<td><span class="addButton">电话：</span></td>--%>
-        <p id="info_phone">电话:</p>
-      </tr>
-      <tr>
-        <p id="info_address">住址:</p>
-      </tr>
-      <tr>
-        <p id="info_regTime">注册时间:</p>
-      </tr>
-      <tr>
-        <p id="info_warn">报警次数:</p>
-      </tr>
-    </table>
-    <input type="hidden" name="oid"/>
-  </form>
-</div>
-<div id="dlg_alertOldMan" class="easyui-dialog"
-     style="width:400px;height:400px;padding:10px 20px;display: none;" closed="true"
-     buttons="#dlg_addOldMan_buttons">
-  <form id="alertOldMan" method="post">
-    <table>
-      <tr>
-        <td><span class="addButton">老人报警信息</span></td>
-      </tr>
-      <tr>
-        <td><span class="addButton">姓名：老人1</span></td>
-        <%--<p style="font-size: 20px">姓名：老人1</p>--%>
-      </tr>
-      <tr>
-        <td><span class="addButton">电话：</span></td>
-      </tr>
-      <tr>
-        <td><span class="addButton">住址：</span></td>
-      </tr>
-      <tr>
-        <td><span class="addButton">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td>
-      </tr>
-      <tr>
-        <td><span class="addButton">姓名：老人2</span></td>
-      </tr>
-      <tr>
-        <td><span class="addButton">电话：</span></td>
-      </tr>
-      <tr>
-        <td><span class="addButton">住址：</span></td>
-      </tr>
-      <tr>
-        <td><span class="addButton">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td>
-      </tr>
-      <tr>
-        <td><span class="addButton">姓名：老人3</span></td>
-      </tr>
-      <tr>
-        <td><span class="addButton">电话：</span></td>
-      </tr>
-      <tr>
-        <td><span class="addButton">住址：</span></td>
-      </tr>
-      <tr>
-        <td><span class="addButton">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td>
-      </tr>
-      <tr>
-        <td><span class="addButton">姓名：老人4</span></td>
-      </tr>
-      <tr>
-        <td><span class="addButton">电话：</span></td>
-      </tr>
-      <tr>
-        <td><span class="addButton">住址：</span></td>
-      </tr>
-    </table>
-    <input type="hidden" name="oid"/>
-  </form>
-</div>
 
 <%--<div id="divAdd">--%>
   <%--&lt;%&ndash;<input type="button" class="btn" value="选择标注样式" onclick="openStylePnl()" />&ndash;%&gt;--%>
@@ -280,20 +212,18 @@
 <%--</div>--%>
 </body>
 <script type="text/javascript">
-  $("#datagrid2").datagrid({onClickRow : function(index, row){
-
-    //alert(row["oldName"]);
-    //   document.getElementById("info_id").innerText ="ID:"+row["oid"];
-      document.getElementById("info_name").innerText ="姓名:"+row["oldName"];
-      document.getElementById("info_phone").innerText ="电话:"+row["oldPhone"];
-      document.getElementById("info_address").innerText ="地址:"+row["oldAddress"];
-      document.getElementById("info_sex").innerText ="性别:"+row["sex"];
-      document.getElementById("info_age").innerText ="年龄:"+row["age"];
-      document.getElementById("info_regTime").innerText ="注册时间:"+row["oldRegtime"];
-      document.getElementById("info_warn").innerText ="报警次数:1次";
-
-      $('#dlg_addOldMan').dialog('open').dialog('setTitle', '老人信息');
-    }});
+  // $("#datagrid2").datagrid({onClickRow : function(index, row){
+  //   //alert(row["oldName"]);
+  //     document.getElementById("info_name").innerText ="姓名:"+row["oldName"];
+  //     document.getElementById("info_phone").innerText ="电话:"+row["oldPhone"];
+  //     document.getElementById("info_address").innerText ="地址:"+row["oldAddress"];
+  //     document.getElementById("info_sex").innerText ="性别:"+row["sex"];
+  //     document.getElementById("info_age").innerText ="年龄:"+row["age"];
+  //     document.getElementById("info_regTime").innerText ="注册时间:"+row["oldRegtime"];
+  //     document.getElementById("info_warn").innerText ="报警次数:1次";
+  //
+  //     $('#dlg_addOldMan').dialog('open').dialog('setTitle', '老人信息');
+  //   }});
   $('#datagrid2').datagrid({
     rowStyler:function(index,row){
       if (index%2==0){
@@ -303,9 +233,9 @@
       }
     }
   });
-  function alertOldman(){
-    $('#dlg_alertOldMan').dialog('open').dialog('setTitle', '老人报警信息');
-  }
+  // function alertOldman(){
+  //   $('#dlg_alertOldMan').dialog('open').dialog('setTitle', '老人报警信息');
+  // }
   function recover_info(){
     document.getElementById("oldId").innerText ="老人ID:";
     document.getElementById("oldName").innerText ="老人姓名:";

@@ -45,7 +45,7 @@
                 /是web项目的根目录
                 exclude-mapping 不拦截的url
             -->
-            <mvc:mapping path="/data/*" />
+            <!--<mvc:mapping path="/data/*" />-->
             <mvc:mapping path="/equip/*" />
             <mvc:mapping path="/log/*" />
             <mvc:mapping path="/menu/*" />

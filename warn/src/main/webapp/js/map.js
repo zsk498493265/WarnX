@@ -384,6 +384,7 @@ var greenNum=0,redNum=0,yellowNum=0;
 //     }
 // });
 // //!!!
+var sum=0;
 $.ajax({
     type: "GET",
     url: "/map/getLouMarkersAndOlds",
@@ -393,6 +394,7 @@ $.ajax({
 
         for (var i = 0; i < data.data.length; i++) {
             for (var j = 0; j < data.data[i].oldMan.length; j++) {
+                sum++;
                 if (data.data[i].oldMan[j].status == 0)
                     greenNum++;
                 else if (data.data[i].oldMan[j].status == 1)
@@ -454,7 +456,7 @@ $.ajax({
                 {
                     type:'bar',
                     barWidth: '20%',
-                    data:[allNum,greenNum, yellowNum,redNum]
+                    data:[40,greenNum, yellowNum,redNum]
                 }
             ]
         };
@@ -1529,7 +1531,7 @@ function divInit() {
             {
                 type:'bar',
                 barWidth: '20%',
-                data:[allNum,greenNum, yellowNum,redNum]
+                data:[40,greenNum, yellowNum,redNum]
             }
         ]
     };
@@ -1880,7 +1882,7 @@ $('#main_pie').highcharts({
         type: 'pie',
         name: '人数占比',
         data: [
-            ['参加居家养老老人总数',43],
+            ['参加居家养老老人总数',sum],
             ['街道老人总数',1200]
         ],
         center:["50%","18%"]
@@ -1931,7 +1933,7 @@ $('#main_pie2').highcharts({
         name: '人数占比',
         data: [
             ['正在被服务老人总数',yellowNum],
-            ['参加居家养老老人总数',50]
+            ['参加居家养老老人总数',sum]
         ],
         center:["50%","18%"]
     }]
@@ -1982,7 +1984,7 @@ $('#main_pie3').highcharts({
         data: [
             ['安装关怀设备老人总数',43],
             ['安装摄像头',37],
-            ['居家养老总人数',49]
+            ['居家养老总人数',sum]
         ],
         center:["50%","18%"]
     }]
