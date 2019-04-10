@@ -106,15 +106,15 @@
   <%--<div id='test' style='width:500px;height:200px;background:#00F;'>--%>
   <%--测试的div1--%>
   <%--</div>--%>
-  <div id='test' style='width:26%;height:28%;background:#EE9A00;position: relative;left: 74%;top:10px'>
+  <div id='test' style='width:28%;height:28%;background:#EE9A00;position: relative;left: 74%;top:10px'>
     <%--<p id="warnMessage" style="font-size: 15px;float: left">报警信息&nbsp;&nbsp;&nbsp;&nbsp;</p>--%>
-    <p id="warn_instant" style="font-size:15px;float: left;position:absolute;font-weight:bold;">实时报警：0</p>
-    <p id="warn_sum" style="font-size: 15px;font-weight:bold;float: left;position:absolute;top:30px" onclick="alertOldman()">累计报警：5</p>
-    <p id="oldId" style="font-size:15px;float: left;position:absolute;top: 60px;display: none">&nbsp;&nbsp;老人ID：</p>
-      <p id="oldName" style="font-size:15px;float: left;position:absolute;top: 60px">&nbsp;&nbsp;老人姓名：</p>
-      <p id="oldPhone" style="font-size:15px;float: left;position:absolute;top: 90px">&nbsp;&nbsp;老人电话：</p>
-      <p id="oldAddress" style="font-size:15px;float: left;position:absolute;top: 120px">&nbsp;&nbsp;老人地址：</p>
-      <input type="button" style="float: right;position: relative;top:-600px;font-size: 10px" value="确认" onclick="recover_info()" />
+    <p id="warn_instant" style="font-size:18px;float: left;position:absolute;font-weight:bold;">&nbsp;实时报警：0</p>
+    <p id="warn_sum" style="font-size: 18px;font-weight:bold;float: left;position:absolute;top:30px" onclick="alertOldman()">&nbsp;累计报警：5</p>
+    <p id="oldId" style="font-size:18px;float: left;position:absolute;top: 60px;display: none">&nbsp;&nbsp;老人ID：</p>
+      <p id="oldName" style="font-size:18px;float: left;position:absolute;top: 60px">&nbsp;&nbsp;老人姓名：</p>
+      <p id="oldPhone" style="font-size:18px;float: left;position:absolute;top: 90px">&nbsp;&nbsp;老人电话：</p>
+      <p id="oldAddress" style="font-size:18px;float: left;position:absolute;top: 120px">&nbsp;&nbsp;老人地址：</p>
+      <input type="button" style="float: right;position: relative;top:-600px;font-size: 10px;display: none" value="确认" onclick="recover_info()" />
 
 
     <%--<p id="oldId" style="font-size: 15px;clear: both;position:absolute;top:110px">老人ID：</p>--%>
@@ -124,25 +124,28 @@
 
   </div>
   <div id="main_bar" style='width:5%;height:150px;position: relative;bottom:25px;display: none'></div>
-  <div id="main_pie" style='width:250px;height:100px;position: relative;top:10px;left:60px'></div>
-    <div id="main_pie2" style='width:250px;height:100px;position: relative;top:10px;left:60px'></div>
-    <div id="main_pie3" style='width:250px;height:100px;position: relative;top:10px;left:60px'></div>
+  <div id="main_pie" style='width:350px;height:100px;position: relative;top:10px;left:20px'></div>
+    <div id="main_pie2" style='width:350px;height:100px;position: relative;top:10px;left:20px'></div>
+    <div id="main_pie3" style='width:350px;height:100px;position: relative;top:10px;left:20px'></div>
 
     <%--测试的div2<br>--%>
     <%--<p id="greenNum" style="font-size: 20px">已接受服务老人数量：1</p>--%>
     <%--<p id="yellowNum" style="font-size: 20px">正在接受服务老人数量：0</p>--%>
     <%--<p id="redNum" style="font-size: 20px">未接受服务老人数量：1</p>--%>
     <%--<p id="allNum" style="font-size: 20px">老人总数：1</p>--%>
-    <div data-options="" style="height:23%;width:380px;position: absolute;left:73%;top:74%;background-color: orange">
+    <div data-options="" style="height:26%;width:380px;position: absolute;left:73%;top:72%;background-color: orange">
       <table id="datagrid2" class="easyui-datagrid"  style='width:200px;height:150px;background-color: orange'fit="true" url="${path}/data/datagrid" title=""
              toolbar="#toolbar"
-             pagination="true"
+             pagination="false"
              fitColumns="true"
              singleSelect="true"
              rownumbers="false"
              striped="true"
              border="false"
-             nowrap="false">
+             nowrap="false"
+             pageList="[6]"
+             pageSize="6"
+             pagePosition="bottom">
         <thead>
         <tr>
           <th data-options="field:'oldName',width:fixWidth(0.05),align:'center'" rowspan="2">姓名</th>
@@ -226,7 +229,7 @@
   //   }});
   $('#datagrid2').datagrid({
     rowStyler:function(index,row){
-      if (index%2==0){
+      if (index%2==1){
         return 'background-color:orange;';
       }else{
           return 'background-color:white;';

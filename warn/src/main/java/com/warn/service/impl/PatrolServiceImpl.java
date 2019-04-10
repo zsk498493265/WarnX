@@ -18,10 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
+import java.net.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -61,7 +58,7 @@ public class PatrolServiceImpl implements PatrolService {
             Long endTime = sdf.parse(night).getTime();
             String content = "startTime="+URLEncoder.encode(startTime.toString(),"UTF-8");
             content+= "&endTime="+URLEncoder.encode(endTime.toString(),"UTF-8");
-            content+= "&limit="+URLEncoder.encode("100","UTF-8");
+            content+="&limit="+URLEncoder.encode("100","UTF-8");
             httpUrlConnection.setDoOutput(true);
             httpUrlConnection.setDoInput(true);
             httpUrlConnection.setRequestMethod("POST");
@@ -97,6 +94,25 @@ public class PatrolServiceImpl implements PatrolService {
         JSONObject object = JSONObject.fromObject(response);
         JSONArray json = object.getJSONArray("rows");
         Patrol patrol1 = patrolDao.getLatestRecord();
+        List<Patrol> patrols = new ArrayList<>();
+        for(int i=0;i<json.size();i++){
+            Patrol patrol = new Patrol();
+            patrol.setWorker(json.getJSONObject(i).getString("patrolmanId"));
+            patrol.setTime(Const.longToDate(new Long(json.getJSONObject(i).getString("createTime"))));
+            JSONObject jsonObject =(JSONObject) json.getJSONObject(i).get("checkpoint");
+            patrol.setPoint(jsonObject.get("name").toString());
+            patrol.setCardNo(jsonObject.get("card").toString());
+            JSONObject jsonObject1 = (JSONObject) json.getJSONObject(i).get("device");
+            patrol.setMachineName(jsonObject1.getString("name"));
+            patrol.setMachineNo(jsonObject1.getString("code"));
+            patrols.add(patrol);
+        }
+        Collections.sort(patrols, new Comparator<Patrol>() {
+            @Override
+            public int compare(Patrol o1, Patrol o2) {
+                return o1.getTime().compareTo(o2.getTime());
+            }
+        });
         int key = 1;
         if(patrol1 == null)
             for(int i=0;i<json.size();i++){
@@ -113,25 +129,15 @@ public class PatrolServiceImpl implements PatrolService {
             }
         else
             for(int i=0;i<json.size();i++){
-                Patrol patrol = new Patrol();
-                Long time = new Long(json.getJSONObject(i).getString("createTime"));
+                Long time = sdf.parse(patrols.get(i).getTime()).getTime();
                 Long ptime  = sdf.parse(patrol1.getTime()).getTime();
                 if(ptime < time)
                     key = 0;
                 if(key == 0)
-                {
-                    patrol.setWorker(json.getJSONObject(i).getString("patrolmanId"));
-                    patrol.setTime(Const.longToDate(new Long(json.getJSONObject(i).getString("createTime"))));
-                    JSONObject jsonObject = (JSONObject) json.getJSONObject(i).get("checkpoint");
-                    patrol.setPoint(jsonObject.get("name").toString());
-                    patrol.setCardNo(jsonObject.get("card").toString());
-                    JSONObject jsonObject1 = (JSONObject) json.getJSONObject(i).get("device");
-                    patrol.setMachineName(jsonObject1.getString("name"));
-                    patrol.setMachineNo(jsonObject1.getString("code"));
-                    patrolDao.addPatrolRecords(patrol);
-                }
-            }
+                    patrolDao.addPatrolRecords(patrols.get(i));
 
+            }
+            patrolDao.deleteDuplicate();
 
     }
 

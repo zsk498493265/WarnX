@@ -22,5 +22,7 @@ public interface PatrolDao {
 
     Integer getOidByPoint(Integer point);
 
+    void deleteDuplicate();
+
 
 }

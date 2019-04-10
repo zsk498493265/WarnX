@@ -33,6 +33,15 @@ public class OldMan {
     private String camera;
 
     private String sex;
+    private Integer isMap;
+
+    public Integer getIsMap() {
+        return isMap;
+    }
+
+    public void setIsMap(Integer isMap) {
+        this.isMap = isMap;
+    }
 
     public String getSex() {
         return sex;

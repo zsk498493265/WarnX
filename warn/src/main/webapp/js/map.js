@@ -394,6 +394,7 @@ $.ajax({
 
         for (var i = 0; i < data.data.length; i++) {
             for (var j = 0; j < data.data[i].oldMan.length; j++) {
+                if(data.data[i].oldMan[j].isMap)
                 sum++;
                 if (data.data[i].oldMan[j].status == 0)
                     greenNum++;
@@ -456,7 +457,7 @@ $.ajax({
                 {
                     type:'bar',
                     barWidth: '20%',
-                    data:[40,greenNum, yellowNum,redNum]
+                    data:[greenNum+yellowNum+redNum,greenNum, yellowNum,redNum]
                 }
             ]
         };
@@ -874,7 +875,7 @@ function getWorkerMarkers() {
             for(var i=0;i<data.data.length;i++) {
                 var icon = BMapLib.MarkerTool.SYS_ICONS[6];
                 var json={icon:{w:21,h:21,l:0,t:0,x:6,lb:5}};
-                var icon = new BMap.Icon("http://i1.bvimg.com/647748/f79715aed233ae84.png", new BMap.Size(60,30),{imageOffset: new BMap.Size(0,0),infoWindowOffset:new BMap.Size(json.lb+5,1),offset:new BMap.Size(0,0)});
+                var icon = new BMap.Icon("http://i2.bvimg.com/647748/f79715aed233ae84.png", new BMap.Size(60,30),{imageOffset: new BMap.Size(0,0),infoWindowOffset:new BMap.Size(json.lb+5,1),offset:new BMap.Size(0,0)});
 
                 var point = new BMap.Point(data.data[i].cx, data.data[i].cy);
                 var marker = new BMap.Marker(point, {icon: icon});
@@ -910,7 +911,7 @@ function getWorkerMarkers() {
                                 strokeStyle : "dashed"});
                             map.addOverlay(path);
                             //console.log(path);
-                            var icon = new BMap.Icon("http://i1.bvimg.com/647748/f79715aed233ae84.png", new BMap.Size(60,30),{imageOffset: new BMap.Size(0,0),infoWindowOffset:new BMap.Size(json.lb+5,1),offset:new BMap.Size(0,0)});
+                            var icon = new BMap.Icon("http://i2.bvimg.com/647748/f79715aed233ae84.png", new BMap.Size(60,30),{imageOffset: new BMap.Size(0,0),infoWindowOffset:new BMap.Size(json.lb+5,1),offset:new BMap.Size(0,0)});
                             var point = new BMap.Point(data1.data[data1.data.length-1].cx, data1.data[data1.data.length-1].cy);
                             var marker = new BMap.Marker(point, {icon: icon});
                             // marker.setTitle(data1.data[data1.data.length-1].time);
@@ -1813,7 +1814,7 @@ function tuChange(id,type,qid) {
             pie: {
                 allowPointSelect: true,
                 cursor: 'pointer',
-                depth: 35,
+                depth: 30,
                 dataLabels: {
                     enabled: true,
                     format: '{point.name}：'+'{point.percentage:.1f}%'
@@ -1858,7 +1859,8 @@ $('#main_pie').highcharts({
     title: {
         text:"参加居家养老老人比例",
         style:{
-            fontSize:10,
+            fontSize:12,
+            fontWeight:'bold',
         },
     },
     tooltip: {
@@ -1868,14 +1870,15 @@ $('#main_pie').highcharts({
         pie: {
             allowPointSelect: true,
             cursor: 'pointer',
-            depth: 35,
+            depth: 30,
             dataLabels: {
                 enabled: true,
                 format: '{point.name}：'+'{point.percentage:.1f}%',
                 style:{
-                    fontSize:6,
+                    fontSize:9,
                 }
-            }
+            },
+            size:45
         }
     },
     series: [{
@@ -1908,7 +1911,8 @@ $('#main_pie2').highcharts({
     title: {
         text:"正在被服务老人比例",
         style:{
-            fontSize:10,
+            fontSize:12,
+            fontWeight:'bold',
         },
     },
     tooltip: {
@@ -1918,14 +1922,15 @@ $('#main_pie2').highcharts({
         pie: {
             allowPointSelect: true,
             cursor: 'pointer',
-            depth: 35,
+            depth: 30,
             dataLabels: {
                 enabled: true,
                 format: '{point.name}：'+'{point.percentage:.1f}%',
                 style:{
-                    fontSize:6,
+                    fontSize:9,
                 }
-            }
+            },
+            size:45
         }
     },
     series: [{
@@ -1956,9 +1961,10 @@ $('#main_pie3').highcharts({
         enabled: false
     },
     title: {
-        text:"安装关怀设备老人总数、安装摄像头老人总数比例",
+        text:"安装关怀设备老人数、安装摄像头老人数比例",
         style:{
-            fontSize:10,
+            fontSize:12,
+            fontWeight:'bold',
         },
     },
     tooltip: {
@@ -1968,22 +1974,23 @@ $('#main_pie3').highcharts({
         pie: {
             allowPointSelect: true,
             cursor: 'pointer',
-            depth: 35,
+            depth: 30,
             dataLabels: {
                 enabled: true,
                 format: '{point.name}：'+'{point.percentage:.1f}%',
                 style:{
-                    fontSize:6,
+                    fontSize:9,
                 }
-            }
+            },
+            size:45
         }
     },
     series: [{
         type: 'pie',
         name: '人数占比',
         data: [
-            ['安装关怀设备老人总数',43],
-            ['安装摄像头',37],
+            ['安装关怀设备数',6],
+            ['安装摄像头',4],
             ['居家养老总人数',sum]
         ],
         center:["50%","18%"]

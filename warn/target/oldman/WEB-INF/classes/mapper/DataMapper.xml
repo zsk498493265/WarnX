@@ -16,6 +16,7 @@
         <result property="oldPwd" column="oldPwd"/>
         <result property="sex" column="sex"/>
         <result property="age" column="age"/>
+        <result property="isMap" column="is_map"/>
         <association property="relatives" javaType="com.warn.entity.Relatives">
             <id property="relid" column="relid"/>
             <result property="rName" column="rName"/>
@@ -96,7 +97,7 @@
 
     <select id="datagridMap" resultType="com.warn.entity.OldMan">
         SELECT
-        oid,oldName,oldQQ,oldPwd,status,family_service,care_system,camera
+        oid,oldName,oldQQ,oldPwd,status,family_service,care_system,camera,is_map
         from oldman
         where louID = #{id}
     </select>

@@ -37,4 +37,15 @@
     <select id="getOidByPoint" resultType="java.lang.Integer">
         select old_id from point_to_oldman where point = #{point}
     </select>
+
+    <delete id="deleteDuplicate" >
+        DELETE from xun_geng where id not in(
+        select dt.minno
+        from(
+             select MIN(id) as minno
+             FROM  xun_geng
+             group by point,time
+        )dt
+        )
+    </delete>
 </mapper>
