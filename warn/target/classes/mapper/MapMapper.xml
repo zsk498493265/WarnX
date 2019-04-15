@@ -213,14 +213,14 @@
 --     FROM worker x
 --     WHERE time in (SELECT max(time) FROM worker)
 SELECT id, cx, cy, time, taskid, name, qq, phone
-    FROM worker x
-    WHERE time = (SELECT max(time) FROM worker y WHERE x.id=y.id)
+    FROM worker_show x
+    WHERE time = (SELECT max(time) FROM worker_show y WHERE x.id=y.id)
     </select>
 
     <select id="getWorkerPosition" resultType="com.warn.entity.WorkerMarker">
         SELECT id, cx, cy, time, taskid, name, qq, phone
-        FROM worker x
-        WHERE id = #{id} AND taskid = (SELECT max(taskid) FROM worker y WHERE x.id=y.id)
+        FROM worker_show x
+        WHERE id = #{id} AND taskid = (SELECT max(taskid) FROM worker_show y WHERE x.id=y.id)
         ORDER BY time
     </select>
 </mapper>

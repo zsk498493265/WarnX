@@ -306,7 +306,7 @@ function addWarnIcon(id) {
                 for(var j=0;j<dataR[i].oldMan.length;j++){
                     if(dataR[i].oldMan[j].oid==1){
                         var json={icon:{w:21,h:21,l:0,t:0,x:6,lb:5}};
-                        var icon = new BMap.Icon("http://i1.bvimg.com/647748/aef36cd98ed16a9d.png", new BMap.Size(128,128),{imageOffset: new BMap.Size(0,0),infoWindowOffset:new BMap.Size(json.lb+5,1),offset:new BMap.Size(0,0)});
+                        var icon = new BMap.Icon("https://organold.oss-cn-shanghai.aliyuncs.com/img/warnS.png", new BMap.Size(128,128),{imageOffset: new BMap.Size(0,0),infoWindowOffset:new BMap.Size(json.lb+5,1),offset:new BMap.Size(0,0)});
                         var point = new BMap.Point(dataR[i].xR, dataR[i].yR);
                         marker= new BMap.Marker(point, {icon: icon});
                         marker.setTitle(dataR[i].info);
@@ -875,7 +875,7 @@ function getWorkerMarkers() {
             for(var i=0;i<data.data.length;i++) {
                 var icon = BMapLib.MarkerTool.SYS_ICONS[6];
                 var json={icon:{w:21,h:21,l:0,t:0,x:6,lb:5}};
-                var icon = new BMap.Icon("http://i2.bvimg.com/647748/f79715aed233ae84.png", new BMap.Size(60,30),{imageOffset: new BMap.Size(0,0),infoWindowOffset:new BMap.Size(json.lb+5,1),offset:new BMap.Size(0,0)});
+                var icon = new BMap.Icon("https://organold.oss-cn-shanghai.aliyuncs.com/img/ss.png", new BMap.Size(60,30),{imageOffset: new BMap.Size(0,0),infoWindowOffset:new BMap.Size(json.lb+5,1),offset:new BMap.Size(0,0)});
 
                 var point = new BMap.Point(data.data[i].cx, data.data[i].cy);
                 var marker = new BMap.Marker(point, {icon: icon});
@@ -911,7 +911,7 @@ function getWorkerMarkers() {
                                 strokeStyle : "dashed"});
                             map.addOverlay(path);
                             //console.log(path);
-                            var icon = new BMap.Icon("http://i2.bvimg.com/647748/f79715aed233ae84.png", new BMap.Size(60,30),{imageOffset: new BMap.Size(0,0),infoWindowOffset:new BMap.Size(json.lb+5,1),offset:new BMap.Size(0,0)});
+                            var icon = new BMap.Icon("https://organold.oss-cn-shanghai.aliyuncs.com/img/ss.png", new BMap.Size(60,30),{imageOffset: new BMap.Size(0,0),infoWindowOffset:new BMap.Size(json.lb+5,1),offset:new BMap.Size(0,0)});
                             var point = new BMap.Point(data1.data[data1.data.length-1].cx, data1.data[data1.data.length-1].cy);
                             var marker = new BMap.Marker(point, {icon: icon});
                             // marker.setTitle(data1.data[data1.data.length-1].time);
@@ -1167,7 +1167,7 @@ function getLouMarkers() {
                 //newPoint
                 var icon2 = BMapLib.MarkerTool.SYS_ICONS[8];
                 var icon3 = BMapLib.MarkerTool.SYS_ICONS[9];
-                var iconC = new BMap.Icon("http://i2.bvimg.com/647748/4a599d66c85a5d0a.jpg", new BMap.Size(30,30),{imageOffset: new BMap.Size(0,0),infoWindowOffset:new BMap.Size(json.lb+5,1)});
+                var iconC = new BMap.Icon("https://organold.oss-cn-shanghai.aliyuncs.com/img/camera15.jpg", new BMap.Size(30,30),{imageOffset: new BMap.Size(0,0),infoWindowOffset:new BMap.Size(json.lb+5,1)});
 
                 var point2 = new BMap.Point(data.data[i].xR, data.data[i].yR);
                 var point3 = new BMap.Point(data.data[i].xY, data.data[i].yY);
