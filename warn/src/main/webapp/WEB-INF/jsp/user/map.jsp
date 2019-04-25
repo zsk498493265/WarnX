@@ -108,8 +108,8 @@
   <%--</div>--%>
   <div id='test' style='width:28%;height:28%;background:#EE9A00;position: relative;left: 74%;top:10px'>
     <%--<p id="warnMessage" style="font-size: 15px;float: left">报警信息&nbsp;&nbsp;&nbsp;&nbsp;</p>--%>
-    <p id="warn_instant" style="font-size:18px;float: left;position:absolute;font-weight:bold;">&nbsp;实时报警：0</p>
-    <p id="warn_sum" style="font-size: 18px;font-weight:bold;float: left;position:absolute;top:30px" onclick="alertOldman()">&nbsp;累计报警：5</p>
+    <p id="warn_instant" style="font-size:18px;float: left;position:absolute;font-weight:bold;">&nbsp;实时报警:0</p>
+    <p id="warn_sum" style="font-size: 18px;font-weight:bold;float: left;position:absolute;top:30px" onclick="">&nbsp;累计报警:5</p>
     <p id="oldId" style="font-size:18px;float: left;position:absolute;top: 60px;display: none">&nbsp;&nbsp;老人ID：</p>
       <p id="oldName" style="font-size:18px;float: left;position:absolute;top: 60px">&nbsp;&nbsp;老人姓名：</p>
       <p id="oldPhone" style="font-size:18px;float: left;position:absolute;top: 90px">&nbsp;&nbsp;老人电话：</p>

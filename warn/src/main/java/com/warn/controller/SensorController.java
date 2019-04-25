@@ -238,7 +238,7 @@ public class SensorController {
     @ResponseBody
     @RequestMapping(value = "/sensorUrgency",method = RequestMethod.GET)
     public Result sensorUrgency(Equipment equip,Integer oid){
-        SystemController.logger.info("紧急报警： 网关id："+oid+"  设备id："+equip.getEid());
+       // SystemController.logger.info("紧急报警： 网关id："+oid+"  设备id："+equip.getEid());
         try {
             sensorService.urgency(equip,oid);
             return new Result(true);

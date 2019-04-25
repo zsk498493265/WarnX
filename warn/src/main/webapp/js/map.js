@@ -67,11 +67,12 @@ function warn2(data){
     //累计报警数
     //setCookie("warn_sum",getCookie("warn_sum")+1,1800*1000);
     //alert(getCookie("warn_sum"));
-    alert(parseInt(document.getElementById("warn_sum").innerText.split(":")[1]));
+    alert(document.getElementById("warn_sum").innerText);
+    //alert(parseInt(document.getElementById("warn_sum").innerText.split(":")[1]));
     document.getElementById("warn_instant").innerText ="实时报警:1";
     var num_curr=parseInt(document.getElementById("warn_sum").innerText.split(":")[1]);
     num_curr++;
-    document.getElementById("warn_sum").innerText ="累计报警:"+num_curr;
+    //document.getElementById("warn_sum").innerText ="累计报警:"+num_curr;
     setCookie("warn_sum",num_curr.toString(),1800*1000);
     if(data.type=="urgency"){
         var wdid=data.id;
@@ -304,7 +305,7 @@ function addWarnIcon(id) {
             for(var i=0;i<data.data.length;i++) {
                 var dataR=data.data;
                 for(var j=0;j<dataR[i].oldMan.length;j++){
-                    if(dataR[i].oldMan[j].oid==1){
+                    if(dataR[i].oldMan[j].oid==id){
                         var json={icon:{w:21,h:21,l:0,t:0,x:6,lb:5}};
                         var icon = new BMap.Icon("https://organold.oss-cn-shanghai.aliyuncs.com/img/warnS.png", new BMap.Size(128,128),{imageOffset: new BMap.Size(0,0),infoWindowOffset:new BMap.Size(json.lb+5,1),offset:new BMap.Size(0,0)});
                         var point = new BMap.Point(dataR[i].xR, dataR[i].yR);
