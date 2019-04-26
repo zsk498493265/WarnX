@@ -57,7 +57,9 @@ $.ajax({
 });
 // 报警cookie
 if(getCookie("warn_sum")!="")
-document.getElementById("warn_sum").innerText ="累计报警:"+getCookie("warn_sum");
+//document.getElementById("warn_sum").innerText ="累计报警:"+getCookie("warn_sum");
+
+
 //setCookie("warn_sum",(parseInt(getCookie("warn_sum"))+1).toString(),1800*1000);
 // alert(getCookie("warn_sum"));
 
@@ -67,12 +69,12 @@ function warn2(data){
     //累计报警数
     //setCookie("warn_sum",getCookie("warn_sum")+1,1800*1000);
     //alert(getCookie("warn_sum"));
-    alert(document.getElementById("warn_sum").innerText);
+    //alert(document.getElementById("warn_sum").innerText);
     //alert(parseInt(document.getElementById("warn_sum").innerText.split(":")[1]));
     document.getElementById("warn_instant").innerText ="实时报警:1";
     var num_curr=parseInt(document.getElementById("warn_sum").innerText.split(":")[1]);
     num_curr++;
-    //document.getElementById("warn_sum").innerText ="累计报警:"+num_curr;
+    document.getElementById("warn_sum").innerText ="累计报警:"+num_curr;
     setCookie("warn_sum",num_curr.toString(),1800*1000);
     if(data.type=="urgency"){
         var wdid=data.id;
