@@ -4,8 +4,10 @@ import com.warn.dao.ThresholdDao;
 import com.warn.dao.WarnHistoryDao;
 import com.warn.dto.DwrData;
 import com.warn.dto.PageHelper;
+import com.warn.dwr.Remote;
 import com.warn.entity.WarnData;
 import com.warn.service.WarnHistoryService;
+import com.warn.util.StaticVal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -144,6 +146,8 @@ public class WarnHistoryServiceImpl implements WarnHistoryService {
         }
         warnHistoryDao.addWarnHistory(warnData);
         dwrData.setId(warnData.getWdid());
+        if(StaticVal.alarmKeeper.size() <= 20 )
+            StaticVal.alarmKeeper.put(dwrData.getId(),dwrData);
     }
 
 
@@ -179,5 +183,10 @@ public class WarnHistoryServiceImpl implements WarnHistoryService {
     @Override
     public void urgencyRead(Integer wdid) {
         warnHistoryDao.messageRead(wdid);
+    }
+    @Override
+    public void sendCoveredAlarm(Integer ndid){
+        DwrData dwrData = StaticVal.alarmKeeper.get(ndid);
+        Remote.noticeNewOrder(dwrData);
     }
 }

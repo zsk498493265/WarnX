@@ -1,3 +1,4 @@
+
 /**
  * 本地图的数据 都是实时更新  新添加 街道、房屋标注  其他相关的统计信息都实时更新  不用刷新页面
  * 房屋状态的改变 由后台推送至前台 进行实时更新 不用刷新页面
@@ -46,6 +47,19 @@ $.ajax({
         console.log(data);
     }
 });
+//获取累计数据
+$.ajax({
+    type: "GET",
+    url: pathJs + "/warnHistory/getSum",
+    dataType: "json",
+    async: false,
+    success: function (data) {
+        // var num_curr=parseInt(document.getElementById("warn_sum").innerText.split(":")[1]);
+        // num_curr++;
+        document.getElementById("warn_sum").innerText ="\xa0累计报警:"+data.data;
+    }
+});
+//
 $.ajax({
     type: "GET",
     url: pathJs + "/patrol/getOldStatus",
@@ -62,8 +76,13 @@ if(getCookie("warn_sum")!="")
 
 //setCookie("warn_sum",(parseInt(getCookie("warn_sum"))+1).toString(),1800*1000);
 // alert(getCookie("warn_sum"));
-
+var wdid;
+var head = 0;
+var tail = 0;
+var number = 0;
+var alarmKeeper = [];
 function warn2(data){
+    wdid=data.id;
     // getNoReadSum();
     //紧急报警
     //累计报警数
@@ -71,13 +90,21 @@ function warn2(data){
     //alert(getCookie("warn_sum"));
     //alert(document.getElementById("warn_sum").innerText);
     //alert(parseInt(document.getElementById("warn_sum").innerText.split(":")[1]));
-    document.getElementById("warn_instant").innerText ="实时报警:1";
+    if(tail == 0){
+        alarmKeeper[tail]= wdid;
+        tail = tail + 1;
+    }else if(alarmKeeper[head] != wdid){
+        alarmKeeper[tail] = wdid;
+        tail = tail + 1;
+    }
+    number = tail - head;
+    document.getElementById("warn_instant").innerText ="实时报警:"+ number;
     var num_curr=parseInt(document.getElementById("warn_sum").innerText.split(":")[1]);
     num_curr++;
     document.getElementById("warn_sum").innerText ="累计报警:"+num_curr;
     setCookie("warn_sum",num_curr.toString(),1800*1000);
     if(data.type=="urgency"){
-        var wdid=data.id;
+
         var urgencyMessage="<div class='eauip'><span class='messageT'>报警设备信息：" +
             "</span><br><p>设备ID：<span class='messageD'>"+data.urgency.equip.eid+"</span></p>"+
             "<p>设备所在房间：<span class='messageD'>"+data.urgency.room.roomName+"</span></p></div>"+
@@ -86,7 +113,22 @@ function warn2(data){
             "老人姓名：<span class='messageD'>"+ data.urgency.oldMan.oldName+"</span></p><p>" +
             "老人电话：<span class='messageD'>"+ data.urgency.oldMan.oldPhone+"</span></p><p>" +
             "老人住址：<span class='messageD'>"+ data.urgency.oldMan.oldAddress+"</span></p></div>";
-        $.messager.alert('紧急报警！',urgencyMessage,'danger');
+        $.messager.alert('紧急报警！',urgencyMessage,'danger',function(){
+            // 该网关故障消息已读
+            $.ajax({
+                type: "POST",
+                url: pathJs + "/warnHistory/messageRead",
+                dataType: "json",
+                data:{
+                    wdid:wdid
+                },
+                async:false,
+                success: function (data) {
+                    //getNoReadSum();
+                    coveredAlarms();
+                }
+            });
+        });
         playSound("urgency");
         oldId=data.urgency.oldMan.oid;
         oldName=data.urgency.oldMan.oldName;
@@ -117,7 +159,8 @@ function warn2(data){
                 },
                 async:false,
                 success: function (data) {
-                    getNoReadSum();
+                    //getNoReadSum();
+                    coveredAlarms();
                 }
             });
         });
@@ -162,7 +205,7 @@ function warn2(data){
                 },
                 async:false,
                 success: function (data) {
-                    getNoReadSum();
+                    //getNoReadSum();
                 }
             });
         });
@@ -186,7 +229,7 @@ function warn2(data){
                 "最初不动的时间：<span class='messageD'>" + data.warn.time + "</span></p><p>" +
                 "是否在该房间的生活规律模型中：<span class='messageD'>" + (data.warn.inTime == 'true' ? "在<p>模型所在时间段：<span class='messageD'>" + data.warn.times + "</span></p><p>" +
                     "规律类型：<span class='messageD'>" + (data.warn.flag == "a" ? "活动" : ((data.warn.flag == "r") ? "休息" : "活动、休息")) + "</span></p>" :
-                    "不在") + "</span></p></div><input name="+data.id+" type='button' value='已读' onclick='readA(event)'/>";
+                    "不在") + "</span></p></div><input name="+data.id+" type='button' value='已读' onclick='readC()'/>";
             oldId=data.warn.oldMan.oid;
             oldName=data.warn.oldMan.oldName;
             oldPhone=data.warn.oldMan.oldPhone;
@@ -202,7 +245,7 @@ function warn2(data){
                 "<div class='detail'><span class='messageT'>温度信息：</span><br><p>" +
                 "报警房间：<span class='messageD read'>" + data.warn_wendu.threshold_wendu.room.roomName + "</span></p><p>" +
                 "当前温度：<span class='messageD read'>" + data.warn_wendu.wendu + "</span></p><p>" +
-                "该房间温度阈值：<span class='messageD'>" + data.warn_wendu.threshold_wendu.wThreshold + "</span></p><p></div><input name="+data.id+" type='button' value='已读' onclick='readA(event)'/>";
+                "该房间温度阈值：<span class='messageD'>" + data.warn_wendu.threshold_wendu.wThreshold + "</span></p><p></div><input name="+data.id+" type='button' value='已读' onclick='readC()'/>";
             oldId=data.warn_wendu.oldMan.oid;
             oldName=data.warn_wendu.oldMan.oldName;
             oldPhone=data.warn_wendu.oldMan.oldPhone;
@@ -223,7 +266,7 @@ function warn2(data){
                 "当前持续时间：<span class='messageD'>" + data.warn_light.value + "</span></p><p>" +
                 "该房间光强阈值：：<span class='messageD'>" + data.warn_light.threshold_light.lThreshold + "</span></p><p>" +
                 "检测时间段：<span class='messageD'>" + data.warn_light.threshold_light.times + "</span></p><p></div>";
-            "持续超过：<span class='messageD'>" + data.warn_light.threshold_light.continueTime + " 分钟报警</span></p><p></div><input name="+data.id+" type='button' value='已读' onclick='readA(event)'/>";
+            "持续超过：<span class='messageD'>" + data.warn_light.threshold_light.continueTime + " 分钟报警</span></p><p></div><input name="+data.id+" type='button' value='已读' onclick='readC()'/>";
             oldId=data.warn_light.oldMan.oid;
             oldName=data.warn_light.oldMan.oldName;
             oldPhone=data.warn_light.oldMan.oldPhone;
@@ -253,7 +296,7 @@ function warn2(data){
                 "老人住址：<span class='messageD'>" + data.outdoor.oldMan.oldAddress + "</span></p></div>" +
                 "<div class='detail'><span class='messageT'>未归信息：</span><br><p>" +
                 "出门时刻：<span class='messageD read'>" + data.outdoor.out + "</span></p><p>" +
-                "未归阈值：<span class='messageD'>" + data.outdoor.threshold_out.noComeThreshold+ "分钟</span></p><p></div><input name="+data.id+" type='button' value='已读' onclick='readA(event)'/>"
+                "未归阈值：<span class='messageD'>" + data.outdoor.threshold_out.noComeThreshold+ "分钟</span></p><p></div><input name="+data.id+" type='button' value='已读' onclick='readC()'/>"
             oldId=data.outdoor.oldMan.oid;
             oldName=data.outdoor.oldMan.oldName;
             oldPhone=data.outdoor.oldMan.oldPhone;
@@ -331,6 +374,45 @@ function mapUpdate() {
     //     //调用map.jsp 子页面的 函数
     //     document.getElementById("iframe_ifr").contentWindow.louChange();
     // }
+}
+function coveredAlarms(){
+    if(wdid == alarmKeeper[head])
+        head = head + 1;
+    else
+        tail = tail - 1;
+    number = tail - head;
+    document.getElementById("warn_instant").innerText ="实时报警数:"+number;
+    if(number == 0){
+        head = 0;
+        tail = 0;
+    }else{
+        $.ajax({
+            type: "POST",
+            url: pathJs + "/warnHistory/CoveredAlarms",
+            dataType: "json",
+            data:{
+                ndid:alarmKeeper[head]
+            },
+            async: false,
+            success: function () {}
+        });
+    }
+}
+function readC(){
+    $.ajax({
+        type: "POST",
+        url: pathJs + "/warnHistory/urgencyRead",
+        dataType: "json",
+        data:{
+            wdid:wdid
+        },
+        async: false,
+        success: function () {
+            coveredAlarms();
+        }
+    });
+
+
 }
 function playSound(type)
 {
@@ -1999,3 +2081,4 @@ $('#main_pie3').highcharts({
         center:["50%","18%"]
     }]
 });
+

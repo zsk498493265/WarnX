@@ -1,6 +1,7 @@
 package com.warn.util;
 
 import com.warn.dto.AuthorityDTO;
+import com.warn.dto.DwrData;
 import com.warn.entity.OldMan;
 
 import java.util.HashMap;
@@ -22,4 +23,6 @@ public class StaticVal {
 
     public static Integer gatewayDown=5; //网关故障的阈值   单位：分钟
     public static Integer equipDown=5; //设备故障的阈值   单位：分钟
+
+    public static Map<Integer, DwrData> alarmKeeper = new HashMap<>();
 }

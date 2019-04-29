@@ -22,4 +22,6 @@ public interface WarnHistoryService {
     String getMessageByWdid(Integer wdid);
 
     void urgencyRead(Integer wdid);
+
+    void sendCoveredAlarm(Integer ndid);
 }

@@ -1,5 +1,6 @@
 package com.warn.controller;
 
+import com.warn.dao.WarnHistoryDao;
 import com.warn.dto.DataGrid;
 import com.warn.dto.PageHelper;
 import com.warn.dto.Result;
@@ -27,6 +28,8 @@ public class WarnHistoryController {
 
     @Autowired
     WarnHistoryService warnHistoryService;
+    @Autowired
+    WarnHistoryDao warnHistoryDao;
 
     //获取 未读消息的数量
     @RequestMapping(value = "/getNoReadSum",method = RequestMethod.GET)
@@ -36,6 +39,15 @@ public class WarnHistoryController {
         return new Result(true,total);
     }
 
+    //获取累计数字
+    //获取 未读消息的数量
+    @RequestMapping(value = "/getSum",method = RequestMethod.GET)
+    @ResponseBody
+    public Result getSum(){
+        WarnData warnData=new WarnData();
+        long total=warnHistoryDao.getDatagridTotal(warnData);
+        return new Result(true,total);
+    }
     //标记 消息已读
     @RequestMapping(value = "/messageRead",method = RequestMethod.POST)
     @ResponseBody
@@ -108,4 +120,12 @@ public class WarnHistoryController {
         return new Result(true);
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/CoveredAlarms",method = RequestMethod.POST)
+    public void getCoveredAlarms(Integer ndid){
+        warnHistoryService.sendCoveredAlarm(ndid);
+    }
+
+
+    
 }
