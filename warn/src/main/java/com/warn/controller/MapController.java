@@ -275,4 +275,15 @@ public class MapController {
         List<WorkerMarker> workerPositionList = mapService.getWorkerPosition(wkid);
         return new Result(true, workerPositionList);
     }
+    
+    /**
+     * 备份一个月之前的旧数据
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value="/backup", method = RequestMethod.GET)
+    public Result backup() {
+        mapService.backup();
+        return new Result(true);
+    }
 }
