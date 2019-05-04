@@ -49,4 +49,6 @@ public interface MapService {
     List<WorkerMarker> getWorkerMarkers();
 
     List<WorkerMarker> getWorkerPosition(Integer wkid);
+    
+    void backup();
 }
