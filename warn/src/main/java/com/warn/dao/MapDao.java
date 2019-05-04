@@ -63,4 +63,6 @@ public interface MapDao {
     List<WorkerMarker> getWorkerMarkers();
 
     List<WorkerMarker> getWorkerPosition(@Param("id") Integer wkid);
+    
+    void backup();
 }
