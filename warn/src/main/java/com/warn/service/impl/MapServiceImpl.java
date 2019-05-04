@@ -158,4 +158,9 @@ public class MapServiceImpl implements MapService {
     public List<WorkerMarker> getWorkerPosition(Integer wkid) {
         return mapDao.getWorkerPosition(wkid);
     }
+    
+    @Override
+    public void backup() {
+        mapDao.backup();
+    }
 }
