@@ -220,6 +220,7 @@
         ON x.id = y.id AND x.taskid = y.taskid
         WHERE x.id = #{id} AND TIME > date_sub(now(),interval 30 MINUTE)
         ORDER BY TIME
+
     </select>
     
     <select id="backup" statementType="CALLABLE">

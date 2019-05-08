@@ -44,6 +44,7 @@
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="#" id="titleLogo">长者关怀</a>
+            <button class="navbar-brand"  onclick="delGPS()">删减并备份GPS数据</button>
         </div>
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -148,5 +149,22 @@
 <script type="text/javascript" src="${path}/easyUI_insdep/jquery.easyui.min.js"></script>
 <script type="text/javascript" src="${path}/easyUI_insdep/themes/insdep/jquery.insdep-extend.min.js"></script>
 <script src="${path}/js/index.js"></script>
+<script>
+
+    //备份GPS数据
+    function delGPS(){
+        $.ajax({
+            type: "GET",
+            url: pathJs + "/map/backup",
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                alert("操作成功");
+            }
+        });
+    }
+
+
+</script>
 </body>
 </html>

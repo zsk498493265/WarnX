@@ -34,6 +34,27 @@ var selectStreet=[];//存储添加标注时  街道的选择  实时更新
 var selectDistrict=[];//存储添加标注时  区的选择  实时更新
 // var selectOldMan=[];//存储添加标注时  人员的选择  实时更新
 
+//messager test
+var num1=111,num2=222;
+var testMessage="<div onclick='markOldman(num1)'>" +"老人1"+"</div>"+
+    "<div onclick='markOldman(num2)'>" +"老人2"+"</div>";
+
+function markOldman(param){
+    alert("param:"+param);
+}
+$.messager.show({
+    title:"title",
+    msg:testMessage,
+    showType:'fade',
+    width:"15%",
+    height:'38%',
+    timeout:15000,
+    style:{
+        right:'',
+        top:document.body.scrollTop+document.documentElement.scrollTop,
+        bottom:''
+    }
+});
 //warn
 var oldName,oldId,oldAddress,oldPhone;
 var len,louName=new Array(),oldss=new Array(),marker=new Array(),marker2=new Array(),marker3=new Array(),markerC=new Array();
