@@ -39,22 +39,8 @@ var num1=111,num2=222;
 var testMessage="<div onclick='markOldman(num1)'>" +"老人1"+"</div>"+
     "<div onclick='markOldman(num2)'>" +"老人2"+"</div>";
 
-function markOldman(param){
-    alert("param:"+param);
-}
-$.messager.show({
-    title:"title",
-    msg:testMessage,
-    showType:'fade',
-    width:"15%",
-    height:'38%',
-    timeout:15000,
-    style:{
-        right:'',
-        top:document.body.scrollTop+document.documentElement.scrollTop,
-        bottom:''
-    }
-});
+
+
 //warn
 var oldName,oldId,oldAddress,oldPhone;
 var len,louName=new Array(),oldss=new Array(),marker=new Array(),marker2=new Array(),marker3=new Array(),markerC=new Array();
@@ -510,6 +496,7 @@ $.ajax({
                     redNum++;
             }
         }
+        //alert("sum:"+sum);
         greenNum=greenNum+redNum+yellowNum;
         var allNum=greenNum+redNum+yellowNum;
         // document.getElementById("greenNum").innerText = "已接受服务老人数量：" + greenNum;
@@ -574,6 +561,7 @@ $.ajax({
 
 var map = new BMap.Map("container");
 map.setMapStyle({style:'googlelite'});
+getLouMarkers();
 if(getCookie("zoom")!=null&&getCookie("zoom")!=""){
 
     map.centerAndZoom(new BMap.Point(parseFloat(getCookie("center_x_y").split(",")[0]),parseFloat(getCookie("center_x_y").split(",")[1])), getCookie("zoom"));
@@ -1213,7 +1201,9 @@ function getJieDaoMarkers() {
 
 //获得楼数据
 // var len,louName=new Array(),oldss=new Array(),marker=new Array(),marker2=new Array(),marker3=new Array();
+var data_temp;
 function getLouMarkers() {
+    //alert(1);
     $.ajax({
         type: "GET",
         // url: pathJs + "/map/getLouMarkersAndOlds",
@@ -1223,6 +1213,9 @@ function getLouMarkers() {
         success: function (data) {
 
 //add camera
+            data_temp=data;
+            // console.log(data_temp);
+            //alert("qaq");
             var json={icon:{w:21,h:21,l:0,t:0,x:6,lb:5}};
             // var icon = new BMap.Icon("http://i1.bvimg.com/647748/d7a9b90404effcc3.jpg", new BMap.Size(30,22),{imageOffset: new BMap.Size(0,0),infoWindowOffset:new BMap.Size(json.lb+5,1)});
             //
@@ -1984,7 +1977,10 @@ $('#main_pie').highcharts({
                     fontSize:9,
                 }
             },
-            size:45
+            size:45,
+            events: {
+                click: function (e) {pieClickFamily(e.point.name);}
+            }
         }
     },
     series: [{
@@ -2036,7 +2032,10 @@ $('#main_pie2').highcharts({
                     fontSize:9,
                 }
             },
-            size:45
+            size:45,
+            events: {
+                click: function (e) {pieClickService(e.point.name);}
+            }
         }
     },
     series: [{
@@ -2088,7 +2087,10 @@ $('#main_pie3').highcharts({
                     fontSize:9,
                 }
             },
-            size:45
+            size:45,
+            events: {
+                click: function (e) {pieClickDevice(e.point.name);}
+            }
         }
     },
     series: [{
@@ -2102,4 +2104,261 @@ $('#main_pie3').highcharts({
         center:["50%","18%"]
     }]
 });
+var oid=0;
+function pieClickFamily(name) {
+    var testMessage="";
+
+    if(name=="参加居家养老老人总数"){
+
+        $.ajax({
+            type: "GET",
+            url: "/map/getLouMarkersAndOlds",
+            dataType: "json",
+            async:false,
+            success: function (data) {
+                var family_array=new Array();
+                var cnt=0;
+                for (var i = 0; i < data.data.length; i++) {
+                    for (var j = 0; j < data.data[i].oldMan.length; j++) {
+                        if(data.data[i].oldMan[j].familyService)
+                        {
+                            //oid=data.data[i].oldMan[j].oid;
+                                testMessage+="<div onclick='markOldman(this)'>" +"老人编号:"+data.data[i].oldMan[j].oid+",老人姓名:"+data.data[i].oldMan[j].oldName+"</div>";
+
+                        }
+
+                        // if (data.data[i].oldMan[j].status == 0)
+                        //     greenNum++;
+                        // else if (data.data[i].oldMan[j].status == 1)
+                        //     yellowNum++;
+                        // else if (data.data[i].oldMan[j].status == 2)
+                        //     redNum++;
+                    }
+                }
+            }
+        });
+
+    }
+    else{
+
+        return;
+    }
+    $.messager.show({
+        title:"title",
+        msg:testMessage,
+        showType:'fade',
+        width:"15%",
+        height:'38%',
+        timeout:15000,
+        style:{
+            right:'',
+            top:document.body.scrollTop+document.documentElement.scrollTop,
+            bottom:''
+        }
+    });
+
+
+}
+function pieClickService(name) {
+    var testMessage="";
+
+    if(name=="正在被服务老人总数"){
+
+        $.ajax({
+            type: "GET",
+            url: "/map/getLouMarkersAndOlds",
+            dataType: "json",
+            async:false,
+            success: function (data) {
+                var family_array=new Array();
+                var cnt=0;
+                for (var i = 0; i < data.data.length; i++) {
+                    for (var j = 0; j < data.data[i].oldMan.length; j++) {
+                        if(data.data[i].oldMan[j].status==1)
+                        {
+                            //oid=data.data[i].oldMan[j].oid;
+                            testMessage+="<div onclick='markOldman(this)'>" +"老人编号:"+data.data[i].oldMan[j].oid+",老人姓名:"+data.data[i].oldMan[j].oldName+"</div>";
+
+                        }
+                    }
+                }
+            }
+        });
+
+    }
+    else if(name=="参加居家养老老人总数"){
+
+        $.ajax({
+            type: "GET",
+            url: "/map/getLouMarkersAndOlds",
+            dataType: "json",
+            async:false,
+            success: function (data) {
+                var family_array=new Array();
+                var cnt=0;
+                for (var i = 0; i < data.data.length; i++) {
+                    for (var j = 0; j < data.data[i].oldMan.length; j++) {
+                        if(data.data[i].oldMan[j].familyService)
+                        {
+                            //oid=data.data[i].oldMan[j].oid;
+                            testMessage+="<div onclick='markOldman(this)'>" +"老人编号:"+data.data[i].oldMan[j].oid+",老人姓名:"+data.data[i].oldMan[j].oldName+"</div>";
+
+                        }
+                    }
+                }
+            }
+        });
+
+    }
+    $.messager.show({
+        title:"title",
+        msg:testMessage,
+        showType:'fade',
+        width:"15%",
+        height:'38%',
+        timeout:15000,
+        style:{
+            right:'',
+            top:document.body.scrollTop+document.documentElement.scrollTop,
+            bottom:''
+        }
+    });
+
+
+}
+function pieClickDevice(name) {
+    var testMessage="";
+
+    if(name=="安装关怀设备数"){
+
+        $.ajax({
+            type: "GET",
+            url: "/map/getLouMarkersAndOlds",
+            dataType: "json",
+            async:false,
+            success: function (data) {
+                var family_array=new Array();
+                var cnt=0;
+                for (var i = 0; i < data.data.length; i++) {
+                    for (var j = 0; j < data.data[i].oldMan.length; j++) {
+                        if(data.data[i].oldMan[j].careSystem)
+                        {
+                            //oid=data.data[i].oldMan[j].oid;
+                            testMessage+="<div onclick='markOldman(this)'>" +"老人编号:"+data.data[i].oldMan[j].oid+",老人姓名:"+data.data[i].oldMan[j].oldName+"</div>";
+
+                        }
+                    }
+                }
+            }
+        });
+
+    }
+    else if(name=="安装摄像头"){
+
+        $.ajax({
+            type: "GET",
+            url: "/map/getLouMarkersAndOlds",
+            dataType: "json",
+            async:false,
+            success: function (data) {
+                var family_array=new Array();
+                var cnt=0;
+                for (var i = 0; i < data.data.length; i++) {
+                    for (var j = 0; j < data.data[i].oldMan.length; j++) {
+                        if(data.data[i].oldMan[j].camera)
+                        {
+                            //oid=data.data[i].oldMan[j].oid;
+                            testMessage+="<div onclick='markOldman(this)'>" +"老人编号:"+data.data[i].oldMan[j].oid+",老人姓名:"+data.data[i].oldMan[j].oldName+"</div>";
+
+                        }
+                    }
+                }
+            }
+        });
+
+    }
+    else if(name=="居家养老总人数"){
+
+        $.ajax({
+            type: "GET",
+            url: "/map/getLouMarkersAndOlds",
+            dataType: "json",
+            async:false,
+            success: function (data) {
+                var family_array=new Array();
+                var cnt=0;
+                for (var i = 0; i < data.data.length; i++) {
+                    for (var j = 0; j < data.data[i].oldMan.length; j++) {
+                        if(data.data[i].oldMan[j].familyService)
+                        {
+                            //oid=data.data[i].oldMan[j].oid;
+                            testMessage+="<div onclick='markOldman(this)'>" +"老人编号:"+data.data[i].oldMan[j].oid+",老人姓名:"+data.data[i].oldMan[j].oldName+"</div>";
+
+                        }
+                    }
+                }
+            }
+        });
+
+    }
+    $.messager.show({
+        title:"title",
+        msg:testMessage,
+        showType:'fade',
+        width:"15%",
+        height:'38%',
+        timeout:15000,
+        style:{
+            right:'',
+            top:document.body.scrollTop+document.documentElement.scrollTop,
+            bottom:''
+        }
+    });
+
+
+}
+function markOldman(param){
+    var str=param.innerHTML.toString();
+    var start,end,id,idStr;
+    for(var i=0;i<str.length;i++){
+        if(str[i]==":"){
+            start=i+1;
+            for(var j=start;j<str.length;j++){
+                if(str[j]==','){
+                    end=j-1;
+                    break;
+                }
+
+            }
+            break;
+        }
+    }
+
+    if(start==end){
+        idStr=str.substr(start,end);
+    }
+    else
+        idStr=str.substr(start,end+1);
+    id=parseInt(idStr);
+    //alert(id);
+
+    console.log(data_temp);
+
+    //add alert icon
+    for(var i=0;i<data_temp.data.length;i++) {
+        var dataR=data_temp.data;
+        for(var j=0;j<dataR[i].oldMan.length;j++){
+            if(dataR[i].oldMan[j].oid==id){
+                var json={icon:{w:21,h:21,l:0,t:0,x:6,lb:5}};
+                var icon = new BMap.Icon("https://organold.oss-cn-shanghai.aliyuncs.com/img/warnS.png", new BMap.Size(128,128),{imageOffset: new BMap.Size(0,0),infoWindowOffset:new BMap.Size(json.lb+5,1),offset:new BMap.Size(0,0)});
+                var point = new BMap.Point(dataR[i].xR, dataR[i].yR);
+                marker= new BMap.Marker(point, {icon: icon});
+                marker.setTitle(dataR[i].info);
+                map.addOverlay(marker);
+
+            }
+        }
+
+    }
+}
 

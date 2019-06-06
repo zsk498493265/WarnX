@@ -99,7 +99,7 @@
         SELECT
         oid,oldName,oldQQ,oldPwd,status,family_service,care_system,camera,is_map
         from oldman
-        where louID = #{id}
+        where louID = #{id} and is_map=1
     </select>
 
     <!--参数只有一个的话 可以直接用对象的属性值，但是有两个以上的话 就要 对象名.属性名-->
