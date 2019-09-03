@@ -12,9 +12,13 @@ import com.warn.exception.WarnException;
 import com.warn.mongodb.model.SensorCollection;
 import com.warn.service.*;
 import com.warn.util.StaticVal;
+import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.ServletInputStream;
+import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.Executors;
@@ -2107,6 +2111,35 @@ public static Map<OldMan,Boolean> warn1=new HashMap<OldMan,Boolean>();//存储�
             throw new WarnException("move inner error:"+e.getLocalizedMessage());
         }
     }
+
+//    @Override
+//    @Transactional
+//    public Result getAlarmForbidden(HttpServletRequest request) {
+//        try {
+//            ServletInputStream inputStream = request.getInputStream();
+//            StringBuffer buffer = new StringBuffer();
+//            byte[] b = new byte[1024];
+//            int len = 0;
+//            while ((len = inputStream.read(b)) != -1) {
+//                buffer.append(new String(b, 0, len));
+//            }
+//            JSONObject json = JSONObject.fromObject(buffer.toString());
+//            AlarmForbidden alarmForbidden = new AlarmForbidden();
+//            alarmForbidden.setLevel(json.get("level").toString());
+//            alarmForbidden.setInfo(json.get("info").toString());
+//            alarmForbidden.setType(json.get("type").toString());
+//            alarmForbidden.setTime(json.get("time").toString());
+//            DwrData dwrData = new DwrData();
+//            dwrData.setType("alarm_forbidden");
+//            dwrData.setAlarmForbidden(alarmForbidden);
+//            warnHistoryService.addWarnHistory(dwrData);
+//            Remote.noticeNewOrder(dwrData);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return new Result(true);
+//    }
+
 
 
 }
