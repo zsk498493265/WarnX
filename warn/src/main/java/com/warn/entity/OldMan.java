@@ -28,12 +28,32 @@ public class OldMan {
     private Integer version;//版本
     private String oldQQ;
     private String oldPwd;
-    private String familyService;
-    private String careSystem;
+    private String family_service;
+    private String care_system;
     private String camera;
 
     private String sex;
     private Integer isMap;
+
+    private String jd;
+
+    public String getJd() {
+        return jd;
+    }
+
+    public void setJd(String jd) {
+        this.jd = jd;
+    }
+
+    public String getWd() {
+        return wd;
+    }
+
+    public void setWd(String wd) {
+        this.wd = wd;
+    }
+
+    private String wd;
 
     public Integer getIsMap() {
         return isMap;
@@ -197,19 +217,19 @@ public class OldMan {
     }
 
     public String getFamilyService() {
-        return familyService;
+        return family_service;
     }
 
     public void setFamilyService(String familyService) {
-        this.familyService = familyService;
+        this.family_service = familyService;
     }
 
     public String getCareSystem() {
-        return careSystem;
+        return care_system;
     }
 
     public void setCareSystem(String careSystem) {
-        this.careSystem = careSystem;
+        this.care_system = careSystem;
     }
 
     public String getCamera() {

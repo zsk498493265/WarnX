@@ -32,6 +32,8 @@ public class DataServiceImpl implements DataService{
     ModelDao modelDao;
     @Autowired
     ThresholdDao thresholdDao;
+    @Autowired
+    LouDao louDao;
 
 
     public Long getDatagridTotal(OldMan oldMan) {
@@ -125,7 +127,21 @@ public class DataServiceImpl implements DataService{
         sdf.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
         String dateNowStr = sdf.format(d);
         oldMan.setOldRegtime(dateNowStr);
+        int is_exist=louDao.is_exist(oldMan.getOldAddress());
 //        oldMan.getRelatives().setOldId(oldMan.getOid());
+        if(is_exist>0){
+            oldMan.setLouId(louDao.getLouId(oldMan.getOldAddress()));
+        }
+        else if(is_exist==0){
+            double jd1,jd2,jd3,wd;
+            jd1=Double.parseDouble(oldMan.getJd());
+            wd=Double.parseDouble(oldMan.getWd());
+            jd2=jd1+0.0001;
+            jd3=jd1+0.0002;
+            louDao.addLou(jd1,jd2,jd3,wd,oldMan.getOldAddress());
+            oldMan.setLouId(louDao.getLouId(oldMan.getOldAddress()));
+
+        }
         dataDao.addOldman(oldMan);
         oldMan.getRelatives().setOldId(oldMan.getOid());
         dataDao.addRelatives(oldMan.getRelatives());

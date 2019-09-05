@@ -25,6 +25,8 @@
     <%--<link href="${path}/easyUI_insdep/themes/insdep/icon.css" rel="stylesheet" type="text/css">--%>
   <script type="text/javascript" src="${path}/js/data_js.js"></script>
     <script type="text/javascript" src="${path}/js/common.js"></script>
+    <%--百度地图--%>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=1.3"></script>
   <%--<script type="text/javascript" src="${path}/js/paper_author.js"></script>--%>
 </head>
 <body class="easyui-layout" fit="true">
@@ -42,48 +44,41 @@
     <tr>
       <th data-options="field:'oid',width:fixWidth(0.05),align:'center'" rowspan="2">人员ID</th>
       <th data-options="field:'oldName',width:fixWidth(0.05),align:'center'" rowspan="2">姓名</th>
-        <th data-options="field:'gatewayID',width:fixWidth(0.09),align:'center'" rowspan="2">网关</th>
-        <th data-options="field:'segment',width:fixWidth(0.09),align:'center',formatter:formatActionSegment" rowspan="2">网段标识</th>
+        <%--<th data-options="field:'gatewayID',width:fixWidth(0.09),align:'center'" rowspan="2">网关</th>--%>
+        <%--<th data-options="field:'segment',width:fixWidth(0.09),align:'center',formatter:formatActionSegment" rowspan="2">网段标识</th>--%>
       <th data-options="field:'oldPhone',width:fixWidth(0.08),align:'center'" rowspan="2">电话</th>
       <th data-options="field:'oldAddress',width:fixWidth(0.14),align:'center'" rowspan="2">住址</th>
-      <th data-options="field:'oldRegtime',width:fixWidth(0.08),align:'center'" rowspan="2">注册时间</th>
-      <th data-options="field:'rooms',width:fixWidth(0.052),align:'center',formatter:formatActionRoom" rowspan="2">房间</th>
-        <th data-options="field:'equips',width:fixWidth(0.052),align:'center',formatter:formatActionEquip" rowspan="2">设备</th>
-      <th data-options="field:'relid',hidden:true,formatter: function(value,row,index){if (row.relatives.relid){return row.relatives.relid;} else {return '';}}">紧急联系人ID</th>
-      <th colspan="4">紧急联系人</th>
+      <%--<th data-options="field:'oldRegtime',width:fixWidth(0.08),align:'center'" rowspan="2">注册时间</th>--%>
+      <%--<th data-options="field:'rooms',width:fixWidth(0.052),align:'center',formatter:formatActionRoom" rowspan="2">房间</th>--%>
+        <%--<th data-options="field:'equips',width:fixWidth(0.052),align:'center',formatter:formatActionEquip" rowspan="2">设备</th>--%>
+        <th data-options="field:'familyService',width:fixWidth(0.052),align:'center'" rowspan="2">居家服务</th>
+        <th data-options="field:'careSystem',width:fixWidth(0.052),align:'center'" rowspan="2">关怀系统</th>
+        <th data-options="field:'camera',width:fixWidth(0.052),align:'center'" rowspan="2">摄像头</th>
+        <th data-options="field:'oldQQ',width:fixWidth(0.052),align:'center'" rowspan="2">QQ号</th>
+        <th data-options="field:'oldPwd',width:fixWidth(0.052),align:'center'" rowspan="2">QQ密码</th>
+
+        <th data-options="field:'relid',hidden:true,formatter: function(value,row,index){if (row.relatives.relid){return row.relatives.relid;} else {return '';}}">紧急联系人ID</th>
     </tr>
-    <tr>
-      <th data-options="field:'rName',width:fixWidth(0.08),align:'center',
+    <tr style="display: none">
+      <th data-options="field:'gatewayID',width:fixWidth(0.08),align:'center',hidden:true,
       formatter: function(value,row,index){
-                if (row.relatives.rName){
-                    return row.relatives.rName;
-                } else {
+
                     return '';
-                }
+
            }">姓名</th>
-      <th data-options="field:'rPhone',width:fixWidth(0.08),align:'center',
+      <th data-options="field:'gatewayID',width:fixWidth(0.08),align:'center',hidden:true,
       formatter: function(value,row,index){
-                if (row.relatives.rPhone){
-                    return row.relatives.rPhone;
-                } else {
-                    return '';
-                }
+              return '';
            }">电话</th>
-      <th data-options="field:'rAddress',width:fixWidth(0.13),align:'center',
+      <th data-options="field:'gatewayID',width:fixWidth(0.13),align:'center',hidden:true,
       formatter: function(value,row,index){
-                if (row.relatives.rAddress){
-                    return row.relatives.rAddress;
-                } else {
-                    return '';
-                }
+               return '';
+
            }">住址</th>
-        <th data-options="field:'oldId',hidden:true,
+        <th data-options="field:'gatewayID',hidden:true,
       formatter: function(value,row,index){
-                if (row.relatives.oldId){
-                    return row.relatives.oldId;
-                } else {
-                    return '';
-                }
+
+               return '';
            }">紧急联系人对应人员ID</th>
     </tr>
     </thead>
@@ -214,6 +209,7 @@
   <div id="dlg_addOldMan" class="easyui-dialog"
        style="width:400px;height:400px;padding:10px 20px" closed="true"
        buttons="#dlg_addOldMan_buttons">
+
     <form id="addOldMan" method="post">
       <table>
         <tr>
@@ -247,24 +243,67 @@
             <td><span class="addButton">人员住址：</span></td>
           <td><input name="oldAddress" class="easyui-textbox" type="text"></td>
         </tr>
-        <tr>
-            <td><span class="addButton">紧急联系人信息：</span></td>
-        </tr>
-        <tr>
+          <tr style="">
+              <td><span class="addButton">经度：</span></td>
+              <td><input name="jd" id="jd" type="text"/></td>
+          </tr>
+          <tr style="">
+              <td><span class="addButton">纬度：</span></td>
+              <td><input name="wd" id="wd" type="text"/></td>
+          </tr>
+          <tr>
+              <td><span class="addButton">QQ号：</span></td>
+              <td><input name="oldQQ" class="easyui-textbox" type="text"></td>
+          </tr>
+          <tr>
+              <td><span class="addButton">QQ密码：</span></td>
+              <td><input name="oldPwd" class="easyui-textbox" type="text"></td>
+          </tr>
+          <tr>
+              <td><span class="addButton">是否参与居家养老系统：</span></td>
+              <td><input name="family_service" class="easyui-textbox" type="text"></td>
+          </tr>
+          <tr>
+              <td><span class="addButton">是否参与关怀系统：</span></td>
+              <td><input name="care_system" class="easyui-textbox" type="text"></td>
+          </tr>
+          <tr>
+              <td><span class="addButton">是否安装摄像头：</span></td>
+              <td><input name="camera" class="easyui-textbox" type="text"></td>
+          </tr>
+        <tr style="display: none">
             <td><span class="addButton">姓名：</span></td>
           <td><input name="relatives.rName" class="easyui-textbox" type="text"></td>
         </tr>
-        <tr>
+        <tr style="display: none">
             <td><span class="addButton">电话：</span></td>
           <td><input name="relatives.rPhone" class="easyui-textbox" type="text"></td>
         </tr>
-        <tr>
+        <tr style="display: none">
             <td><span class="addButton">住址：</span></td>
           <td><input name="relatives.rAddress" class="easyui-textbox" type="text"></td>
         </tr>
+          <%--经纬度--%>
+
       </table>
+
         <input type="hidden" name="oid"/>
     </form>
+      <div style="width:100px;margin:auto;">
+          要查询的地址：<input id="text_" type="text" value="宁波天一广场" style="margin-right:100px;"/>
+          查询结果(经纬度)：<input id="result_" type="text" />
+          <input type="button" value="查询" onclick="searchByStationName();"/>
+          <div id="container"
+               style="position: absolute;
+                margin-top:30px;
+                width: 730px;
+                height: 590px;
+                top: 50px;
+                border: 1px solid gray;
+                display: none;
+                overflow:hidden;">
+          </div>
+      </div>
   </div>
 
   <!-- 新增人员对话框按钮 -->
@@ -278,6 +317,38 @@
 
 
 </div>
+<script type="text/javascript">
+    var map = new BMap.Map("container");
+    map.centerAndZoom("宁波", 12);
+    map.enableScrollWheelZoom();    //启用滚轮放大缩小，默认禁用
+    map.enableContinuousZoom();    //启用地图惯性拖拽，默认禁用
 
+    map.addControl(new BMap.NavigationControl());  //添加默认缩放平移控件
+    map.addControl(new BMap.OverviewMapControl()); //添加默认缩略地图控件
+    map.addControl(new BMap.OverviewMapControl({ isOpen: true, anchor: BMAP_ANCHOR_BOTTOM_RIGHT }));   //右下角，打开
+
+    var localSearch = new BMap.LocalSearch(map);
+    localSearch.enableAutoViewport(); //允许自动调节窗体大小
+    function searchByStationName() {
+        map.clearOverlays();//清空原来的标注
+        var keyword = document.getElementById("text_").value;
+        localSearch.setSearchCompleteCallback(function (searchResult) {
+            var poi = searchResult.getPoi(0);
+            document.getElementById("result_").value = poi.point.lng + "," + poi.point.lat;
+            document.getElementById("jd").value = poi.point.lng;
+            document.getElementById("wd").value = poi.point.lat;
+            alert(document.getElementById("wd").value);
+            //alert(document.getElementById("jwd").value);
+            map.centerAndZoom(poi.point, 13);
+            var marker = new BMap.Marker(new BMap.Point(poi.point.lng, poi.point.lat));  // 创建标注，为要查询的地方对应的经纬度
+            map.addOverlay(marker);
+            var content = document.getElementById("text_").value + "<br/><br/>经度：" + poi.point.lng + "<br/>纬度：" + poi.point.lat;
+            var infoWindow = new BMap.InfoWindow("<p style='font-size:14px;'>" + content + "</p>");
+            marker.addEventListener("click", function () { this.openInfoWindow(infoWindow); });
+            // marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+        });
+        localSearch.search(keyword);
+    }
+</script>
 </body>
 </html>

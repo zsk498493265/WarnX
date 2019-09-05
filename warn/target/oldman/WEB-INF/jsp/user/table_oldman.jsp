@@ -34,38 +34,38 @@
             <th colspan="4">紧急联系人</th>
         </tr>
         <tr>
-            <th data-options="field:'rName',width:fixWidth(0.08),align:'center',
-      formatter: function(value,row,index){
-                if (row.relatives.rName){
-                    return row.relatives.rName;
-                } else {
-                    return '';
-                }
-           }">姓名</th>
-            <th data-options="field:'rPhone',width:fixWidth(0.08),align:'center',
-      formatter: function(value,row,index){
-                if (row.relatives.rPhone){
-                    return row.relatives.rPhone;
-                } else {
-                    return '';
-                }
-           }">电话</th>
-            <th data-options="field:'rAddress',width:fixWidth(0.11),align:'center',
-      formatter: function(value,row,index){
-                if (row.relatives.rAddress){
-                    return row.relatives.rAddress;
-                } else {
-                    return '';
-                }
-           }">住址</th>
-            <th data-options="field:'oldId',hidden:true,
-      formatter: function(value,row,index){
-                if (row.relatives.oldId){
-                    return row.relatives.oldId;
-                } else {
-                    return '';
-                }
-           }">紧急联系人对应网关ID</th>
+            <%--<th data-options="field:'rName',width:fixWidth(0.08),align:'center',--%>
+      <%--formatter: function(value,row,index){--%>
+                <%--if (row.relatives.rName){--%>
+                    <%--return row.relatives.rName;--%>
+                <%--} else {--%>
+                    <%--return '';--%>
+                <%--}--%>
+           <%--}">姓名</th>--%>
+            <%--<th data-options="field:'rPhone',width:fixWidth(0.08),align:'center',--%>
+      <%--formatter: function(value,row,index){--%>
+                <%--if (row.relatives.rPhone){--%>
+                    <%--return row.relatives.rPhone;--%>
+                <%--} else {--%>
+                    <%--return '';--%>
+                <%--}--%>
+           <%--}">电话</th>--%>
+            <%--<th data-options="field:'rAddress',width:fixWidth(0.11),align:'center',--%>
+      <%--formatter: function(value,row,index){--%>
+                <%--if (row.relatives.rAddress){--%>
+                    <%--return row.relatives.rAddress;--%>
+                <%--} else {--%>
+                    <%--return '';--%>
+                <%--}--%>
+           <%--}">住址</th>--%>
+            <%--<th data-options="field:'oldId',hidden:true,--%>
+      <%--formatter: function(value,row,index){--%>
+                <%--if (row.relatives.oldId){--%>
+                    <%--return row.relatives.oldId;--%>
+                <%--} else {--%>
+                    <%--return '';--%>
+                <%--}--%>
+           <%--}">紧急联系人对应网关ID</th>--%>
         </tr>
         </thead>
     </table>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.warn.dao.LouDao">
+
+
+
+    <select id="is_exist" resultType="int">
+        SELECT count(*)
+        FROM marker_lou
+        where info=#{param1}
+
+    </select>
+    <select id="getLouId" resultType="int">
+        SELECT id
+        FROM marker_lou
+        where info=#{param1}
+    </select>
+    <insert id="addLou">
+        INSERT INTO marker_lou(x_g,y_g,x_r,y_r,x_y,y_y,info) VALUES (#{param1},#{param4},#{param2},#{param4},#{param3},#{param4},#{param5})
+    </insert>
+
+
+
+
+</mapper>
