@@ -243,11 +243,11 @@
             <td><span class="addButton">人员住址：</span></td>
           <td><input name="oldAddress" class="easyui-textbox" type="text"></td>
         </tr>
-          <tr style="">
+          <tr style="display: none">
               <td><span class="addButton">经度：</span></td>
               <td><input name="jd" id="jd" type="text"/></td>
           </tr>
-          <tr style="">
+          <tr style="display: none">
               <td><span class="addButton">纬度：</span></td>
               <td><input name="wd" id="wd" type="text"/></td>
           </tr>

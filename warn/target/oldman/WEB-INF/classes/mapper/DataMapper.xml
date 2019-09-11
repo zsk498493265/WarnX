@@ -49,6 +49,14 @@
         <!--</collection>-->
     </resultMap>
 
+    <resultMap id="resultWorker" type="com.warn.entity.Worker">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="qq" column="qq"/>
+        <result property="password" column="password"/>
+        <result property="phone" column="phone"/>
+    </resultMap>
+
 
     <select id="getDatagridTotal" resultType="long">
         select
@@ -84,6 +92,28 @@
         <if test="oldMan.louMarker!=null and oldMan.louMarker.id != null and oldMan.louMarker.id != ''">
             and l.id=#{oldMan.louMarker.id}
         </if>
+    </select>
+
+    <select id="getDatagridTotal_worker" resultType="long">
+        select
+        count(1)
+        from worker_base wb where 1=1
+        <if test="worker.id != null and worker.id != ''">
+            and wb.id=#{worker.id}
+        </if>
+        <if test="worker.name != null and worker.name != ''">
+            and wb.name=#{worker.name}
+        </if>
+        <if test="worker.qq != null and worker.qq != ''">
+            and wb.qq=#{worker.qq}
+        </if>
+        <if test="worker.password != null and worker.password != ''">
+            and wb.password=#{worker.password}
+        </if>
+        <if test="worker.phone != null and worker.phone != ''">
+            and wb.phone=#{worker.phone}
+        </if>
+
     </select>
 
     <select id="getDatagridTotalNG" resultType="long">
@@ -131,6 +161,34 @@
         </if>
         <if test="oldMan.oldAddress != null and oldMan.oldAddress != ''">
             and oldAddress like concat('%',#{oldMan.oldAddress},'%')
+        </if>
+        <if test="page.sort != null and page.sort != ''">
+            order by #{page.sort} #{page.order}
+        </if>
+        <if test="page.page > 0">
+            limit #{page.start},#{page.rows}
+        </if>
+    </select>
+
+    <select id="datagridUser_worker" resultMap="resultWorker">
+        select
+        wb.id,wb.name,wb.qq,wb.password,wb.phone
+        FROM worker_base wb
+        WHERE 1=1
+        <if test="worker.id != null and worker.id != ''">
+            and id=#{worker.id}
+        </if>
+        <if test="worker.name != null and worker.name != ''">
+            and name=#{worker.name}
+        </if>
+        <if test="worker.qq != null and worker.qq != ''">
+            and qq=#{worker.qq}
+        </if>
+        <if test="worker.password != null and worker.password != ''">
+            and password=#{worker.password}
+        </if>
+        <if test="worker.phone != null and worker.phone != ''">
+            and phone=#{worker.phone}
         </if>
         <if test="page.sort != null and page.sort != ''">
             order by #{page.sort} #{page.order}
@@ -201,9 +259,12 @@
 
     <!--插入后返回老人的主键 以便于给relatives的oldId赋值-->
     <insert id="addOldman" parameterType="com.warn.entity.OldMan"  useGeneratedKeys="true" keyProperty="oid">
-        INSERT INTO oldman(gatewayID,segment,oldName,oldPhone,oldAddress,oldRegtime,oldQQ,oldPwd,family_service,care_system,camera,jd,wd,louID) VALUES (#{gatewayID},#{segment},#{oldName},#{oldPhone},#{oldAddress},#{oldRegtime},#{oldQQ},#{oldPwd},#{family_service},#{care_system},#{camera},#{jd},#{wd},#{louId})
+        INSERT INTO oldman(gatewayID,segment,oldName,oldPhone,oldAddress,oldRegtime,oldQQ,oldPwd,family_service,care_system,camera,jd,wd,louID,is_map) VALUES (#{gatewayID},#{segment},#{oldName},#{oldPhone},#{oldAddress},#{oldRegtime},#{oldQQ},#{oldPwd},#{family_service},#{care_system},#{camera},#{jd},#{wd},#{louId},1)
     </insert>
 
+    <insert id="addWorker" parameterType="com.warn.entity.Worker"  useGeneratedKeys="true" keyProperty="oid">
+        INSERT INTO worker_base(id,name,qq,password,phone) VALUES (#{id},#{name},#{qq},#{password},#{phone})
+    </insert>
     <insert id="addRelatives" parameterType="com.warn.entity.Relatives">
         INSERT INTO relatives(rName,rPhone,rAddress,oldId) VALUES (#{rName},#{rPhone},#{rAddress},#{oldId})
     </insert>
@@ -218,6 +279,10 @@
     
     <delete id="deleteOldmanById">
       delete from oldman where oid=#{id}
+    </delete>
+
+    <delete id="deleteWorkerById">
+      delete from worker_base where id=#{id}
     </delete>
 
     <delete id="deleteRelativesByOldManId">

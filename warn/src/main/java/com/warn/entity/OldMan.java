@@ -29,6 +29,23 @@ public class OldMan {
     private String oldQQ;
     private String oldPwd;
     private String family_service;
+
+    public String getFamily_service() {
+        return family_service;
+    }
+
+    public void setFamily_service(String family_service) {
+        this.family_service = family_service;
+    }
+
+    public String getCare_system() {
+        return care_system;
+    }
+
+    public void setCare_system(String care_system) {
+        this.care_system = care_system;
+    }
+
     private String care_system;
     private String camera;
 
@@ -216,21 +233,7 @@ public class OldMan {
         this.oldQQ = oldQQ;
     }
 
-    public String getFamilyService() {
-        return family_service;
-    }
 
-    public void setFamilyService(String familyService) {
-        this.family_service = familyService;
-    }
-
-    public String getCareSystem() {
-        return care_system;
-    }
-
-    public void setCareSystem(String careSystem) {
-        this.care_system = careSystem;
-    }
 
     public String getCamera() {
         return camera;

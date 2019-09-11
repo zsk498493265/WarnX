@@ -5,6 +5,7 @@ import com.warn.dao.*;
 import com.warn.entity.OldMan;
 import com.warn.dto.PageHelper;
 import com.warn.entity.Room;
+import com.warn.entity.Worker;
 import com.warn.service.DataService;
 import com.warn.util.StaticVal;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +55,10 @@ public class DataServiceImpl implements DataService{
         return dataDao.getDatagridTotal(oldMan);
     }
 
+    public Long getDatagridTotal_worker(Worker worker) {
+        return dataDao.getDatagridTotal_worker(worker);
+    }
+
     public Long getDatagridTotalNG(OldMan oldMan){
         if(oldMan.getSegment()!=null&&!oldMan.getSegment().equals("")){
             //简单判断 用户输入的是二进制还是十进制   十进制1-16  长度>=4且只有0和1 则判断为二进制
@@ -82,6 +87,19 @@ public class DataServiceImpl implements DataService{
         }
         page.setStart((page.getPage() - 1) * page.getRows());
         return dataDao.datagridUser(page,oldMan);
+    }
+
+    public List<Worker> datagridUser_worker(PageHelper page,Worker worker) {
+//        if(oldMan.getGatewayID()!=null&&!oldMan.getGatewayID().equals("")){
+//            //简单判断 用户输入的是二进制还是十进制   十进制1-16  长度>=4且只有0和1 则判断为二进制
+//            if(oldMan.getGatewayID().length()>=4&&isBinary(oldMan.getGatewayID())){
+//                //查询以二进制的方式
+//                oldMan.setGatewayID(Integer.valueOf(oldMan.getGatewayID(),2).toString());
+//            }
+//        }
+
+        page.setStart((page.getPage() - 1) * page.getRows());
+        return dataDao.datagridUser_worker(page,worker);
     }
     public List<OldMan> datagridNGUser(PageHelper page,OldMan oldMan) {
 //        if(oldMan.getGatewayID()!=null&&!oldMan.getGatewayID().equals("")){
@@ -152,6 +170,22 @@ public class DataServiceImpl implements DataService{
     }
 
     @Transactional
+    public void addWorker(Worker worker) {
+
+        //获得系统当前时间
+        Date d = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        sdf.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
+        String dateNowStr = sdf.format(d);
+        worker.setOldRegtime(dateNowStr);
+
+        dataDao.addWorker(worker);
+
+
+
+    }
+
+    @Transactional
     public void editOldman(OldMan oldMan, Integer segmentTwo_Ten) {
 //        if(gatewayTwo_Ten.intValue()==2){
 //            //添加时，输入的网关是二进制的， 转换成十进制后，再存入数据库
@@ -206,6 +240,12 @@ public class DataServiceImpl implements DataService{
             StaticVal.oldManTimer.remove(oldMan);
             SystemController.logger.info("预警开关删除");
         }
+    }
+
+    @Transactional
+    public void deleteWorkerById(Integer id) {
+        dataDao.deleteWorkerById(id);
+
     }
 
     @Override

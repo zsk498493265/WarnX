@@ -29,7 +29,7 @@
 </head>
 <body class="easyui-layout" fit="true">
 <div region="center" border="false" style="overflow: hidden; width: 90%;height: 80%">
-  <table id="datagrid" class="easyui-datagrid" fit="true" url="${path}/data/datagrid"
+  <table  id="datagrid" class="easyui-datagrid" fit="true" url="${path}/data/datagrid_worker"
          toolbar="#toolbar"
          pagination="true"
          fitColumns="true"
@@ -40,53 +40,14 @@
          nowrap="false">
     <thead>
     <tr>
-      <th data-options="field:'oid',width:fixWidth(0.05),align:'center'" rowspan="2">人员ID</th>
-      <th data-options="field:'oldName',width:fixWidth(0.05),align:'center'" rowspan="2">姓名</th>
-      <th data-options="field:'oldPhone',width:fixWidth(0.08),align:'center'" rowspan="2">电话</th>
-      <th data-options="field:'oldAddress',width:fixWidth(0.14),align:'center'" rowspan="2">QQ号</th>
-        <th data-options="field:'oldAddress',width:fixWidth(0.14),align:'center'" rowspan="2">密码</th>
+      <th data-options="field:'id',width:fixWidth(0.05),align:'center'" rowspan="2">人员ID</th>
+      <th data-options="field:'name',width:fixWidth(0.05),align:'center'" rowspan="2">姓名</th>
+      <th data-options="field:'phone',width:fixWidth(0.08),align:'center'" rowspan="2">电话</th>
+      <th data-options="field:'qq',width:fixWidth(0.14),align:'center'" rowspan="2">QQ号</th>
+        <th data-options="field:'password',width:fixWidth(0.14),align:'center'" rowspan="2">密码</th>
     </tr>
     <tr>
-        <th data-options="field:'rName',width:fixWidth(0.08),align:'center',
-      formatter: function(value,row,index){
-                if (row.relatives.rName){
-                    return row.relatives.rName;
-                } else {
-                    return '';
-                }
-           }">人员ID</th>
-      <th data-options="field:'rName',width:fixWidth(0.08),align:'center',
-      formatter: function(value,row,index){
-                if (row.relatives.rName){
-                    return row.relatives.rName;
-                } else {
-                    return '';
-                }
-           }">姓名</th>
-      <th data-options="field:'rPhone',width:fixWidth(0.08),align:'center',
-      formatter: function(value,row,index){
-                if (row.relatives.rPhone){
-                    return row.relatives.rPhone;
-                } else {
-                    return '';
-                }
-           }">电话</th>
-      <th data-options="field:'rAddress',width:fixWidth(0.13),align:'center',
-      formatter: function(value,row,index){
-                if (row.relatives.rAddress){
-                    return row.relatives.rAddress;
-                } else {
-                    return '';
-                }
-           }">QQ号</th>
-        <th data-options="field:'rAddress',width:fixWidth(0.13),align:'center',
-      formatter: function(value,row,index){
-                if (row.relatives.rAddress){
-                    return row.relatives.rAddress;
-                } else {
-                    return '';
-                }
-           }">密码</th>
+
     </tr>
     </thead>
   </table>
@@ -95,7 +56,7 @@
   <div id="toolbar">
       <div id="buttonTool">
     <a href="javascript:void(0);" class="easyui-linkbutton aaa toolB fa fa-plus-square"
-        plain="true" onclick="addDialog();"><span>新增</span></a>
+        plain="true" onclick="addWorkerDialog();"><span>新增</span></a>
     <a href="javascript:void(0);" class="easyui-linkbutton aaa toolB fa fa-pencil"
        plain="true" onclick="alt();"><span>修改</span></a>
     <a href="javascript:void(0);" class="easyui-linkbutton aaa toolB fa fa-trash"
@@ -103,12 +64,14 @@
       </div>
     <form id="search" method="post" action="${paht}/data/datagrid" novalidate>
         <%--<label>ID：</label>--%>
-        <input class="easyui-searchbox" data-options="prompt:'人员ID'"  style="width:10%" name="oid" />
-        <input class="easyui-searchbox" data-options="prompt:'姓名'" style="width:10%" name="oldName" />
-        <input class="easyui-searchbox" data-options="prompt:'电话'" style="width:10%" name="oldPhone" />
-        <input class="easyui-searchbox" data-options="prompt:'QQ'" style="width:15%" name="oldAddress"/>
+        <input class="easyui-searchbox" data-options="prompt:'人员ID'"  style="width:10%" name="id" />
+        <input class="easyui-searchbox" data-options="prompt:'姓名'" style="width:10%" name="name" />
+        <input class="easyui-searchbox" data-options="prompt:'电话'" style="width:10%" name="phone" />
+        <input class="easyui-searchbox" data-options="prompt:'QQ'" style="width:15%" name="qq"/>
         <a href="javascript:void(0);" class="easyui-linkbutton fa fa-search aaa toolB"
            plain="true" id="searchB" onclick="formSearch()"><span>查询</span></a>
+            <a href="javascript:void(0);" class="easyui-linkbutton aaa toolB fa fa-refresh"
+               plain="true" onclick="refresh();"><span>刷新</span></a>
     </form>
   </div>
 
@@ -180,33 +143,33 @@
 
 
   <!-- 新增人员对话框 -->
-  <div id="dlg_addOldMan" class="easyui-dialog"
+  <div id="dlg_addWorker" class="easyui-dialog"
        style="width:400px;height:400px;padding:10px 20px" closed="true"
        buttons="#dlg_addOldMan_buttons">
-    <form id="addOldMan" method="post">
+    <form id="addWorker" method="post">
       <table>
         <tr>
             <td><span class="addButton">人员信息：</span></td>
         </tr>
           <tr>
               <td><span class="addButton">人员姓名：</span></td>
-              <td><input name="oldName" class="easyui-textbox" type="text"></td>
+              <td><input name="name" class="easyui-textbox" type="text"></td>
           </tr>
           <tr>
-              <td><span class="addButton">人员ID：</span></td>
-              <td><input name="gatewayID" class="easyui-textbox" type="text"></td>
+              <td><span class="addButton">人员id：</span></td>
+              <td><input name="id" class="easyui-textbox" type="text"></td>
           </tr>
         <tr>
             <td><span class="addButton">人员电话：</span></td>
-          <td><input name="oldPhone" class="easyui-textbox" type="text"></td>
+          <td><input name="phone" class="easyui-textbox" type="text"></td>
         </tr>
           <tr>
               <td><span class="addButton">QQ：</span></td>
-              <td><input name="oldPhone" class="easyui-textbox" type="text"></td>
+              <td><input name="qq" class="easyui-textbox" type="text"></td>
           </tr>
         <tr>
             <td><span class="addButton">密码：</span></td>
-          <td><input name="oldAddress" class="easyui-textbox" type="text"></td>
+          <td><input name="password" class="easyui-textbox" type="text"></td>
         </tr>
       </table>
         <input type="hidden" name="oid"/>
@@ -216,9 +179,9 @@
   <!-- 新增人员对话框按钮 -->
   <div id="dlg_addOldMan_buttons">
     <a href="javascript:void(0)" class="easyui-linkbutton c6"
-       iconCls="icon-ok" onclick="saveOldMan()" style="width:90px"><span class="addButton">保存</span></a>
+       iconCls="icon-ok" onclick="saveWorker()" style="width:90px"><span class="addButton">保存</span></a>
     <a href="javascript:void(0)" class="easyui-linkbutton"
-       iconCls="icon-cancel" onclick="javascript:$('#dlg_addOldMan').dialog('close')"
+       iconCls="icon-cancel" onclick="javascript:$('#dlg_addWorker').dialog('close')"
        style="width:90px"><span class="addButton">取消</span></a>
   </div>
 

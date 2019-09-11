@@ -17,17 +17,39 @@ var url;//存储请求的地址
 var mesTitle;//存储消息信息
 
 //添加
-function addDialog(){
+function addWorkerDialog(){
     //$("input[name=gatewayTwo_Ten]:first").prop( "checked", true);
-    $('#dlg_addOldMan').dialog('open').dialog('setTitle', '新增服务人员');
-    $('#addOldMan').form('clear');
+    $('#dlg_addWorker').dialog('open').dialog('setTitle', '新增服务人员');
+    $('#addWorker').form('clear');
     // $('input[name="segmentTwo_Ten"]:first-child').prop('checked',true);
     // $('input[name="gatewayTwo_Ten"]:first-child').prop('checked',true);
 
-    url = pathJs + "/data/addOldman";
+    url = pathJs + "/data/addWorker";
 
 }
+function saveWorker(){
+    $('#addWorker').form('submit', {
+        url: url,
+        onSubmit: function () {
+            return $(this).form();
+        },
+        success: function (result) {
+            var result = eval('(' + result + ')');
+            if (result.success) {
+                mesTitle = '新增成功';
+                $('#dlg_addWorker').dialog('close');
+                $('#datagrid').datagrid('reload');
+            } else {
+                mesTitle = '新增失败';
+            }
+            $.messager.show({
+                title: mesTitle,
+                msg: result.msg
+            });
 
+        }
+    });
+}
 function saveOldMan(){
     $('#addOldMan').form('submit', {
         url: url,
@@ -56,9 +78,10 @@ function saveOldMan(){
 function del(){
     var row = $('#datagrid').datagrid('getSelected');
     if (row) {
-        var oid = row.oid;
+        var id = row.id;
         $('#dlg_del').dialog('open').dialog('setTitle', '删除服务人员');
-        url = pathJs + "/data/deleteOldman?oldmanId=" + oid;
+        url = pathJs + "/data/deleteWorker?id=" + id;
+        alert(url);
         mesTitle = '删除成功';
     } else {
         $.messager.alert('提示', '请选择要删除的条目！', 'error');

@@ -4,6 +4,7 @@ import com.warn.dto.DataGrid;
 import com.warn.dto.Result;
 import com.warn.entity.OldMan;
 import com.warn.dto.PageHelper;
+import com.warn.entity.Worker;
 import com.warn.service.DataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -59,6 +60,20 @@ public class DataController {
         return dg;
     }
 
+    /**
+     * 获得工人信息表格
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value="/datagrid_worker", method = RequestMethod.POST)
+    public DataGrid workerDatagrid(PageHelper page,Worker worker) {
+        DataGrid dg = new DataGrid();
+        dg.setTotal(dataService.getDatagridTotal_worker(worker));
+        List<Worker> workerList = dataService.datagridUser_worker(page,worker);
+        dg.setRows(workerList);
+        return dg;
+    }
+
     @ResponseBody
     @RequestMapping(value = "/area/datagrid", method = RequestMethod.POST)
     public DataGrid dataGrid(PageHelper page, OldMan oldMan){
@@ -90,6 +105,18 @@ public class DataController {
     }
 
     /**
+     * 添加工人信息
+     * @param worker
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/addWorker",method = RequestMethod.POST)
+    public Result addWorker(Worker worker){
+        dataService.addWorker(worker);
+        return new Result(true);
+    }
+
+    /**
      * 修改老人信息
      * @param oldMan
      * @return
@@ -110,6 +137,18 @@ public class DataController {
     @RequestMapping(value = "/deleteOldman",method = RequestMethod.POST)
     public Result deleteOldman(@RequestParam Integer oldmanId){
         dataService.deleteOldmanById(oldmanId);
+        return new Result(true);
+    }
+
+    /**
+     * 删除工人信息
+     * @param id
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/deleteWorker",method = RequestMethod.POST)
+    public Result deleteWorker(@RequestParam Integer id){
+        dataService.deleteWorkerById(id);
         return new Result(true);
     }
 
