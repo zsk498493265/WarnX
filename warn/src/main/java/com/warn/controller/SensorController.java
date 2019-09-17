@@ -6,11 +6,13 @@ import com.warn.entity.Equipment;
 import com.warn.entity.OldMan;
 import com.warn.exception.NullFromDBException;
 import com.warn.mongodb.model.SensorCollection;
+import com.warn.service.AlarmService;
 import com.warn.service.SensorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -30,6 +32,8 @@ public class SensorController {
 
     @Autowired
     SensorService sensorService;
+
+    AlarmService alarmService;
 
 
 
@@ -271,6 +275,14 @@ public class SensorController {
         return new Result(true);
     }
 
+
+    //新的接受警报
+    @ResponseBody
+    @RequestMapping(value = "/Forbidden",method = RequestMethod.POST)
+    public Result getForbiddenAlarm(HttpServletRequest request) {
+        alarmService.getAlarmForbidden(request);
+        return new Result(true);
+    }
 //    @ResponseBody
 //    @RequestMapping(value = "/sensorData",method = RequestMethod.GET)
 //    public Result sensorDataGET(@RequestBody SensorCollection[] sensorCollections){
