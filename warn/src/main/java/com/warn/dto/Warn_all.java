@@ -6,6 +6,15 @@ import com.warn.entity.*;
  * Created by admin on 2017/4/26.
  */
 public class Warn_all {
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    private  String type;
     //warn
     private Integer warnLevel;//报警级别  1表示一级 2表示二级
     private OldMan oldMan;

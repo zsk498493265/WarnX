@@ -33,6 +33,7 @@ public class SensorController {
     @Autowired
     SensorService sensorService;
 
+    @Autowired
     AlarmService alarmService;
 
 
@@ -280,8 +281,8 @@ public class SensorController {
     @ResponseBody
     @RequestMapping(value = "/Forbidden",method = RequestMethod.POST)
     public Result getForbiddenAlarm(HttpServletRequest request) {
-        alarmService.getAlarmForbidden(request);
-        return new Result(true);
+        return alarmService.getAlarmForbidden(request);
+        //return new Result(true);
     }
 //    @ResponseBody
 //    @RequestMapping(value = "/sensorData",method = RequestMethod.GET)

@@ -260,15 +260,15 @@
               <td><input name="oldPwd" class="easyui-textbox" type="text"></td>
           </tr>
           <tr>
-              <td><span class="addButton">是否参与居家养老系统：</span></td>
+              <td><span class="addButton">是否参与居家养老系统（参加填1,不参加填0）：</span></td>
               <td><input name="family_service" class="easyui-textbox" type="text"></td>
           </tr>
           <tr>
-              <td><span class="addButton">是否参与关怀系统：</span></td>
+              <td><span class="addButton">是否参与关怀系统（参加填1,不参加填0）：</span></td>
               <td><input name="care_system" class="easyui-textbox" type="text"></td>
           </tr>
           <tr>
-              <td><span class="addButton">是否安装摄像头：</span></td>
+              <td><span class="addButton">是否安装摄像头（安装填1,未安装填0）：</span></td>
               <td><input name="camera" class="easyui-textbox" type="text"></td>
           </tr>
         <tr style="display: none">

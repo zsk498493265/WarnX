@@ -57,7 +57,7 @@
       <div id="buttonTool">
     <a href="javascript:void(0);" class="easyui-linkbutton aaa toolB fa fa-plus-square"
         plain="true" onclick="addWorkerDialog();"><span>新增</span></a>
-    <a href="javascript:void(0);" class="easyui-linkbutton aaa toolB fa fa-pencil"
+    <a style="display: none;" href="javascript:void(0);" class="easyui-linkbutton aaa toolB fa fa-pencil"
        plain="true" onclick="alt();"><span>修改</span></a>
     <a href="javascript:void(0);" class="easyui-linkbutton aaa toolB fa fa-trash"
        plain="true" onclick="del();"><span>删除</span></a>
