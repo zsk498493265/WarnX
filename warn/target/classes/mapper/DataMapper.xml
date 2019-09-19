@@ -265,6 +265,10 @@
     <insert id="addWorker" parameterType="com.warn.entity.Worker"  useGeneratedKeys="true" keyProperty="oid">
         INSERT INTO worker_base(id,name,qq,password,phone) VALUES (#{id},#{name},#{qq},#{password},#{phone})
     </insert>
+
+    <insert id="addXungeng" parameterType="com.warn.entity.Xungeng">
+        INSERT INTO point_to_oldman(point,old_id) VALUES (#{point},#{old_id})
+    </insert>
     <insert id="addRelatives" parameterType="com.warn.entity.Relatives">
         INSERT INTO relatives(rName,rPhone,rAddress,oldId) VALUES (#{rName},#{rPhone},#{rAddress},#{oldId})
     </insert>

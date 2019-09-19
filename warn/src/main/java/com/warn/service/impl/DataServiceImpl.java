@@ -6,6 +6,7 @@ import com.warn.entity.OldMan;
 import com.warn.dto.PageHelper;
 import com.warn.entity.Room;
 import com.warn.entity.Worker;
+import com.warn.entity.Xungeng;
 import com.warn.service.DataService;
 import com.warn.util.StaticVal;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -180,6 +181,16 @@ public class DataServiceImpl implements DataService{
         worker.setOldRegtime(dateNowStr);
 
         dataDao.addWorker(worker);
+
+
+
+    }
+
+    @Transactional
+    public void addXungeng(Xungeng xungeng) {
+
+
+        dataDao.addXungeng(xungeng);
 
 
 

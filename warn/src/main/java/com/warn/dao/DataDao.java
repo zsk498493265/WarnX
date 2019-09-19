@@ -60,4 +60,6 @@ public interface DataDao {
     void editOldmanMap(OldMan oldMan);
 
     Integer addWorker(Worker worker);
+
+    Integer addXungeng(Xungeng xungeng);
 }

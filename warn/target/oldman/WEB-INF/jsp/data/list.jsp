@@ -90,11 +90,11 @@
     <a href="javascript:void(0);" class="easyui-linkbutton aaa toolB fa fa-plus-square"
         plain="true" onclick="addDialog();"><span>新增</span></a>
     <a href="javascript:void(0);" class="easyui-linkbutton aaa toolB fa fa-pencil"
-       plain="true" onclick="alt();"><span>修改</span></a>
+       plain="true" onclick="alt();" style="display: none"><span>修改</span></a>
     <a href="javascript:void(0);" class="easyui-linkbutton aaa toolB fa fa-trash"
        plain="true" onclick="del();"><span>删除</span></a>
           <a href="javascript:void(0);" class="easyui-linkbutton aaa toolB fa fa-download"
-             plain="true" onclick="exportfile();"><span>导出</span></a>
+             plain="true" onclick="exportfile();" style="display: none"><span>导出</span></a>
           <a href="javascript:void(0);" class="easyui-linkbutton aaa toolB fa fa-refresh"
              plain="true" onclick="refresh();"><span>刷新</span></a>
       </div>
@@ -102,11 +102,11 @@
         <%--<label>ID：</label>--%>
         <input class="easyui-searchbox" data-options="prompt:'人员ID'"  style="width:10%" name="oid" />
             <input class="easyui-searchbox" data-options="prompt:'姓名'" style="width:10%" name="oldName" />
-            <input class="easyui-searchbox" data-options="prompt:'网关',validType:'length[1,4]'" style="width:10%" name="gatewayID" />
-            <input class="easyui-searchbox" data-options="prompt:'网段标识',validType:'length[1,4]'" style="width:10%" name="segment" />
-        <input class="easyui-searchbox" data-options="prompt:'电话'" style="width:10%" name="oldPhone" />
-        <input class="easyui-searchbox" data-options="prompt:'地址'" style="width:15%" name="oldAddress"/>
-        <input  data-options="prompt:'注册日期'" style="width:10%" name="oldRegtime" class="easyui-datebox" />
+            <%--<input class="easyui-searchbox" data-options="prompt:'网关',validType:'length[1,4]'" style="width:10%;display: none" name="gatewayID" />--%>
+            <%--<input class="easyui-searchbox" data-options="prompt:'网段标识',validType:'length[1,4]'" style="width:10%;display: none" name="segment" />--%>
+        <input class="easyui-searchbox" data-options="prompt:'电话'" style="width:10%;" name="oldPhone" />
+        <input class="easyui-searchbox" data-options="prompt:'地址'" style="width:15%;" name="oldAddress"/>
+        <%--<input  data-options="prompt:'注册日期'" style="width:10%;display: none" name="oldRegtime" class="easyui-datebox" />--%>
         <a href="javascript:void(0);" class="easyui-linkbutton fa fa-search aaa toolB"
            plain="true" id="searchB" onclick="formSearch()"><span>查询</span></a>
     </form>
@@ -243,12 +243,12 @@
             <td><span class="addButton">人员住址：</span></td>
           <td><input name="oldAddress" class="easyui-textbox" type="text"></td>
         </tr>
-          <tr style="display: none">
-              <td><span class="addButton">经度：</span></td>
+          <tr style="">
+              <td><span class="addButton">经度（可自动生成）：</span></td>
               <td><input name="jd" id="jd" type="text"/></td>
           </tr>
-          <tr style="display: none">
-              <td><span class="addButton">纬度：</span></td>
+          <tr style="">
+              <td><span class="addButton">纬度（可自动生成）：</span></td>
               <td><input name="wd" id="wd" type="text"/></td>
           </tr>
           <tr>

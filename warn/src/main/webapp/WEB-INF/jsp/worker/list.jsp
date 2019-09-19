@@ -61,6 +61,8 @@
        plain="true" onclick="alt();"><span>修改</span></a>
     <a href="javascript:void(0);" class="easyui-linkbutton aaa toolB fa fa-trash"
        plain="true" onclick="del();"><span>删除</span></a>
+          <a href="javascript:void(0);" class="easyui-linkbutton aaa toolB fa fa-plus-square"
+             plain="true" onclick="addXungengDialog();"><span>新增巡更点与老人的绑定</span></a>
       </div>
     <form id="search" method="post" action="${paht}/data/datagrid" novalidate>
         <%--<label>ID：</label>--%>
@@ -176,6 +178,28 @@
     </form>
   </div>
 
+    <div id="dlg_addXungeng" class="easyui-dialog"
+         style="width:400px;height:400px;padding:10px 20px" closed="true"
+         buttons="#dlg_addXungeng_buttons">
+        <form id="addXungeng" method="post">
+            <table>
+                <tr>
+                    <td><span class="addButton">巡更信息：</span></td>
+                </tr>
+                <tr>
+                    <td><span class="addButton">巡更点：</span></td>
+                    <td><input name="point" class="easyui-textbox" type="text"></td>
+                </tr>
+                <tr>
+                    <td><span class="addButton">老人id：</span></td>
+                    <td><input name="old_id" class="easyui-textbox" type="text"></td>
+                </tr>
+
+            </table>
+            <input type="hidden" name="oid"/>
+        </form>
+    </div>
+
   <!-- 新增人员对话框按钮 -->
   <div id="dlg_addOldMan_buttons">
     <a href="javascript:void(0)" class="easyui-linkbutton c6"
@@ -184,6 +208,13 @@
        iconCls="icon-cancel" onclick="javascript:$('#dlg_addWorker').dialog('close')"
        style="width:90px"><span class="addButton">取消</span></a>
   </div>
+    <div id="dlg_addXungeng_buttons">
+        <a href="javascript:void(0)" class="easyui-linkbutton c6"
+           iconCls="icon-ok" onclick="saveXungeng()" style="width:90px"><span class="addButton">保存</span></a>
+        <a href="javascript:void(0)" class="easyui-linkbutton"
+           iconCls="icon-cancel" onclick="javascript:$('#dlg_addXungeng').dialog('close')"
+           style="width:90px"><span class="addButton">取消</span></a>
+    </div>
 
 
 </div>

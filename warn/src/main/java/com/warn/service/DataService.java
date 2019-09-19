@@ -3,6 +3,7 @@ package com.warn.service;
 import com.warn.entity.OldMan;
 import com.warn.dto.PageHelper;
 import com.warn.entity.Worker;
+import com.warn.entity.Xungeng;
 
 import java.util.List;
 
@@ -41,4 +42,6 @@ public interface DataService {
 
     //添加工人
     void addWorker(Worker worker);
+    //添加巡更
+    void addXungeng(Xungeng xungeng);
 }

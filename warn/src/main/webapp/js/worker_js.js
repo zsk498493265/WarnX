@@ -27,6 +27,16 @@ function addWorkerDialog(){
     url = pathJs + "/data/addWorker";
 
 }
+function addXungengDialog(){
+    //$("input[name=gatewayTwo_Ten]:first").prop( "checked", true);
+    $('#dlg_addXungeng').dialog('open').dialog('setTitle', '新增巡更信息绑定');
+    $('#addXungeng').form('clear');
+    // $('input[name="segmentTwo_Ten"]:first-child').prop('checked',true);
+    // $('input[name="gatewayTwo_Ten"]:first-child').prop('checked',true);
+
+    url = pathJs + "/data/addXungeng";
+
+}
 function saveWorker(){
     $('#addWorker').form('submit', {
         url: url,
@@ -38,6 +48,29 @@ function saveWorker(){
             if (result.success) {
                 mesTitle = '新增成功';
                 $('#dlg_addWorker').dialog('close');
+                $('#datagrid').datagrid('reload');
+            } else {
+                mesTitle = '新增失败';
+            }
+            $.messager.show({
+                title: mesTitle,
+                msg: result.msg
+            });
+
+        }
+    });
+}
+function saveXungeng(){
+    $('#addXungeng').form('submit', {
+        url: url,
+        onSubmit: function () {
+            return $(this).form();
+        },
+        success: function (result) {
+            var result = eval('(' + result + ')');
+            if (result.success) {
+                mesTitle = '新增成功';
+                $('#dlg_addXungeng').dialog('close');
                 $('#datagrid').datagrid('reload');
             } else {
                 mesTitle = '新增失败';

@@ -5,6 +5,7 @@ import com.warn.dto.Result;
 import com.warn.entity.OldMan;
 import com.warn.dto.PageHelper;
 import com.warn.entity.Worker;
+import com.warn.entity.Xungeng;
 import com.warn.service.DataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -113,6 +114,18 @@ public class DataController {
     @RequestMapping(value = "/addWorker",method = RequestMethod.POST)
     public Result addWorker(Worker worker){
         dataService.addWorker(worker);
+        return new Result(true);
+    }
+
+    /**
+     * 添加巡更信息
+     * @param xungeng
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/addXungeng",method = RequestMethod.POST)
+    public Result addXungeng(Xungeng xungeng){
+        dataService.addXungeng(xungeng);
         return new Result(true);
     }
 
