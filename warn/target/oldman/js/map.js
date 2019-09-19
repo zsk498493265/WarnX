@@ -561,6 +561,7 @@ $.ajax({
 
 var map = new BMap.Map("container");
 map.setMapStyle({style:'googlelite'});
+
 getLouMarkers();
 if(getCookie("zoom")!=null&&getCookie("zoom")!=""){
 
@@ -582,7 +583,8 @@ if(getCookie("zoom")!=null&&getCookie("zoom")!=""){
 }else {
     map.centerAndZoom(new BMap.Point(121.481, 31.238), 13);
 }
-
+map.addControl(new BMap.NavigationControl());
+// map.addControl(new BMap.ScaleControl());
 map.addEventListener("zoomend", function(){
     //区：<=13  街道：14.15  房屋 >=16
     //alert("地图缩放至：" + this.getZoom() + "级");
