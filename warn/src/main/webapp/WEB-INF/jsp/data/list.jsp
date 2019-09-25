@@ -54,8 +54,8 @@
         <th data-options="field:'familyService',width:fixWidth(0.052),align:'center'" rowspan="2">居家服务</th>
         <th data-options="field:'careSystem',width:fixWidth(0.052),align:'center'" rowspan="2">关怀系统</th>
         <th data-options="field:'camera',width:fixWidth(0.052),align:'center'" rowspan="2">摄像头</th>
-        <th data-options="field:'oldQQ',width:fixWidth(0.052),align:'center'" rowspan="2">QQ号</th>
-        <th data-options="field:'oldPwd',width:fixWidth(0.052),align:'center'" rowspan="2">QQ密码</th>
+        <th data-options="field:'linkMan',width:fixWidth(0.052),align:'center'" rowspan="2">紧急联系人</th>
+
 
         <th data-options="field:'relid',hidden:true,formatter: function(value,row,index){if (row.relatives.relid){return row.relatives.relid;} else {return '';}}">紧急联系人ID</th>
     </tr>
@@ -224,7 +224,7 @@
               <%--<td><input name="gatewayTwo_Ten" value="2" type="radio"/>二进制<input name="gatewayTwo_Ten" value="10" type="radio">十进制</td>--%>
           <%--</tr>--%>
           <tr>
-              <td><span class="addButton">网关：</span></td>
+              <td><span class="addButton">网关（没有就填0）：</span></td>
               <td><input name="gatewayID" class="easyui-textbox" type="text"></td>
           </tr>
           <tr>

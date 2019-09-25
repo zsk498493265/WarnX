@@ -35,7 +35,7 @@
     </select>
 
     <select id="getOidByPoint" resultType="java.lang.Integer">
-        select old_id from point_to_oldman where point = #{point}
+        select old_id from point_to_oldman where point = #{point} LIMIT 1
     </select>
 
     <delete id="deleteDuplicate" >

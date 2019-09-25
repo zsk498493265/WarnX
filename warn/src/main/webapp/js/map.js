@@ -476,7 +476,7 @@ var greenNum=0,redNum=0,yellowNum=0;
 //     }
 // });
 // //!!!
-var sum=0;
+var sum=0,device_num=0,camera_num=0;
 $.ajax({
     type: "GET",
     url: "/map/getLouMarkersAndOlds",
@@ -490,13 +490,17 @@ $.ajax({
                 sum++;
                 if (data.data[i].oldMan[j].status == 0)
                     greenNum++;
-                else if (data.data[i].oldMan[j].status == 1)
+                if (data.data[i].oldMan[j].status == 1)
                     yellowNum++;
-                else if (data.data[i].oldMan[j].status == 2)
+                if (data.data[i].oldMan[j].status == 2)
                     redNum++;
+                if(data.data[i].oldMan[j].careSystem==1)
+                    device_num++;
+                if(data.data[i].oldMan[j].camera==1)
+                    camera_num++;
             }
         }
-        //alert("sum:"+sum);
+        alert("care:"+device_num+","+"camera:"+camera_num);
         greenNum=greenNum+redNum+yellowNum;
         var allNum=greenNum+redNum+yellowNum;
         // document.getElementById("greenNum").innerText = "已接受服务老人数量：" + greenNum;
@@ -1287,7 +1291,7 @@ function getLouMarkers() {
                 //new remove listener
 
                 var camera_num=0;
-                if(dataR[i].greenSum)
+                if(dataR[i].greenSum+dataR[i].redSum+dataR[i].yellowSum)
                     map.addOverlay(marker[i]);
                 if(dataR[i].redSum)
                     map.addOverlay(marker2[i]);
@@ -2099,8 +2103,8 @@ $('#main_pie3').highcharts({
         type: 'pie',
         name: '人数占比',
         data: [
-            ['安装关怀设备数',6],
-            ['安装摄像头',4],
+            ['安装关怀设备数',device_num],
+            ['安装摄像头',camera_num],
             ['居家养老总人数',sum]
         ],
         center:["50%","18%"]
@@ -2304,10 +2308,10 @@ function pieClickDevice(name) {
 
     }
     $.messager.show({
-        title:"title",
+        title:"",
         msg:testMessage,
         showType:'fade',
-        width:"15%",
+        width:"25%",
         height:'38%',
         timeout:15000,
         style:{

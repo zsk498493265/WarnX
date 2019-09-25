@@ -28,25 +28,37 @@ public class OldMan {
     private Integer version;//版本
     private String oldQQ;
     private String oldPwd;
-    private String family_service;
 
-    public String getFamily_service() {
-        return family_service;
+
+
+    private String familyService;
+    private String careSystem;
+
+    public String getLinkMan() {
+        return linkMan;
     }
 
-    public void setFamily_service(String family_service) {
-        this.family_service = family_service;
+    public void setLinkMan(String linkMan) {
+        this.linkMan = linkMan;
     }
 
-    public String getCare_system() {
-        return care_system;
+    private String linkMan;
+
+    public String getFamilyService() {
+        return familyService;
     }
 
-    public void setCare_system(String care_system) {
-        this.care_system = care_system;
+    public void setFamilyService(String familyService) {
+        this.familyService = familyService;
     }
 
-    private String care_system;
+    public String getCareSystem() {
+        return careSystem;
+    }
+
+    public void setCareSystem(String careSystem) {
+        this.careSystem = careSystem;
+    }
     private String camera;
 
     private String sex;
@@ -242,6 +254,8 @@ public class OldMan {
     public void setCamera(String camera) {
         this.camera = camera;
     }
+
+
 
     public String getOldPwd() {
         return oldPwd;

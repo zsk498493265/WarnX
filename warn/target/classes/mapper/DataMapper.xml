@@ -17,9 +17,10 @@
         <result property="sex" column="sex"/>
         <result property="age" column="age"/>
         <result property="isMap" column="is_map"/>
-        <result property="family_service" column="family_service"/>
-        <result property="care_system" column="care_system"/>
+        <result property="familyService" column="family_service"/>
+        <result property="careSystem" column="care_system"/>
         <result property="camera" column="camera"/>
+        <result property="linkMan" column="linkMan"/>
         <association property="relatives" javaType="com.warn.entity.Relatives">
             <id property="relid" column="relid"/>
             <result property="rName" column="rName"/>
@@ -127,7 +128,6 @@
             and oldName=#{oldMan.oldName}
         </if>
     </select>
-
     <select id="datagridMap" resultType="com.warn.entity.OldMan">
         SELECT
         oid,oldName,oldQQ,oldPwd,status,family_service,care_system,camera,is_map
@@ -138,7 +138,7 @@
     <!--参数只有一个的话 可以直接用对象的属性值，但是有两个以上的话 就要 对象名.属性名-->
     <select id="datagridUser" resultMap="resultOldMan">
         select
-        old.oid,old.gatewayID,old.segment,old.oldName,old.oldPhone,old.oldAddress,old.oldRegtime,old.sex,old.age,family_service,care_system,camera,oldQQ,oldPwd
+        old.oid,old.gatewayID,old.segment,old.oldName,old.oldPhone,old.oldAddress,old.oldRegtime,old.sex,old.age,family_service,care_system,camera,oldQQ,oldPwd,linkMan
         FROM oldman old
         WHERE is_map=1
         <if test="oldMan.oid != null and oldMan.oid != ''">
@@ -165,9 +165,9 @@
         <if test="page.sort != null and page.sort != ''">
             order by #{page.sort} #{page.order}
         </if>
-        <if test="page.page > 0">
-            limit #{page.start},#{page.rows}
-        </if>
+        <!--<if test="page.page > 0">-->
+<!--&#45;&#45;             limit #{page.start},#{page.rows}-->
+        <!--</if>-->
     </select>
 
     <select id="datagridUser_worker" resultMap="resultWorker">
