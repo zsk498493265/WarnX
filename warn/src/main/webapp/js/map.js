@@ -975,7 +975,9 @@ function getWorkerMarkers() {
             for(var i=0;i<data.data.length;i++) {
                 var icon = BMapLib.MarkerTool.SYS_ICONS[6];
                 var json={icon:{w:21,h:21,l:0,t:0,x:6,lb:5}};
-                var icon = new BMap.Icon("https://organold.oss-cn-shanghai.aliyuncs.com/img/ss.png", new BMap.Size(60,30),{imageOffset: new BMap.Size(0,0),infoWindowOffset:new BMap.Size(json.lb+5,1),offset:new BMap.Size(0,0)});
+                //var icon = new BMap.Icon("https://organold.oss-cn-shanghai.aliyuncs.com/img/ss.png", new BMap.Size(60,30),{imageOffset: new BMap.Size(0,0),infoWindowOffset:new BMap.Size(json.lb+5,1),offset:new BMap.Size(0,0)});
+
+                var icon = new BMap.Icon("https://organold.oss-cn-shanghai.aliyuncs.com/img/worker.png", new BMap.Size(60,30),{imageOffset: new BMap.Size(0,0),infoWindowOffset:new BMap.Size(json.lb+5,1),offset:new BMap.Size(0,0)});
 
                 var point = new BMap.Point(data.data[i].cx, data.data[i].cy);
                 var marker = new BMap.Marker(point, {icon: icon});
@@ -1011,7 +1013,7 @@ function getWorkerMarkers() {
                                 strokeStyle : "dashed"});
                             map.addOverlay(path);
                             //console.log(path);
-                            var icon = new BMap.Icon("https://organold.oss-cn-shanghai.aliyuncs.com/img/ss.png", new BMap.Size(60,30),{imageOffset: new BMap.Size(0,0),infoWindowOffset:new BMap.Size(json.lb+5,1),offset:new BMap.Size(0,0)});
+                            var icon = new BMap.Icon("https://organold.oss-cn-shanghai.aliyuncs.com/img/worker.png", new BMap.Size(60,30),{imageOffset: new BMap.Size(0,0),infoWindowOffset:new BMap.Size(json.lb+5,1),offset:new BMap.Size(0,0)});
                             var point = new BMap.Point(data1.data[data1.data.length-1].cx, data1.data[data1.data.length-1].cy);
                             var marker = new BMap.Marker(point, {icon: icon});
                             // marker.setTitle(data1.data[data1.data.length-1].time);
@@ -1304,7 +1306,8 @@ function getLouMarkers() {
                 }
 
                 if(camera_num){
-                    map.addOverlay(markerC[i]);
+                    //删除摄像头
+                    //map.addOverlay(markerC[i]);
                 }
 
                 // var lHtml=[];
@@ -1395,6 +1398,9 @@ function getLouMarkers() {
                         // }
                         infostr=infostr+"手机："+this.oldsInfo[j].oldPhone+",";
                         infostr=infostr+"密码："+this.oldsInfo[j].oldPwd+"<br/>";
+                        if(this.oldsInfo[j].camera==1){
+                            infostr+="<button onclick='exec()'>查看室内情况</button>";
+                        }
                         // infostr+="<Button onclick='f1()'>实时通讯</Button>";
                         //infostr+="<button onclick='exec()'>查看室内情况</button>";
                         infostr+="<br/>"
@@ -1443,6 +1449,9 @@ function getLouMarkers() {
                         infostr=infostr+"密码："+this.oldsInfo[j].oldPwd+"<br/>";
                         //infostr+="<Button onclick='f1()'>实时通讯</Button>";
                         //infostr+="<button onclick='exec()'>查看室内情况</button>";
+                        if(this.oldsInfo[j].camera==1){
+                            infostr+="<button onclick='exec()'>查看室内情况</button>";
+                        }
                         infostr+="<br/>"
                     }
 
@@ -1473,6 +1482,9 @@ function getLouMarkers() {
                         infostr=infostr+"密码："+this.oldsInfo[j].oldPwd+"<br/>";
                         //infostr+="<Button onclick='f1()'>实时通讯</Button>";
                         //infostr+="<button onclick='exec()'>查看室内情况</button>";
+                        if(this.oldsInfo[j].camera==1){
+                            infostr+="<button onclick='exec()'>查看室内情况</button>";
+                        }
                         infostr+="<br/>"
                     }
 

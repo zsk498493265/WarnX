@@ -148,6 +148,7 @@
              pagePosition="bottom">
         <thead>
         <tr>
+          <th data-options="field:'oid',width:fixWidth(0.05),align:'center'" rowspan="2">编号</th>
           <th data-options="field:'oldName',width:fixWidth(0.05),align:'center'" rowspan="2">姓名</th>
           <th data-options="field:'oldPhone',width:fixWidth(0.08),align:'center'" rowspan="2">电话</th>
           <th data-options="field:'oldAddress',width:fixWidth(0.11),align:'center'" rowspan="2">住址</th>
@@ -155,6 +156,7 @@
           <th data-options="field:'age',width:fixWidth(0.05),align:'center'" rowspan="2">年龄</th>
         </tr>
         <tr hidden="true">
+
           <th data-options="field:'rName',width:fixWidth(0.08),align:'center',hidden:'true',
       formatter: function(value,row,index){
                 if (row.relatives.rName){
@@ -234,6 +236,10 @@
       }else{
           return 'background-color:white;';
       }
+    },
+    onClickRow:function (rowIndex,rowData,value) {
+      addWarnIcon(rowData.oid);
+      
     }
   });
   // function alertOldman(){
