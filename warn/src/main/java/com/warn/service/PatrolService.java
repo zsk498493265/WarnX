@@ -1,5 +1,6 @@
 package com.warn.service;
 
+import com.warn.dto.Result;
 import com.warn.entity.AutoValue;
 
 import java.io.IOException;
@@ -12,4 +13,6 @@ public interface PatrolService {
     List<Integer> getOldIds();
 
     List<AutoValue> getOldsStatus();
+
+    Result checkRecords();
 }

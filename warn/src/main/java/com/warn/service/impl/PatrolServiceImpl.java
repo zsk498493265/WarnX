@@ -3,6 +3,7 @@ package com.warn.service.impl;
 import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import com.warn.dao.DataDao;
 import com.warn.dao.PatrolDao;
+import com.warn.dto.Result;
 import com.warn.dto.Urgency;
 import com.warn.entity.AutoValue;
 import com.warn.entity.Cookie;
@@ -139,6 +140,35 @@ public class PatrolServiceImpl implements PatrolService {
             }
             patrolDao.deleteDuplicate();
 
+    }
+    @Override
+    public Result checkRecords(){
+        List<Patrol> patrols = patrolDao.getAllRecords();
+        Map<String,Integer> worker = new HashMap<>();
+        Map<String,Integer> point = new HashMap<>();
+        Integer[][] num = new Integer[patrols.size()][patrols.size()];
+        for(int n=0;n<patrols.size();n++)
+            for(int j=0;j<patrols.size();j++)
+                num[n][j] = 0;
+         Integer i = 0;
+        for(Patrol patrol:patrols){
+            if(!worker.containsKey(patrol.getWorker()))
+                worker.put(patrol.getWorker(),i);
+            if(!point.containsKey(patrol.getPoint()))
+                point.put(patrol.getPoint(),i);
+            num[worker.get(patrol.getWorker())][point.get(patrol.getPoint())]++;
+        }
+        for(int n=0;n<patrols.size();n++){
+            Integer service = 0;
+            for(int j=0;j<patrols.size();j++){
+                if(!(num[n][j] % 2 == 0)){
+                    service++;
+                }
+            }
+            if(service >= 2)
+                return new Result(true,"我爱寻网站数据延迟");
+        }
+            return new Result(true,"我爱寻网站数据正常");
     }
 
     public List<Integer> getOldIds(){

@@ -76,6 +76,15 @@ $.ajax({
         console.log(data);
     }
 });
+$.ajax({
+    type: "GET",
+    url: pathJs + "/patrol/checkRecords",
+    dataType: "json",
+    async: false,
+    success: function (data) {
+        alert(data.data);
+    }
+});
 // 报警cookie
 if(getCookie("warn_sum")!="")
 //document.getElementById("warn_sum").innerText ="累计报警:"+getCookie("warn_sum");
@@ -500,7 +509,7 @@ $.ajax({
                     camera_num++;
             }
         }
-        alert("care:"+device_num+","+"camera:"+camera_num);
+       // alert("care:"+device_num+","+"camera:"+camera_num);
         greenNum=greenNum+redNum+yellowNum;
         var allNum=greenNum+redNum+yellowNum;
         // document.getElementById("greenNum").innerText = "已接受服务老人数量：" + greenNum;
