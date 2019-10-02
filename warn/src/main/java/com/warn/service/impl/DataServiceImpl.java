@@ -146,10 +146,13 @@ public class DataServiceImpl implements DataService{
         sdf.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
         String dateNowStr = sdf.format(d);
         oldMan.setOldRegtime(dateNowStr);
-        int is_exist=louDao.is_exist(oldMan.getOldAddress());
+
 //        oldMan.getRelatives().setOldId(oldMan.getOid());
+        String full_address=oldMan.getOldAddress();
+        String sub_address=full_address.split("号")[0]+"号";
+        int is_exist=louDao.is_exist(sub_address);
         if(is_exist>0){
-            oldMan.setLouId(louDao.getLouId(oldMan.getOldAddress()));
+            oldMan.setLouId(louDao.getLouId(sub_address));
         }
         else if(is_exist==0){
             double jd1,jd2,jd3,wd;
@@ -157,8 +160,8 @@ public class DataServiceImpl implements DataService{
             wd=Double.parseDouble(oldMan.getWd());
             jd2=jd1+0.0001;
             jd3=jd1+0.0002;
-            louDao.addLou(jd1,jd2,jd3,wd,oldMan.getOldAddress());
-            oldMan.setLouId(louDao.getLouId(oldMan.getOldAddress()));
+            louDao.addLou(jd1,jd2,jd3,wd,sub_address);
+            oldMan.setLouId(louDao.getLouId(sub_address));
 
         }
         dataDao.addOldman(oldMan);

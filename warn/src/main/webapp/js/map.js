@@ -82,7 +82,7 @@ $.ajax({
     dataType: "json",
     async: false,
     success: function (data) {
-        alert(data.data);
+        //alert(data.data);
     }
 });
 // 报警cookie
@@ -97,7 +97,41 @@ var head = 0;
 var tail = 0;
 var number = 0;
 var alarmKeeper = [];
-function warn2(data){
+function warn2(data) {
+    alert("进入");
+    console.log(data);
+}
+function warn21(data){
+    //alert("进入报警");
+    //判断老人是不是在数据库
+   // alert("进入");
+    //console.log(data);
+    // alert("GID:"+data.oldMan.gatewayID);
+    // var is_exist=0;
+    // var gid=data.oldMan.gatewayID;
+    // $.ajax({
+    //     type: "GET",
+    //     url: "/map/getLouMarkersAndOlds",
+    //     dataType: "json",
+    //     async:false,
+    //     success: function (data) {
+    //         for(var i=0;i<data.data.length;i++) {
+    //             var dataR=data.data;
+    //             for(var j=0;j<dataR[i].oldMan.length;j++){
+    //                 if(dataR[i].oldMan[j].gatewayID==gid){
+    //                     is_exist=1;
+    //                     break;
+    //
+    //                 }
+    //             }
+    //
+    //         }
+    //
+    //
+    //     }
+    // });
+
+    //
     wdid=data.id;
     // getNoReadSum();
     //紧急报警
@@ -119,6 +153,7 @@ function warn2(data){
     num_curr++;
     document.getElementById("warn_sum").innerText ="累计报警:"+num_curr;
     setCookie("warn_sum",num_curr.toString(),1800*1000);
+    //if(is_exist==0)return;
     if(data.type=="urgency"){
 
         var urgencyMessage="<div class='eauip'><span class='messageT'>报警设备信息：" +
@@ -349,14 +384,45 @@ function warn2(data){
 
     }
 
+
     document.getElementById("oldId").innerText ="老人ID："+oldId ;
     document.getElementById("oldName").innerText ="老人姓名："+oldName ;
     document.getElementById("oldPhone").innerText ="老人电话："+oldPhone ;
     document.getElementById("oldAddress").innerText ="老人地址："+oldAddress ;
-    addWarnIcon(oldId);
+
+    //判断该老人是不是在该系统的数据库
+    //addWarnIcon(data.oldMan.gatewayID);
+    //addWarnIcon(data.oldMan.gatewayID);
 
 }
 function addWarnIcon(id) {
+    $.ajax({
+        type: "GET",
+        url: "/map/getLouMarkersAndOlds",
+        dataType: "json",
+        async:false,
+        success: function (data) {
+            for(var i=0;i<data.data.length;i++) {
+                var dataR=data.data;
+                for(var j=0;j<dataR[i].oldMan.length;j++){
+                    if(dataR[i].oldMan[j].gatewayID==id){
+                        var json={icon:{w:21,h:21,l:0,t:0,x:6,lb:5}};
+                        var icon = new BMap.Icon("https://organold.oss-cn-shanghai.aliyuncs.com/img/warnS.png", new BMap.Size(128,128),{imageOffset: new BMap.Size(0,0),infoWindowOffset:new BMap.Size(json.lb+5,1),offset:new BMap.Size(0,0)});
+                        var point = new BMap.Point(dataR[i].xR, dataR[i].yR);
+                        marker= new BMap.Marker(point, {icon: icon});
+                        marker.setTitle(dataR[i].info);
+                        map.addOverlay(marker);
+
+                    }
+                }
+
+            }
+
+
+        }
+    });
+}
+function addInfoIcon(id) {
     $.ajax({
         type: "GET",
         url: "/map/getLouMarkersAndOlds",
@@ -1405,8 +1471,8 @@ function getLouMarkers() {
                         //     else if(olds[j].status==2)
                         //         infostr=infostr+":"+"<div id='test' style='width:10px;height:10px;background:#dd1144;'></div>";
                         // }
-                        infostr=infostr+"手机："+this.oldsInfo[j].oldPhone+",";
-                        infostr=infostr+"密码："+this.oldsInfo[j].oldPwd+"<br/>";
+                        // infostr=infostr+"手机："+this.oldsInfo[j].oldPhone+",";
+                        // infostr=infostr+"密码："+this.oldsInfo[j].oldPwd+"<br/>";
                         if(this.oldsInfo[j].camera==1){
                             infostr+="<button onclick='exec()'>查看室内情况</button>";
                         }
@@ -2150,7 +2216,7 @@ function pieClickFamily(name) {
                         if(data.data[i].oldMan[j].familyService)
                         {
                             //oid=data.data[i].oldMan[j].oid;
-                                testMessage+="<div onclick='markOldman(this)'>" +"老人编号:"+data.data[i].oldMan[j].oid+",老人姓名:"+data.data[i].oldMan[j].oldName+"</div>";
+                                testMessage+="<div onclick='markOldman(this)'>" +"编号:"+data.data[i].oldMan[j].oid+",姓名:"+data.data[i].oldMan[j].oldName+"</div>";
 
                         }
 
@@ -2171,11 +2237,13 @@ function pieClickFamily(name) {
         return;
     }
     $.messager.show({
-        title:"title",
+        title:"老人信息",
         msg:testMessage,
         showType:'fade',
-        width:"15%",
-        height:'38%',
+        width:"28%",
+        height:'31%',
+        left:"73%",
+        top:"20%",
         timeout:15000,
         style:{
             right:'',
@@ -2204,7 +2272,7 @@ function pieClickService(name) {
                         if(data.data[i].oldMan[j].status==1)
                         {
                             //oid=data.data[i].oldMan[j].oid;
-                            testMessage+="<div onclick='markOldman(this)'>" +"老人编号:"+data.data[i].oldMan[j].oid+",老人姓名:"+data.data[i].oldMan[j].oldName+"</div>";
+                            testMessage+="<div onclick='markOldman(this)'>" +"编号:"+data.data[i].oldMan[j].oid+",姓名:"+data.data[i].oldMan[j].oldName+"</div>";
 
                         }
                     }
@@ -2228,7 +2296,7 @@ function pieClickService(name) {
                         if(data.data[i].oldMan[j].familyService)
                         {
                             //oid=data.data[i].oldMan[j].oid;
-                            testMessage+="<div onclick='markOldman(this)'>" +"老人编号:"+data.data[i].oldMan[j].oid+",老人姓名:"+data.data[i].oldMan[j].oldName+"</div>";
+                            testMessage+="<div onclick='markOldman(this)'>" +"编号:"+data.data[i].oldMan[j].oid+",姓名:"+data.data[i].oldMan[j].oldName+"</div>";
 
                         }
                     }
@@ -2238,11 +2306,13 @@ function pieClickService(name) {
 
     }
     $.messager.show({
-        title:"title",
+        title:"老人信息",
         msg:testMessage,
         showType:'fade',
-        width:"15%",
-        height:'38%',
+        width:"28%",
+        height:'31%',
+        left:"73%",
+        top:"20%",
         timeout:15000,
         style:{
             right:'',
@@ -2271,7 +2341,7 @@ function pieClickDevice(name) {
                         if(data.data[i].oldMan[j].careSystem)
                         {
                             //oid=data.data[i].oldMan[j].oid;
-                            testMessage+="<div onclick='markOldman(this)'>" +"老人编号:"+data.data[i].oldMan[j].oid+",老人姓名:"+data.data[i].oldMan[j].oldName+"</div>";
+                            testMessage+="<div onclick='markOldman(this)'>" +"编号:"+data.data[i].oldMan[j].oid+",姓名:"+data.data[i].oldMan[j].oldName+"</div>";
 
                         }
                     }
@@ -2295,7 +2365,7 @@ function pieClickDevice(name) {
                         if(data.data[i].oldMan[j].camera)
                         {
                             //oid=data.data[i].oldMan[j].oid;
-                            testMessage+="<div onclick='markOldman(this)'>" +"老人编号:"+data.data[i].oldMan[j].oid+",老人姓名:"+data.data[i].oldMan[j].oldName+"</div>";
+                            testMessage+="<div onclick='markOldman(this)'>" +"编号:"+data.data[i].oldMan[j].oid+",姓名:"+data.data[i].oldMan[j].oldName+"</div>";
 
                         }
                     }
@@ -2319,7 +2389,7 @@ function pieClickDevice(name) {
                         if(data.data[i].oldMan[j].familyService)
                         {
                             //oid=data.data[i].oldMan[j].oid;
-                            testMessage+="<div onclick='markOldman(this)'>" +"老人编号:"+data.data[i].oldMan[j].oid+",老人姓名:"+data.data[i].oldMan[j].oldName+"</div>";
+                            testMessage+="<div onclick='markOldman(this)'>" +"编号:"+data.data[i].oldMan[j].oid+",姓名:"+data.data[i].oldMan[j].oldName+"</div>";
 
                         }
                     }
@@ -2329,11 +2399,13 @@ function pieClickDevice(name) {
 
     }
     $.messager.show({
-        title:"",
+        title:"老人信息",
         msg:testMessage,
         showType:'fade',
-        width:"25%",
-        height:'38%',
+        width:"28%",
+        height:'31%',
+        left:"73%",
+        top:"20%",
         timeout:15000,
         style:{
             right:'',

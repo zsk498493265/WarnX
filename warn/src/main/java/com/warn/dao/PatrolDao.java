@@ -16,7 +16,13 @@ public interface PatrolDao {
 
     Integer getOldIdByRecord(Integer point);
 
+    String getMaxTimeByWorker(String worker);
+
+    Integer getPointByTime(String time);
+
     List<Integer> getPoints();
+
+    List<Integer> getPointsByWorker(String worker);
 
     Long getSizeOfPoint(Integer point);
 

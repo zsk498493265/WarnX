@@ -238,7 +238,7 @@
       }
     },
     onClickRow:function (rowIndex,rowData,value) {
-      addWarnIcon(rowData.oid);
+      addInfoIcon(rowData.oid);
       
     }
   });

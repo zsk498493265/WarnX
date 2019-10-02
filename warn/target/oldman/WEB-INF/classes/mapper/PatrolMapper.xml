@@ -30,6 +30,18 @@
         select distinct point from xun_geng where 1=1
     </select>
 
+    <select id="getPointsByWorker" resultType="java.lang.Integer">
+        select distinct point from xun_geng where worker=#{param1}
+    </select>
+
+    <select id="getMaxTimeByWorker" resultType="java.lang.String">
+        select MAX(time) from xun_geng WHERE worker=#{param1}
+    </select>
+
+    <select id="getPointByTime" resultType="java.lang.Integer">
+        select distinct point from xun_geng WHERE time=#{param1}
+    </select>
+
     <select id="getSizeOfPoint" resultType="java.lang.Long">
         select count(1) from xun_geng where point = #{point}
     </select>

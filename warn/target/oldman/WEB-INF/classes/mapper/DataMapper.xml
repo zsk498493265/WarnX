@@ -21,6 +21,7 @@
         <result property="careSystem" column="care_system"/>
         <result property="camera" column="camera"/>
         <result property="linkMan" column="linkMan"/>
+        <result property="linkPhone" column="linkPhone"/>
         <association property="relatives" javaType="com.warn.entity.Relatives">
             <id property="relid" column="relid"/>
             <result property="rName" column="rName"/>
@@ -138,7 +139,7 @@
     <!--参数只有一个的话 可以直接用对象的属性值，但是有两个以上的话 就要 对象名.属性名-->
     <select id="datagridUser" resultMap="resultOldMan">
         select
-        old.oid,old.gatewayID,old.segment,old.oldName,old.oldPhone,old.oldAddress,old.oldRegtime,old.sex,old.age,family_service,care_system,camera,oldQQ,oldPwd,linkMan
+        old.oid,old.gatewayID,old.segment,old.oldName,old.oldPhone,old.oldAddress,old.oldRegtime,old.sex,old.age,family_service,care_system,camera,oldQQ,oldPwd,linkMan,linkPhone
         FROM oldman old
         WHERE is_map=1
         <if test="oldMan.oid != null and oldMan.oid != ''">
@@ -259,7 +260,7 @@
 
     <!--插入后返回老人的主键 以便于给relatives的oldId赋值-->
     <insert id="addOldman" parameterType="com.warn.entity.OldMan"  useGeneratedKeys="true" keyProperty="oid">
-        INSERT INTO oldman(gatewayID,segment,oldName,oldPhone,oldAddress,oldRegtime,oldQQ,oldPwd,family_service,care_system,camera,jd,wd,louID,is_map) VALUES (#{gatewayID},#{segment},#{oldName},#{oldPhone},#{oldAddress},#{oldRegtime},#{oldQQ},#{oldPwd},#{family_service},#{care_system},#{camera},#{jd},#{wd},#{louId},1)
+        INSERT INTO oldman(gatewayID,segment,oldName,oldPhone,oldAddress,oldRegtime,family_service,care_system,camera,linkMan,linkPhone,jd,wd,louID,is_map) VALUES (#{gatewayID},#{segment},#{oldName},#{oldPhone},#{oldAddress},#{oldRegtime},#{familyService},#{careSystem},#{camera},#{linkMan},#{linkPhone},#{jd},#{wd},#{louId},1)
     </insert>
 
     <insert id="addWorker" parameterType="com.warn.entity.Worker"  useGeneratedKeys="true" keyProperty="oid">

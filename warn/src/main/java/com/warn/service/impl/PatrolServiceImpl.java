@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.net.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -147,27 +148,62 @@ public class PatrolServiceImpl implements PatrolService {
         Map<String,Integer> worker = new HashMap<>();
         Map<String,Integer> point = new HashMap<>();
         Integer[][] num = new Integer[patrols.size()][patrols.size()];
+        List<String>errorWorkers=new ArrayList<String>();
+
+        Set<String>keySet;
         for(int n=0;n<patrols.size();n++)
             for(int j=0;j<patrols.size();j++)
                 num[n][j] = 0;
-         Integer i = 0;
+         Integer i = 0,j = 0;
         for(Patrol patrol:patrols){
             if(!worker.containsKey(patrol.getWorker()))
-                worker.put(patrol.getWorker(),i);
+                worker.put(patrol.getWorker(),i++);
             if(!point.containsKey(patrol.getPoint()))
-                point.put(patrol.getPoint(),i);
+                point.put(patrol.getPoint(),j++);
             num[worker.get(patrol.getWorker())][point.get(patrol.getPoint())]++;
         }
+
         for(int n=0;n<patrols.size();n++){
             Integer service = 0;
-            for(int j=0;j<patrols.size();j++){
-                if(!(num[n][j] % 2 == 0)){
+            for(int k=0;k<patrols.size();k++){
+                if(!(num[n][k] % 2 == 0)){
                     service++;
                 }
             }
-            if(service >= 2)
-                return new Result(true,"我爱寻网站数据延迟");
+            if(service>=2)
+            {
+                keySet=worker.keySet();
+                Iterator<String> it = keySet.iterator();
+                while(it.hasNext()) {                //判断集合是否有元素
+                    String key = it.next();         //获取每一个键
+                    Integer value = worker.get(key);
+                    if(value==n)
+                        errorWorkers.add(key);
+                }
+            }
+
         }
+        for(String workerId:errorWorkers){
+            List<Integer> points = patrolDao.getPointsByWorker(workerId);
+            for(Integer point1:points){
+                Integer oid = patrolDao.getOidByPoint(point1);
+                OldMan oldMan = new OldMan();
+                oldMan.setOid(oid);
+                oldMan.setStatus(0);
+                dataDao.editOldManStatus(oldMan);
+            }
+            String maxTime=patrolDao.getMaxTimeByWorker(workerId);
+            Integer point2=patrolDao.getPointByTime(maxTime);
+            Integer oid = patrolDao.getOidByPoint(point2);
+            OldMan oldMan = new OldMan();
+            oldMan.setOid(oid);
+            oldMan.setStatus(1);
+            dataDao.editOldManStatus(oldMan);
+
+
+        }
+
+
             return new Result(true,"我爱寻网站数据正常");
     }
 

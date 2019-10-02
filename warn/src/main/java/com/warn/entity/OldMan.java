@@ -34,15 +34,6 @@ public class OldMan {
     private String familyService;
     private String careSystem;
 
-    public String getLinkMan() {
-        return linkMan;
-    }
-
-    public void setLinkMan(String linkMan) {
-        this.linkMan = linkMan;
-    }
-
-    private String linkMan;
 
     public String getFamilyService() {
         return familyService;
@@ -61,6 +52,25 @@ public class OldMan {
     }
     private String camera;
 
+    private String linkMan;
+
+    public String getLinkMan() {
+        return linkMan;
+    }
+
+    public void setLinkMan(String linkMan) {
+        this.linkMan = linkMan;
+    }
+
+    public String getLinkPhone() {
+        return linkPhone;
+    }
+
+    public void setLinkPhone(String linkPhone) {
+        this.linkPhone = linkPhone;
+    }
+
+    private String linkPhone;
     private String sex;
     private Integer isMap;
 

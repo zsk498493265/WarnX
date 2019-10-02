@@ -55,6 +55,7 @@
         <th data-options="field:'careSystem',width:fixWidth(0.052),align:'center'" rowspan="2">关怀系统</th>
         <th data-options="field:'camera',width:fixWidth(0.052),align:'center'" rowspan="2">摄像头</th>
         <th data-options="field:'linkMan',width:fixWidth(0.052),align:'center'" rowspan="2">紧急联系人</th>
+        <th data-options="field:'linkPhone',width:fixWidth(0.052),align:'center'" rowspan="2">紧急联系人电话</th>
 
 
         <th data-options="field:'relid',hidden:true,formatter: function(value,row,index){if (row.relatives.relid){return row.relatives.relid;} else {return '';}}">紧急联系人ID</th>
@@ -232,9 +233,10 @@
               <td><input name="segmentTwo_Ten" value="2" type="radio"/>二进制<input name="segmentTwo_Ten" value="10" type="radio">十进制</td>
           </tr>
           <tr>
-              <td><span class="addButton"></span></td>
-              <td><input name="segment" class="easyui-textbox" type="text" data-options="validType:'length[1,4]'"></td>
+              <td><span class="addButton">网段：</span></td>
+              <td><input name="segment" class="easyui-textbox" type="text"></td>
           </tr>
+
         <tr>
             <td><span class="addButton">人员电话：</span></td>
           <td><input name="oldPhone" class="easyui-textbox" type="text"></td>
@@ -252,24 +254,24 @@
               <td><input name="wd" id="wd" type="text"/></td>
           </tr>
           <tr>
-              <td><span class="addButton">QQ号：</span></td>
-              <td><input name="oldQQ" class="easyui-textbox" type="text"></td>
-          </tr>
-          <tr>
-              <td><span class="addButton">QQ密码：</span></td>
-              <td><input name="oldPwd" class="easyui-textbox" type="text"></td>
-          </tr>
-          <tr>
               <td><span class="addButton">是否参与居家养老系统（参加填1,不参加填0）：</span></td>
-              <td><input name="family_service" class="easyui-textbox" type="text"></td>
+              <td><input name="familyService" class="easyui-textbox" type="text"></td>
           </tr>
           <tr>
               <td><span class="addButton">是否参与关怀系统（参加填1,不参加填0）：</span></td>
-              <td><input name="care_system" class="easyui-textbox" type="text"></td>
+              <td><input name="careSystem" class="easyui-textbox" type="text"></td>
           </tr>
           <tr>
               <td><span class="addButton">是否安装摄像头（安装填1,未安装填0）：</span></td>
               <td><input name="camera" class="easyui-textbox" type="text"></td>
+          </tr>
+          <tr>
+              <td><span class="addButton">紧急联系人姓名：</span></td>
+              <td><input name="linkMan" class="easyui-textbox" type="text"></td>
+          </tr>
+          <tr>
+              <td><span class="addButton">紧急联系人电话：</span></td>
+              <td><input name="linkPhone" class="easyui-textbox" type="text"></td>
           </tr>
         <tr style="display: none">
             <td><span class="addButton">姓名：</span></td>
