@@ -27,7 +27,7 @@ import java.util.logging.SimpleFormatter;
  * Created by admin on 2017/4/10.
  */
 @Controller
-@RequestMapping("/sensor")
+@RequestMapping("/alarm")
 public class SensorController {
 
     @Autowired

@@ -40,6 +40,8 @@ public class AlarmServiceImpl implements AlarmService {
     @Transactional
     public Result getAlarmForbidden(HttpServletRequest request) {
         try {
+            //编码格式
+            request.setCharacterEncoding("GBK");
             ServletInputStream inputStream = request.getInputStream();
             StringBuffer buffer = new StringBuffer();
             byte[] b = new byte[1024];
@@ -51,7 +53,6 @@ public class AlarmServiceImpl implements AlarmService {
 //            Warn_all warn_all = (Warn_all) JSONObject.toJavaObject(json,Warn_all.class);
             Map<String,Class> classMap=new HashMap<>();
             DwrData warn_all = (DwrData) JSONObject.toBean(json,DwrData.class,classMap);
-
 //            Warn_all warn_all = (Warn_all)JSONObject.toBean(json,Warn_all.class,classMap);
           //  if(json.get("type")=="warn"){
                 //alarmForbidden.setWarnLevel(Integer.parseInt(String.valueOf(json.get("warnLevel"))));

@@ -234,6 +234,7 @@ public class PatrolServiceImpl implements PatrolService {
             OldMan oldMan = new OldMan();
             oldMan.setOid(oid);
             if(num % 2 == 0){
+
                 autoValue.setInfo("0");
                 oldMan.setStatus(0);
                 dataDao.editOldManStatus(oldMan);

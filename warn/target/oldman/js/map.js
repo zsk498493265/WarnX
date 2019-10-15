@@ -82,7 +82,7 @@ $.ajax({
     dataType: "json",
     async: false,
     success: function (data) {
-        alert(data.data);
+        //alert(data.data);
     }
 });
 // 报警cookie
@@ -97,12 +97,12 @@ var head = 0;
 var tail = 0;
 var number = 0;
 var alarmKeeper = [];
-function warn2(data) {
+function warn21(data) {
     alert("进入");
     console.log(data);
 }
-function warn21(data){
-    //alert("进入报警");
+function warn2(data){
+    //alert("进入/警报");
     //判断老人是不是在数据库
    // alert("进入");
     //console.log(data);
@@ -265,12 +265,12 @@ function warn21(data){
         //预警信息
         var warnMessage = "";
         var title = "";
-        if (data.type == "warn_move") {
+        if (data.type == "warn_position") {
             //行为预警
             title="行为预警";
             warnMessage = "<div class='oldMan'><span class='messageT'>老人信息：</span><br><p>" +
                 "老人ID：<span class='messageD'>" + data.warn.oldMan.oid + "</span></p><p>" +
-                "老人姓名：<span class='messageD'>" + data.warn.oldMan.oldName + "</span></p><p>" +
+                        "老人姓名：<span class='messageD'>" + data.warn.oldMan.oldName + "</span></p><p>" +
                 "老人电话：<span class='messageD'>" + data.warn.oldMan.oldPhone + "</span></p><p>" +
                 "老人住址：<span class='messageD'>" + data.warn.oldMan.oldAddress + "</span></p></div>" +
                 "<div class='detail'><span class='messageT'>行为信息：</span><br><p>" +
@@ -279,12 +279,13 @@ function warn21(data){
                 "所处房间：<span class='messageD'>" + data.warn.room.roomName + "</span></p><p>" +
                 "最初不动的时间：<span class='messageD'>" + data.warn.time + "</span></p><p>" +
                 "是否在该房间的生活规律模型中：<span class='messageD'>" + (data.warn.inTime == 'true' ? "在<p>模型所在时间段：<span class='messageD'>" + data.warn.times + "</span></p><p>" +
-                    "规律类型：<span class='messageD'>" + (data.warn.flag == "a" ? "活动" : ((data.warn.flag == "r") ? "休息" : "活动、休息")) + "</span></p>" :
+                    "规律类型：<span class='messageD'>" + (data.warn.flag == "a" ? "活动" : ((data.warn.flag == "r") ? "休息" : "活动、休息")) + "</span></p>" :+
                     "不在") + "</span></p></div><input name="+data.id+" type='button' value='已读' onclick='readC()'/>";
             oldId=data.warn.oldMan.oid;
             oldName=data.warn.oldMan.oldName;
             oldPhone=data.warn.oldMan.oldPhone;
             oldAddress=data.warn.oldMan.oldAddress;
+            //alert(warnMessage);
         } else if (data.type == "warn_wendu") {
             //温度预警
             title="温度预警";
@@ -316,7 +317,7 @@ function warn21(data){
                 "起止时间：<span class='messageD'>" + data.warn_light.time+ "</span></p><p>" +
                 "当前持续时间：<span class='messageD'>" + data.warn_light.value + "</span></p><p>" +
                 "该房间光强阈值：：<span class='messageD'>" + data.warn_light.threshold_light.lThreshold + "</span></p><p>" +
-                "检测时间段：<span class='messageD'>" + data.warn_light.threshold_light.times + "</span></p><p></div>";
+                "检测时间段：<span class='messageD'>" + data.warn_light.threshold_light.times + "</span></p><p></div>"+
             "持续超过：<span class='messageD'>" + data.warn_light.threshold_light.continueTime + " 分钟报警</span></p><p></div><input name="+data.id+" type='button' value='已读' onclick='readC()'/>";
             oldId=data.warn_light.oldMan.oid;
             oldName=data.warn_light.oldMan.oldName;
@@ -367,18 +368,21 @@ function warn21(data){
             oldPhone=data.outdoor.oldMan.oldPhone;
             oldAddress=data.outdoor.oldMan.oldAddress;
         }
-        $.messager.show({
-            title:title,
-            msg:warnMessage,
-            showType:'fade',
-            width:"15%",
-            height:'38%',
-            timeout:15000,
-            style:{
-                right:'',
-                top:document.body.scrollTop+document.documentElement.scrollTop,
-                bottom:''
-            }
+        // $.messager.show({
+        //     title:title,
+        //     msg:warnMessage,
+        //     showType:'fade',
+        //     width:"15%",
+        //     height:'38%',
+        //     timeout:1500000,
+        //     style:{
+        //         right:'',
+        //         top:document.body.scrollTop+document.documentElement.scrollTop,
+        //         bottom:''
+        //     }
+        // });
+        $.messager.alert(title,warnMessage,'danger',function(){
+            //该网关故障消息已读
         });
         playSound("warn");
 
@@ -434,7 +438,7 @@ function addInfoIcon(id) {
                 for(var j=0;j<dataR[i].oldMan.length;j++){
                     if(dataR[i].oldMan[j].oid==id){
                         var json={icon:{w:21,h:21,l:0,t:0,x:6,lb:5}};
-                        var icon = new BMap.Icon("https://organold.oss-cn-shanghai.aliyuncs.com/img/warnS.png", new BMap.Size(128,128),{imageOffset: new BMap.Size(0,0),infoWindowOffset:new BMap.Size(json.lb+5,1),offset:new BMap.Size(0,0)});
+                        var icon = new BMap.Icon("https://organold.oss-cn-shanghai.aliyuncs.com/img/info.png", new BMap.Size(128,128),{imageOffset: new BMap.Size(0,0),infoWindowOffset:new BMap.Size(json.lb+5,1),offset:new BMap.Size(0,0)});
                         var point = new BMap.Point(dataR[i].xR, dataR[i].yR);
                         marker= new BMap.Marker(point, {icon: icon});
                         marker.setTitle(dataR[i].info);
@@ -2449,7 +2453,9 @@ function markOldman(param){
         for(var j=0;j<dataR[i].oldMan.length;j++){
             if(dataR[i].oldMan[j].oid==id){
                 var json={icon:{w:21,h:21,l:0,t:0,x:6,lb:5}};
-                var icon = new BMap.Icon("https://organold.oss-cn-shanghai.aliyuncs.com/img/warnS.png", new BMap.Size(128,128),{imageOffset: new BMap.Size(0,0),infoWindowOffset:new BMap.Size(json.lb+5,1),offset:new BMap.Size(0,0)});
+                //var icon = new BMap.Icon("https://organold.oss-cn-shanghai.aliyuncs.com/img/warnS.png", new BMap.Size(128,128),{imageOffset: new BMap.Size(0,0),infoWindowOffset:new BMap.Size(json.lb+5,1),offset:new BMap.Size(0,0)});
+                var icon = new BMap.Icon("https://organold.oss-cn-shanghai.aliyuncs.com/img/info.gif", new BMap.Size(128,128),{imageOffset: new BMap.Size(0,0),infoWindowOffset:new BMap.Size(json.lb+5,1),offset:new BMap.Size(0,0)});
+
                 var point = new BMap.Point(dataR[i].xR, dataR[i].yR);
                 marker= new BMap.Marker(point, {icon: icon});
                 marker.setTitle(dataR[i].info);
