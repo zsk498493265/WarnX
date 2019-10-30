@@ -30,6 +30,8 @@ public interface DataService {
     //删除老人
     void deleteOldmanById(Integer oldManId);
 
+    void updateOldmanStatusById(Integer oldManId);
+
     void deleteWorkerById(Integer id);
 
     List<OldMan> getAllOldmanID_Name();
@@ -44,4 +46,5 @@ public interface DataService {
     void addWorker(Worker worker);
     //添加巡更
     void addXungeng(Xungeng xungeng);
+
 }

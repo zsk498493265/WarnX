@@ -18,6 +18,8 @@ public interface PatrolDao {
 
     String getMaxTimeByWorker(String worker);
 
+    void addData(String worker,Integer point);
+
     Integer getPointByTime(String time);
 
     List<Integer> getPoints();

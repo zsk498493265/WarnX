@@ -17,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,15 +43,19 @@ public class AlarmServiceImpl implements AlarmService {
     public Result getAlarmForbidden(HttpServletRequest request) {
         try {
             //编码格式
-            request.setCharacterEncoding("GBK");
+            //request.setCharacterEncoding("GB2312");
             ServletInputStream inputStream = request.getInputStream();
-            StringBuffer buffer = new StringBuffer();
-            byte[] b = new byte[1024];
-            int len = 0;
-            while ((len = inputStream.read(b)) != -1) {
-                buffer.append(new String(b, 0, len));
+            //BufferedReader buffer =
+            BufferedReader buffer = new BufferedReader(new InputStreamReader(request.getInputStream(),"UTF-8"));
+            //byte[] b = new byte[1024];
+            //int len = 0;
+            StringBuilder sb=new StringBuilder();
+            String str="";
+            while ((str=buffer.readLine())!=null) {
+                sb.append(str);
+                //buffer.append(new String(b, 0, len));
             }
-            JSONObject json = JSONObject.fromObject(buffer.toString());
+            JSONObject json = JSONObject.fromObject(sb.toString());
 //            Warn_all warn_all = (Warn_all) JSONObject.toJavaObject(json,Warn_all.class);
             Map<String,Class> classMap=new HashMap<>();
             DwrData warn_all = (DwrData) JSONObject.toBean(json,DwrData.class,classMap);

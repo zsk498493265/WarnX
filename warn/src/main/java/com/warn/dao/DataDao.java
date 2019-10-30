@@ -62,4 +62,5 @@ public interface DataDao {
     Integer addWorker(Worker worker);
 
     Integer addXungeng(Xungeng xungeng);
+
 }

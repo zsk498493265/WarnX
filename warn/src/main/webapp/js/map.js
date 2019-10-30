@@ -105,10 +105,11 @@ function warn2(data){
     //alert("进入/警报");
     //判断老人是不是在数据库
    // alert("进入");
-    //console.log(data);
+    console.log(data);
     // alert("GID:"+data.oldMan.gatewayID);
-    // var is_exist=0;
-    // var gid=data.oldMan.gatewayID;
+    var is_exist=0;
+    var gid=0;
+    //alert(gid);
     // $.ajax({
     //     type: "GET",
     //     url: "/map/getLouMarkersAndOlds",
@@ -130,8 +131,9 @@ function warn2(data){
     //
     //     }
     // });
-
     //
+
+
     wdid=data.id;
     // getNoReadSum();
     //紧急报警
@@ -156,6 +158,7 @@ function warn2(data){
     //if(is_exist==0)return;
     if(data.type=="urgency"){
 
+        gid=data.urgency.oldMan.gatewayID;
         var urgencyMessage="<div class='eauip'><span class='messageT'>报警设备信息：" +
             "</span><br><p>设备ID：<span class='messageD'>"+data.urgency.equip.eid+"</span></p>"+
             "<p>设备所在房间：<span class='messageD'>"+data.urgency.room.roomName+"</span></p></div>"+
@@ -164,7 +167,9 @@ function warn2(data){
             "老人姓名：<span class='messageD'>"+ data.urgency.oldMan.oldName+"</span></p><p>" +
             "老人电话：<span class='messageD'>"+ data.urgency.oldMan.oldPhone+"</span></p><p>" +
             "老人住址：<span class='messageD'>"+ data.urgency.oldMan.oldAddress+"</span></p></div>";
-        $.messager.alert('紧急报警！',urgencyMessage,'danger',function(){
+        if(gatewayID_exist(gid)==0)return;
+        oldId=data.urgency.oldMan.oid;
+        $.messager.alert('紧急报警！',urgencyMessage,'info',function(){
             // 该网关故障消息已读
             $.ajax({
                 type: "POST",
@@ -179,6 +184,18 @@ function warn2(data){
                     coveredAlarms();
                 }
             });
+            //点击确定恢复老人状态
+            $.ajax({
+                type: "POST",
+                url: pathJs + "/data/updateOldmanStatus",
+                dataType: "json",
+                data:{
+                    oldmanId:oldId
+                },
+                async:false,
+                success: function (data) {
+                }
+            });
         });
         playSound("urgency");
         oldId=data.urgency.oldMan.oid;
@@ -187,6 +204,7 @@ function warn2(data){
         oldAddress=data.urgency.oldMan.oldAddress;
     }else if(data.type=="gatewayDown"){
         var downid=data.downid;
+        gid=data.oldMan.gatewayID;
         //网关故障
         var gatewayDownMessage="<div class='eauip'><span class='messageT'>网关故障信息：" +
             "</span><br><p>网关：<span class='messageD'>"+data.oldMan.gatewayID+"</span></p></div>"+
@@ -199,6 +217,7 @@ function warn2(data){
         oldName=data.oldMan.oldName;
         oldPhone=data.oldMan.oldPhone;
         oldAddress=data.oldMan.oldAddress;
+        if(gatewayID_exist(gid)==0)return;
         $.messager.alert('网关故障！',gatewayDownMessage,'danger',function(){
             // 该网关故障消息已读
             $.ajax({
@@ -212,6 +231,17 @@ function warn2(data){
                 success: function (data) {
                     //getNoReadSum();
                     coveredAlarms();
+                }
+            });
+            $.ajax({
+                type: "POST",
+                url: pathJs + "/data/updateOldmanStatus",
+                dataType: "json",
+                data:{
+                    oldmanId:oldId
+                },
+                async:false,
+                success: function (data) {
                 }
             });
         });
@@ -233,6 +263,7 @@ function warn2(data){
             default:
                 break;
         }
+        gid=data.oldMan.gatewayID;
         var gatewayDownMessage="<div class='eauip'><span class='messageT'>设备故障信息：" +
             "</span><br><p>设备ID：<span class='messageD'>"+data.equipDown.eid+"</span></p>"+
             "<p>设备种类：<span class='messageD'>"+type+"</span></p></div>"+
@@ -245,7 +276,8 @@ function warn2(data){
         oldName=data.oldMan.oldName;
         oldPhone=data.oldMan.oldPhone;
         oldAddress=data.oldMan.oldAddress;
-        $.messager.alert('设备故障！',gatewayDownMessage,'danger',function(){
+        if(gatewayID_exist(gid)==0)return;
+        $.messager.alert('设备故障！',gatewayDownMessage,'info',function(){
             //该网关故障消息已读
             $.ajax({
                 type: "POST",
@@ -259,6 +291,17 @@ function warn2(data){
                     //getNoReadSum();
                 }
             });
+            $.ajax({
+                type: "POST",
+                url: pathJs + "/data/updateOldmanStatus",
+                dataType: "json",
+                data:{
+                    oldmanId:oldId
+                },
+                async:false,
+                success: function (data) {
+                }
+            });
         });
         playSound("urgency");
     }else {
@@ -268,6 +311,7 @@ function warn2(data){
         if (data.type == "warn_position") {
             //行为预警
             title="行为预警";
+            gid=data.warn.oldMan.gatewayID;
             warnMessage = "<div class='oldMan'><span class='messageT'>老人信息：</span><br><p>" +
                 "老人ID：<span class='messageD'>" + data.warn.oldMan.oid + "</span></p><p>" +
                         "老人姓名：<span class='messageD'>" + data.warn.oldMan.oldName + "</span></p><p>" +
@@ -277,10 +321,7 @@ function warn2(data){
                 "预警级别：<span class='messageD read'>" + data.warn.warnLevel + "</span></p><p>" +
                 "已经不动：<span class='messageD read'>" + data.warn.noMoveTime + " </span>分钟</p><p>" +
                 "所处房间：<span class='messageD'>" + data.warn.room.roomName + "</span></p><p>" +
-                "最初不动的时间：<span class='messageD'>" + data.warn.time + "</span></p><p>" +
-                "是否在该房间的生活规律模型中：<span class='messageD'>" + (data.warn.inTime == 'true' ? "在<p>模型所在时间段：<span class='messageD'>" + data.warn.times + "</span></p><p>" +
-                    "规律类型：<span class='messageD'>" + (data.warn.flag == "a" ? "活动" : ((data.warn.flag == "r") ? "休息" : "活动、休息")) + "</span></p>" :+
-                    "不在") + "</span></p></div><input name="+data.id+" type='button' value='已读' onclick='readC()'/>";
+                "最初不动的时间：<span class='messageD'>" + data.warn.time + "</span></p></div><input name="+data.id+" type='button' value='已读' onclick='readC()'/>";
             oldId=data.warn.oldMan.oid;
             oldName=data.warn.oldMan.oldName;
             oldPhone=data.warn.oldMan.oldPhone;
@@ -289,15 +330,25 @@ function warn2(data){
         } else if (data.type == "warn_wendu") {
             //温度预警
             title="温度预警";
-            warnMessage = "<div class='oldMan'><span class='messageT'>老人信息：</span><br><p>" +
+            gid=data.warn_wendu.oldMan.gatewayID;
+            warnMessage = "老人信息：<br><p>" +
                 "老人ID：<span class='messageD'>" + data.warn_wendu.oldMan.oid + "</span></p><p>" +
                 "老人姓名：<span class='messageD'>" + data.warn_wendu.oldMan.oldName + "</span></p><p>" +
                 "老人电话：<span class='messageD'>" + data.warn_wendu.oldMan.oldPhone + "</span></p><p>" +
-                "老人住址：<span class='messageD'>" + data.warn_wendu.oldMan.oldAddress + "</span></p></div>" +
+                "老人住址：<span class='messageD'>" + data.warn_wendu.oldMan.oldAddress + "</span></p>" +
                 "<div class='detail'><span class='messageT'>温度信息：</span><br><p>" +
                 "报警房间：<span class='messageD read'>" + data.warn_wendu.threshold_wendu.room.roomName + "</span></p><p>" +
                 "当前温度：<span class='messageD read'>" + data.warn_wendu.wendu + "</span></p><p>" +
                 "该房间温度阈值：<span class='messageD'>" + data.warn_wendu.threshold_wendu.wThreshold + "</span></p><p></div><input name="+data.id+" type='button' value='已读' onclick='readC()'/>";
+            // warnMessage = "<div class='oldMan'><span class='messageT'>老人信息：</span><br><p>" +
+            //     "老人ID：<span class='messageD'>" + data.warn_wendu.oldMan.oid + "</span></p><p>" +
+            //     "老人姓名：<span class='messageD'>" + data.warn_wendu.oldMan.oldName + "</span></p><p>" +
+            //     "老人电话：<span class='messageD'>" + data.warn_wendu.oldMan.oldPhone + "</span></p><p>" +
+            //     "老人住址：<span class='messageD'>" + data.warn_wendu.oldMan.oldAddress + "</span></p></div>" +
+            //     "<div class='detail'><span class='messageT'>温度信息：</span><br><p>" +
+            //     "报警房间：<span class='messageD read'>" + data.warn_wendu.threshold_wendu.room.roomName + "</span></p><p>" +
+            //     "当前温度：<span class='messageD read'>" + data.warn_wendu.wendu + "</span></p><p>" +
+            //     "该房间温度阈值：<span class='messageD'>" + data.warn_wendu.threshold_wendu.wThreshold + "</span></p><p></div><input name="+data.id+" type='button' value='已读' onclick='readC()'/>";
             oldId=data.warn_wendu.oldMan.oid;
             oldName=data.warn_wendu.oldMan.oldName;
             oldPhone=data.warn_wendu.oldMan.oldPhone;
@@ -306,6 +357,7 @@ function warn2(data){
             //光强预警
             title="光强预警";
 
+            gid=data.warn_light.oldMan.gatewayID;
             warnMessage = "<div class='oldMan'><span class='messageT'>老人信息：</span><br><p>" +
                 "老人ID：<span class='messageD'>" + data.warn_light.oldMan.oid + "</span></p><p>" +
                 "老人姓名：<span class='messageD'>" + data.warn_light.oldMan.oldName + "</span></p><p>" +
@@ -326,6 +378,7 @@ function warn2(data){
         }else if(data.type=="outdoor_out"){
             //没有了  不用再进行提示了  代码先保留
             title="老人出门";
+            gid=data.outdoor.oldMan.gatewayID;
             warnMessage = "<div class='oldMan'><span class='messageT'>老人信息：</span><br><p>" +
                 "老人ID：<span class='messageD'>" + data.outdoor.oldMan.oid + "</span></p><p>" +
                 "老人姓名：<span class='messageD'>" + data.outdoor.oldMan.oldName + "</span></p><p>" +
@@ -341,6 +394,7 @@ function warn2(data){
 
         }else if(data.type=="outdoor_nocome"){
             title="老人出门未归预警";
+            gid=data.outdoor.oldMan.gatewayID;
             warnMessage = "<div class='oldMan'><span class='messageT'>老人信息：</span><br><p>" +
                 "老人ID：<span class='messageD'>" + data.outdoor.oldMan.oid + "</span></p><p>" +
                 "老人姓名：<span class='messageD'>" + data.outdoor.oldMan.oldName + "</span></p><p>" +
@@ -356,6 +410,7 @@ function warn2(data){
         }else if(data.type=="outdoor_come"){
             //没有了  不用再进行提示了  代码先保留
             title="老人回来";
+            gid=data.outdoor.oldMan.gatewayID;
             warnMessage = "<div class='oldMan'><span class='messageT'>老人信息：</span><br><p>" +
                 "老人ID：<span class='messageD'>" + data.outdoor.oldMan.oid + "</span></p><p>" +
                 "老人姓名：<span class='messageD'>" + data.outdoor.oldMan.oldName + "</span></p><p>" +
@@ -381,8 +436,20 @@ function warn2(data){
         //         bottom:''
         //     }
         // });
-        $.messager.alert(title,warnMessage,'danger',function(){
+        if(gatewayID_exist(gid)==0)return;
+        $.messager.alert(title,warnMessage,'info',function(){
             //该网关故障消息已读
+            $.ajax({
+                type: "POST",
+                url: pathJs + "/data/updateOldmanStatus",
+                dataType: "json",
+                data:{
+                    oldmanId:oldId
+                },
+                async:false,
+                success: function (data) {
+                }
+            });
         });
         playSound("warn");
 
@@ -395,11 +462,12 @@ function warn2(data){
     document.getElementById("oldAddress").innerText ="老人地址："+oldAddress ;
 
     //判断该老人是不是在该系统的数据库
-    //addWarnIcon(data.oldMan.gatewayID);
+    //alert(gid);
+    addWarnIcon(gid);
     //addWarnIcon(data.oldMan.gatewayID);
 
 }
-function addWarnIcon(id) {
+function gatewayID_exist(gid) {
     $.ajax({
         type: "GET",
         url: "/map/getLouMarkersAndOlds",
@@ -409,9 +477,37 @@ function addWarnIcon(id) {
             for(var i=0;i<data.data.length;i++) {
                 var dataR=data.data;
                 for(var j=0;j<dataR[i].oldMan.length;j++){
+                    if(dataR[i].oldMan[j].gatewayID==gid){
+                        return 1;
+                    }
+                }
+
+            }
+            return 0;
+
+
+        }
+    });
+
+}
+function addWarnIcon(id) {
+    $.ajax({
+        type: "GET",
+        url: "/map/getLouMarkersAndOlds",
+        dataType: "json",
+        async:false,
+        success: function (data) {
+            //alert(id);
+            for(var i=0;i<data.data.length;i++) {
+                var dataR=data.data;
+                for(var j=0;j<dataR[i].oldMan.length;j++){
+                    //alert(dataR[i].oldMan[j].gatewayID);
+
+                    //console.log(dataR);
                     if(dataR[i].oldMan[j].gatewayID==id){
+                        //alert("found");
                         var json={icon:{w:21,h:21,l:0,t:0,x:6,lb:5}};
-                        var icon = new BMap.Icon("https://organold.oss-cn-shanghai.aliyuncs.com/img/warnS.png", new BMap.Size(128,128),{imageOffset: new BMap.Size(0,0),infoWindowOffset:new BMap.Size(json.lb+5,1),offset:new BMap.Size(0,0)});
+                        var icon = new BMap.Icon("https://organold.oss-cn-shanghai.aliyuncs.com/img/info.png", new BMap.Size(45,45),{imageOffset: new BMap.Size(0,0),infoWindowOffset:new BMap.Size(json.lb+5,1),offset:new BMap.Size(0,0)});
                         var point = new BMap.Point(dataR[i].xR, dataR[i].yR);
                         marker= new BMap.Marker(point, {icon: icon});
                         marker.setTitle(dataR[i].info);
@@ -438,7 +534,7 @@ function addInfoIcon(id) {
                 for(var j=0;j<dataR[i].oldMan.length;j++){
                     if(dataR[i].oldMan[j].oid==id){
                         var json={icon:{w:21,h:21,l:0,t:0,x:6,lb:5}};
-                        var icon = new BMap.Icon("https://organold.oss-cn-shanghai.aliyuncs.com/img/info.png", new BMap.Size(128,128),{imageOffset: new BMap.Size(0,0),infoWindowOffset:new BMap.Size(json.lb+5,1),offset:new BMap.Size(0,0)});
+                        var icon = new BMap.Icon("https://organold.oss-cn-shanghai.aliyuncs.com/img/info.png", new BMap.Size(45,45),{imageOffset: new BMap.Size(0,0),infoWindowOffset:new BMap.Size(json.lb+5,1),offset:new BMap.Size(0,0)});
                         var point = new BMap.Point(dataR[i].xR, dataR[i].yR);
                         marker= new BMap.Marker(point, {icon: icon});
                         marker.setTitle(dataR[i].info);
@@ -1058,6 +1154,19 @@ function getWorkerMarkers() {
 
                 var icon = new BMap.Icon("https://organold.oss-cn-shanghai.aliyuncs.com/img/worker.png", new BMap.Size(60,30),{imageOffset: new BMap.Size(0,0),infoWindowOffset:new BMap.Size(json.lb+5,1),offset:new BMap.Size(0,0)});
 
+                var cxx,cyy;
+                var url_baidu="http://api.map.baidu.com/geoconv/v1/?coords="+data.data[i].cx+","+data.data[i].cy+"&from=1&to=5&ak=sGSOaO07WkRHHiCRxxbSQVBn";
+                $.ajax({
+                    type: "GET",
+                    dataType: "JSONP",
+                    url: url_baidu,
+                    async:false,
+                    success: function (response) {
+                        console.log(response);
+                        cxx=response.result[0].x;
+                        cyy=response.result[0].y;
+                    }
+                });
                 var point = new BMap.Point(data.data[i].cx, data.data[i].cy);
                 var marker = new BMap.Marker(point, {icon: icon});
                 marker.setTitle(data.data[i].id);
@@ -2454,7 +2563,7 @@ function markOldman(param){
             if(dataR[i].oldMan[j].oid==id){
                 var json={icon:{w:21,h:21,l:0,t:0,x:6,lb:5}};
                 //var icon = new BMap.Icon("https://organold.oss-cn-shanghai.aliyuncs.com/img/warnS.png", new BMap.Size(128,128),{imageOffset: new BMap.Size(0,0),infoWindowOffset:new BMap.Size(json.lb+5,1),offset:new BMap.Size(0,0)});
-                var icon = new BMap.Icon("https://organold.oss-cn-shanghai.aliyuncs.com/img/info.gif", new BMap.Size(128,128),{imageOffset: new BMap.Size(0,0),infoWindowOffset:new BMap.Size(json.lb+5,1),offset:new BMap.Size(0,0)});
+                var icon = new BMap.Icon("https://organold.oss-cn-shanghai.aliyuncs.com/img/info.png", new BMap.Size(128,128),{imageOffset: new BMap.Size(0,0),infoWindowOffset:new BMap.Size(json.lb+5,1),offset:new BMap.Size(0,0)});
 
                 var point = new BMap.Point(dataR[i].xR, dataR[i].yR);
                 marker= new BMap.Marker(point, {icon: icon});

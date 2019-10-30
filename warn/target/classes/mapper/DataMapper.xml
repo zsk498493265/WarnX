@@ -131,7 +131,7 @@
     </select>
     <select id="datagridMap" resultType="com.warn.entity.OldMan">
         SELECT
-        oid,oldName,oldQQ,oldPwd,status,family_service,care_system,camera,is_map
+        oid,oldName,oldQQ,oldPwd,status,gatewayID,family_service,care_system,camera,is_map
         from oldman
         where louID = #{id} and is_map=1
     </select>
@@ -336,6 +336,7 @@
     <update id="editOldManStatus" parameterType="com.warn.entity.OldMan">
         UPDATE oldman SET status=#{status} WHERE oid=#{oid}
     </update>
+
 
     <update id="editOldmanMap" parameterType="com.warn.entity.OldMan">
         UPDATE oldman SET louID=#{louId} WHERE oid=#{oid}

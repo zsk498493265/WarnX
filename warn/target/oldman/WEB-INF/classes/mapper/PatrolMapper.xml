@@ -42,6 +42,9 @@
         select distinct point from xun_geng WHERE time=#{param1}
     </select>
 
+    <insert id="addData">
+         INSERT INTO xun_geng(worker,point) VALUES (#{param1},#{param2})
+    </insert>
     <select id="getSizeOfPoint" resultType="java.lang.Long">
         select count(1) from xun_geng where point = #{point}
     </select>

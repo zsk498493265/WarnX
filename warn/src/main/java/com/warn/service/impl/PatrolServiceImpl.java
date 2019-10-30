@@ -191,6 +191,7 @@ public class PatrolServiceImpl implements PatrolService {
                 oldMan.setOid(oid);
                 oldMan.setStatus(0);
                 dataDao.editOldManStatus(oldMan);
+                patrolDao.addData(workerId,point1);
             }
             String maxTime=patrolDao.getMaxTimeByWorker(workerId);
             Integer point2=patrolDao.getPointByTime(maxTime);
@@ -199,6 +200,7 @@ public class PatrolServiceImpl implements PatrolService {
             oldMan.setOid(oid);
             oldMan.setStatus(1);
             dataDao.editOldManStatus(oldMan);
+            patrolDao.addData(workerId,point2);
 
 
         }

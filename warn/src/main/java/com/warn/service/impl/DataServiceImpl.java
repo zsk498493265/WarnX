@@ -257,6 +257,15 @@ public class DataServiceImpl implements DataService{
     }
 
     @Transactional
+    public void updateOldmanStatusById(Integer oldManId) {
+        OldMan oldMan = new OldMan();
+        oldMan.setOid(oldManId);
+        oldMan.setStatus(0);
+        dataDao.editOldManStatus(oldMan);
+    }
+
+
+    @Transactional
     public void deleteWorkerById(Integer id) {
         dataDao.deleteWorkerById(id);
 
@@ -284,4 +293,5 @@ public class DataServiceImpl implements DataService{
     public void editOldmanMap(OldMan oldMan) {
         dataDao.editOldmanMap(oldMan);
     }
+
 }

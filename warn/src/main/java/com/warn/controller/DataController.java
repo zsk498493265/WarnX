@@ -154,6 +154,19 @@ public class DataController {
     }
 
     /**
+     * 更新老人状态
+     * @param oldmanId
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/updateOldmanStatus",method = RequestMethod.POST)
+    public Result updateOldmanStatus(@RequestParam Integer oldmanId){
+
+        dataService.updateOldmanStatusById(oldmanId);
+        return new Result(true);
+    }
+
+    /**
      * 删除工人信息
      * @param id
      * @return
