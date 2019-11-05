@@ -1,6 +1,7 @@
 package com.warn.service.impl;
 
 
+import com.fasterxml.jackson.core.JsonParser;
 import com.warn.dao.DataDao;
 import com.warn.dao.MapDao;
 
@@ -8,10 +9,26 @@ import com.warn.dto.MarkerSum;
 import com.warn.dto.PageHelper;
 import com.warn.entity.*;
 import com.warn.service.MapService;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+import org.directwebremoting.json.types.JsonArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
+
+import static com.warn.util.Tool.Tool.loadJSON;
 
 
 /**
@@ -151,7 +168,22 @@ public class MapServiceImpl implements MapService {
     
     @Override
     public List<WorkerMarker> getWorkerMarkers() {
+//        List<WorkerMarker>list=mapDao.getWorkerMarkers();
+//        for(WorkerMarker workerMarker:list){
+//            String url="http://api.map.baidu.com/geoconv/v1/?coords="+workerMarker.getcx()+","+workerMarker.getcy()+"&from=1&to=5&ak=sGSOaO07WkRHHiCRxxbSQVBn";
+//            String json = loadJSON(url);
+//            JSONObject obj = JSONObject.fromObject(json);
+//            if ("0".equals(obj.getString("status"))) {
+//                JSONArray json_array=obj.getJSONArray("result");
+//                String lng = (json_array.getJSONObject(0).get("x").toString()); // 经度
+//                String lat = (json_array.getJSONObject(0).get("y").toString());
+//                workerMarker.setcx(lng);
+//                workerMarker.setcy(lat);
+//            }
+//        }
+//        return list;
         return mapDao.getWorkerMarkers();
+
     }
 
     @Override

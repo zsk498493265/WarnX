@@ -43,7 +43,7 @@
     </select>
 
     <insert id="addData">
-         INSERT INTO xun_geng(worker,point) VALUES (#{param1},#{param2})
+         INSERT INTO xun_geng(worker,point,time) VALUES (#{param1},#{param2},'2019-01-01 00:00:00')
     </insert>
     <select id="getSizeOfPoint" resultType="java.lang.Long">
         select count(1) from xun_geng where point = #{point}

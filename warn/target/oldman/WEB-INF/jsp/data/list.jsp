@@ -266,6 +266,14 @@
               <td><input name="camera" class="easyui-textbox" type="text"></td>
           </tr>
           <tr>
+              <td><span class="addButton">性別：</span></td>
+              <td><input name="sex" class="easyui-textbox" type="text"></td>
+          </tr>
+          <tr>
+              <td><span class="addButton">年龄：</span></td>
+              <td><input name="age" class="easyui-textbox" type="text"></td>
+          </tr>
+          <tr>
               <td><span class="addButton">紧急联系人姓名：</span></td>
               <td><input name="linkMan" class="easyui-textbox" type="text"></td>
           </tr>

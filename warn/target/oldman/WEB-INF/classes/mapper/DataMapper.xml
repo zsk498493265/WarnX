@@ -260,7 +260,7 @@
 
     <!--插入后返回老人的主键 以便于给relatives的oldId赋值-->
     <insert id="addOldman" parameterType="com.warn.entity.OldMan"  useGeneratedKeys="true" keyProperty="oid">
-        INSERT INTO oldman(gatewayID,segment,oldName,oldPhone,oldAddress,oldRegtime,family_service,care_system,camera,linkMan,linkPhone,jd,wd,louID,is_map) VALUES (#{gatewayID},#{segment},#{oldName},#{oldPhone},#{oldAddress},#{oldRegtime},#{familyService},#{careSystem},#{camera},#{linkMan},#{linkPhone},#{jd},#{wd},#{louId},1)
+        INSERT INTO oldman(gatewayID,segment,oldName,oldPhone,oldAddress,oldRegtime,family_service,care_system,camera,linkMan,linkPhone,jd,wd,louID,is_map,sex,age) VALUES (#{gatewayID},#{segment},#{oldName},#{oldPhone},#{oldAddress},#{oldRegtime},#{familyService},#{careSystem},#{camera},#{linkMan},#{linkPhone},#{jd},#{wd},#{louId},1,#{sex},#{age})
     </insert>
 
     <insert id="addWorker" parameterType="com.warn.entity.Worker"  useGeneratedKeys="true" keyProperty="oid">

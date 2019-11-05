@@ -36,6 +36,7 @@ var selectDistrict=[];//存储添加标注时  区的选择  实时更新
 
 //messager test
 var num1=111,num2=222;
+var cxx=-1,cyy=-1,processed_point={x:0,y:0};
 var testMessage="<div onclick='markOldman(num1)'>" +"老人1"+"</div>"+
     "<div onclick='markOldman(num2)'>" +"老人2"+"</div>";
 
@@ -1140,6 +1141,27 @@ function getSums() {
 setInterval(louChange, 3000000);      //每30s刷新一次
 
 var strQQ="init";
+function sleep(d){
+    for(var t = Date.now();Date.now() - t <= d;);
+}
+function convertGpsPoint(url_baidu){
+    $.ajax({
+        type: "GET",
+        dataType: "JSONP",
+        url: url_baidu,
+        async:false,
+        success: function (response) {
+            //已执行
+            cxx=response.result[0].x;
+            cyy=response.result[0].y;
+            //alert("in1:"+processed_point.x);
+        }
+    });
+    // sleep(2000);
+    //alert("in2:"+processed_point.x);
+    //return processed_point;
+}
+var dataP;
 function getWorkerMarkers() {
     $.ajax({
         type: "GET",
@@ -1154,20 +1176,10 @@ function getWorkerMarkers() {
 
                 var icon = new BMap.Icon("https://organold.oss-cn-shanghai.aliyuncs.com/img/worker.png", new BMap.Size(60,30),{imageOffset: new BMap.Size(0,0),infoWindowOffset:new BMap.Size(json.lb+5,1),offset:new BMap.Size(0,0)});
 
-                var cxx,cyy;
-                var url_baidu="http://api.map.baidu.com/geoconv/v1/?coords="+data.data[i].cx+","+data.data[i].cy+"&from=1&to=5&ak=sGSOaO07WkRHHiCRxxbSQVBn";
-                $.ajax({
-                    type: "GET",
-                    dataType: "JSONP",
-                    url: url_baidu,
-                    async:false,
-                    success: function (response) {
-                        console.log(response);
-                        cxx=response.result[0].x;
-                        cyy=response.result[0].y;
-                        alert("改变后："+cxx)
-                    }
-                });
+
+                //var urlb="http://api.map.baidu.com/geoconv/v1/?coords="+data.data[i].cx+","+data.data[i].cy+"&from=1&to=5&ak=sGSOaO07WkRHHiCRxxbSQVBn";
+                //
+
                 var point = new BMap.Point(data.data[i].cx, data.data[i].cy);
                 var marker = new BMap.Marker(point, {icon: icon});
                 marker.setTitle(data.data[i].id);
@@ -1234,6 +1246,7 @@ function getWorkerMarkers() {
                     });
 
                 });
+                //
 
             }
         }
