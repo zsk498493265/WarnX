@@ -438,19 +438,19 @@ function warn2(data){
         //     }
         // });
         if(gatewayID_exist(gid)==0)return;
-        $.messager.alert(title,warnMessage,'info',function(){
+        $.messager.confirm(title,warnMessage,'info',function(){
             //该网关故障消息已读
-            $.ajax({
-                type: "POST",
-                url: pathJs + "/data/updateOldmanStatus",
-                dataType: "json",
-                data:{
-                    oldmanId:oldId
-                },
-                async:false,
-                success: function (data) {
-                }
-            });
+            // $.ajax({
+            //     type: "POST",
+            //     url: pathJs + "/data/updateOldmanStatus",
+            //     dataType: "json",
+            //     data:{
+            //         oldmanId:oldId
+            //     },
+            //     async:false,
+            //     success: function (data) {
+            //     }
+            // });
         });
         playSound("warn");
 
@@ -676,7 +676,7 @@ $.ajax({
                     camera_num++;
             }
         }
-       // alert("care:"+device_num+","+"camera:"+camera_num);
+        //alert("sum:"+sum+","+"camera:"+camera_num);
         greenNum=greenNum+redNum+yellowNum;
         var allNum=greenNum+redNum+yellowNum;
         // document.getElementById("greenNum").innerText = "已接受服务老人数量：" + greenNum;
@@ -1169,6 +1169,9 @@ function getWorkerMarkers() {
         dataType: "json",
         async: false,
         success: function (data) {
+            // var point_1 = new BMap.Point(121.40968087397, 31.235347779343);
+            // var point_2 = new BMap.Point(121.48789949, 31.24916171);
+            // alert(map.getDistance(point_1,point_2)).toFixed(2);
             for(var i=0;i<data.data.length;i++) {
                 var icon = BMapLib.MarkerTool.SYS_ICONS[6];
                 var json={icon:{w:21,h:21,l:0,t:0,x:6,lb:5}};
@@ -1204,9 +1207,20 @@ function getWorkerMarkers() {
                         dataType: "json",
                         async: false,
                         success: function (data1) {
+                            if(data1.data.length==0)return;
                             var runLine = [];
-                            for(var j = 0; j < data1.data.length; j++)
-                                runLine.push(new BMap.Point(data1.data[j].cx, data1.data[j].cy));
+                            var point_temp=new BMap.Point(data1.data[0].cx, data1.data[0].cy);
+                            var runLine_index=0;
+                            runLine.push(new BMap.Point(data1.data[0].cx, data1.data[0].cy));
+                            for(var j = 1; j < data1.data.length; j++)
+                            {
+                                if(map.getDistance(new BMap.Point(runLine[runLine_index].cx, runLine[runLine_index].cy),new BMap.Point(data1.data[j].cx, data1.data[j].cy))<=3000){
+                                    runLine.push(new BMap.Point(data1.data[j].cx, data1.data[j].cy));
+                                    runLine_index++;
+                                }
+
+                            }
+
                             var path = new BMap.Polyline(runLine,{
                                 strokeColor : "#009933", //线路颜色
                                 strokeWeight : 4,//线路大小
@@ -2208,7 +2222,7 @@ $('#main_pie').highcharts({
         name: '人数占比',
         data: [
             ['参加居家养老老人总数',sum],
-            ['街道老人总数',1200]
+            ['街道老人总数',167000]
         ],
         center:["50%","18%"]
     }]
