@@ -34,8 +34,16 @@
         select distinct point from xun_geng where worker=#{param1}
     </select>
 
+    <select id="getRecordsByPoint" resultType="com.warn.entity.Patrol">
+        select * from xun_geng where point=#{param1}
+    </select>
+
     <select id="getMaxTimeByWorker" resultType="java.lang.String">
         select MAX(time) from xun_geng WHERE worker=#{param1}
+    </select>
+
+    <select id="getMaxTimeByWorkerAndPoint" resultType="java.lang.String">
+        select MAX(time) from xun_geng WHERE worker=#{param1} and point=#{param2}
     </select>
 
     <select id="getPointByTime" resultType="java.lang.Integer">
@@ -52,6 +60,10 @@
     <select id="getOidByPoint" resultType="java.lang.Integer">
         select old_id from point_to_oldman where point = #{point} LIMIT 1
     </select>
+
+    <delete id="deleteNull">
+        delete from xun_geng where point='' or worker=''
+    </delete>
 
     <delete id="deleteDuplicate" >
         DELETE from xun_geng where id not in(

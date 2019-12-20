@@ -49,5 +49,12 @@ public class PatrolController {
 
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/deleteNull",method = RequestMethod.GET)
+    public void deleteNull(){
+        patrolService.deleteNull();
+
+    }
+
 
 }

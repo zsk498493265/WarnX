@@ -140,11 +140,13 @@ public class PatrolServiceImpl implements PatrolService {
 
             }
             patrolDao.deleteDuplicate();
+            patrolDao.deleteNull();
 
     }
     @Override
     public Result checkRecords(){
         List<Patrol> patrols = patrolDao.getAllRecords();
+        List<Integer>point_list=new ArrayList<Integer>();
         Map<String,Integer> worker = new HashMap<>();
         Map<String,Integer> point = new HashMap<>();
         Integer[][] num = new Integer[patrols.size()][patrols.size()];
@@ -159,7 +161,12 @@ public class PatrolServiceImpl implements PatrolService {
             if(!worker.containsKey(patrol.getWorker()))
                 worker.put(patrol.getWorker(),i++);
             if(!point.containsKey(patrol.getPoint()))
+            {
                 point.put(patrol.getPoint(),j++);
+                if(patrol.getPoint()!=null)
+                point_list.add(Integer.parseInt(patrol.getPoint()));
+            }
+
             num[worker.get(patrol.getWorker())][point.get(patrol.getPoint())]++;
         }
 
@@ -183,30 +190,67 @@ public class PatrolServiceImpl implements PatrolService {
             }
 
         }
+
         for(String workerId:errorWorkers){
             List<Integer> points = patrolDao.getPointsByWorker(workerId);
-            for(Integer point1:points){
-                Integer oid = patrolDao.getOidByPoint(point1);
-                OldMan oldMan = new OldMan();
-                oldMan.setOid(oid);
-                oldMan.setStatus(0);
-                dataDao.editOldManStatus(oldMan);
-                patrolDao.addData(workerId,point1);
+            String max_time="2018-01-01 00:00:00";
+
+            for(i=0;i<patrols.size();i++){
+                if(i== Integer.valueOf(workerId)){
+                    for(j=0;j<patrols.size();j++){
+                        if(num[i][j]%2!=0){
+                            Integer oid = patrolDao.getOidByPoint(j);
+                            OldMan oldMan = new OldMan();
+                            oldMan.setOid(oid);
+                            oldMan.setStatus(0);
+                            dataDao.editOldManStatus(oldMan);
+                            //patrolDao.addData(workerId,j);
+                            if(patrolDao.getMaxTimeByWorkerAndPoint(workerId,j).compareTo(max_time)>0){
+                                max_time=patrolDao.getMaxTimeByWorker(workerId);
+                            }
+                        }
+                    }
+
+                }
             }
-            String maxTime=patrolDao.getMaxTimeByWorker(workerId);
-            Integer point2=patrolDao.getPointByTime(maxTime);
+
+            //String maxTime=patrolDao.getMaxTimeByWorker(workerId);
+            Integer point2=patrolDao.getPointByTime(max_time);
             Integer oid = patrolDao.getOidByPoint(point2);
             OldMan oldMan = new OldMan();
             oldMan.setOid(oid);
             oldMan.setStatus(1);
             dataDao.editOldManStatus(oldMan);
-            patrolDao.addData(workerId,point2);
+            //patrolDao.addData(workerId,point2);
+
+        }
+        for(Integer point1:point_list){
+            List<Patrol> patrols2 = patrolDao.getRecordsByPoint(point1.toString());
+
+            String lastWorker=patrols2.get(patrols2.size()-1).getWorker();
+            int cnt=0;
+            for(Patrol p:patrols){
+                if(p.getWorker().equals(lastWorker)){
+                    cnt++;
+                }
+            }
+            if(cnt%2==0){
+                Integer oid = patrolDao.getOidByPoint(Integer.parseInt(patrols2.get(patrols2.size()-1).getPoint()));
+                OldMan oldMan = new OldMan();
+                oldMan.setOid(oid);
+                oldMan.setStatus(0);
+                dataDao.editOldManStatus(oldMan);
+            }
+
+
+
 
 
         }
 
 
-            return new Result(true,"我爱寻网站数据正常");
+
+            return new Result(true,"正常");
     }
 
     public List<Integer> getOldIds(){
@@ -236,7 +280,6 @@ public class PatrolServiceImpl implements PatrolService {
             OldMan oldMan = new OldMan();
             oldMan.setOid(oid);
             if(num % 2 == 0){
-
                 autoValue.setInfo("0");
                 oldMan.setStatus(0);
                 dataDao.editOldManStatus(oldMan);
@@ -250,5 +293,10 @@ public class PatrolServiceImpl implements PatrolService {
         }
         return oldS;
     }
+    @Transactional
+    public void deleteNull(){
+        patrolDao.deleteNull();
+    }
+
 }
 

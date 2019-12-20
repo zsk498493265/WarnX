@@ -158,7 +158,7 @@ public class DataServiceImpl implements DataService{
             double jd1,jd2,jd3,wd;
             jd1=Double.parseDouble(oldMan.getJd());
             wd=Double.parseDouble(oldMan.getWd());
-            jd2=jd1+0.0001;
+            jd2=jd1+0.0004;
             jd3=jd1+0.0002;
             louDao.addLou(jd1,jd2,jd3,wd,sub_address);
             oldMan.setLouId(louDao.getLouId(sub_address));
@@ -261,6 +261,14 @@ public class DataServiceImpl implements DataService{
         OldMan oldMan = new OldMan();
         oldMan.setOid(oldManId);
         oldMan.setStatus(0);
+        dataDao.editOldManStatus(oldMan);
+    }
+
+    @Transactional
+    public void updateOldmanStatusById2(Integer oldManId) {
+        OldMan oldMan = new OldMan();
+        oldMan.setOid(oldManId);
+        oldMan.setStatus(2);
         dataDao.editOldManStatus(oldMan);
     }
 

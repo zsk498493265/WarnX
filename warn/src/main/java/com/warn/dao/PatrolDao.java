@@ -14,9 +14,13 @@ public interface PatrolDao {
 
     List<Patrol> getAllRecords();
 
+    List<Patrol> getRecordsByPoint(String point);
+
     Integer getOldIdByRecord(Integer point);
 
     String getMaxTimeByWorker(String worker);
+
+    String getMaxTimeByWorkerAndPoint(String worker,Integer point);
 
     void addData(String worker,Integer point);
 
@@ -31,6 +35,8 @@ public interface PatrolDao {
     Integer getOidByPoint(Integer point);
 
     void deleteDuplicate();
+
+    void deleteNull();
 
 
 }

@@ -32,6 +32,8 @@ public interface DataService {
 
     void updateOldmanStatusById(Integer oldManId);
 
+    void updateOldmanStatusById2(Integer oldManId);
+
     void deleteWorkerById(Integer id);
 
     List<OldMan> getAllOldmanID_Name();

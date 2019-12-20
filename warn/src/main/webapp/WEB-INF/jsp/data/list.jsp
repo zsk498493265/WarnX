@@ -300,9 +300,10 @@
         <input type="hidden" name="oid"/>
     </form>
       <div style="width:100px;margin:auto;">
-          要查询的地址：<input id="text_" type="text" value="宁波天一广场" style="margin-right:100px;"/>
+          <a href="http://api.map.baidu.com/lbsapi/getpoint/index.html" target="_blank">go baidu</a>
+          <input id="text_" type="text" value="宁波天一广场" style="margin-right:100px;display: none"/>
           查询结果(经纬度)：<input id="result_" type="text" />
-          <input type="button" value="查询" onclick="searchByStationName();"/>
+          <input type="button" value="分解填充经纬度" onclick="searchByStationName();"/>
           <div id="container"
                style="position: absolute;
                 margin-top:30px;
@@ -340,14 +341,22 @@
     var localSearch = new BMap.LocalSearch(map);
     localSearch.enableAutoViewport(); //允许自动调节窗体大小
     function searchByStationName() {
+        //分解经纬度
+        var latlon=document.getElementById("result_").value;
+        var lng=latlon.split(",")[0];
+        var lat=latlon.split(",")[1];
+        document.getElementById("jd").value = lng;
+        document.getElementById("wd").value = lat;
+alert(lon);
+        //
         map.clearOverlays();//清空原来的标注
         var keyword = document.getElementById("text_").value;
         localSearch.setSearchCompleteCallback(function (searchResult) {
             var poi = searchResult.getPoi(0);
             document.getElementById("result_").value = poi.point.lng + "," + poi.point.lat;
-            document.getElementById("jd").value = poi.point.lng;
-            document.getElementById("wd").value = poi.point.lat;
-            alert(document.getElementById("wd").value);
+            //document.getElementById("jd").value = poi.point.lng;
+            //document.getElementById("wd").value = poi.point.lat;
+            //alert(document.getElementById("wd").value);
             //alert(document.getElementById("jwd").value);
             map.centerAndZoom(poi.point, 13);
             var marker = new BMap.Marker(new BMap.Point(poi.point.lng, poi.point.lat));  // 创建标注，为要查询的地方对应的经纬度

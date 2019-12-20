@@ -165,6 +165,18 @@ public class DataController {
         dataService.updateOldmanStatusById(oldmanId);
         return new Result(true);
     }
+    /**
+     * 更新老人状态至报警
+     * @param oldmanId
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/updateOldmanStatustTo2",method = RequestMethod.POST)
+    public Result updateOldmanStatustTo2(@RequestParam Integer oldmanId){
+
+        dataService.updateOldmanStatusById2(oldmanId);
+        return new Result(true);
+    }
 
     /**
      * 删除工人信息

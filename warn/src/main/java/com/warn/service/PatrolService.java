@@ -15,4 +15,6 @@ public interface PatrolService {
     List<AutoValue> getOldsStatus();
 
     Result checkRecords();
+
+    void  deleteNull();
 }

@@ -211,14 +211,14 @@
     <select id="getWorkerMarkers" resultType="com.warn.entity.WorkerMarker">
         SELECT x.id, cx, cy, x.time, taskid, name, qq, phone
         FROM worker x JOIN (SELECT id, MAX(time) AS time FROM worker GROUP BY id) AS y
-        ON x.id = y.id AND x.time = y.time
+        ON x.id = y.id AND x.time = y.time AND x.time > date_sub(now(),interval 150 MINUTE)
     </select>
 
     <select id="getWorkerPosition" resultType="com.warn.entity.WorkerMarker">
         SELECT x.id, cx, cy, TIME, x.taskid, name, qq, phone
         FROM worker x JOIN (SELECT id,MAX(taskid) AS taskid FROM worker GROUP BY id) AS y
         ON x.id = y.id AND x.taskid = y.taskid
-        WHERE x.id = #{id} AND TIME > date_sub(now(),interval 30 MINUTE)
+        WHERE x.id = #{id} AND TIME > date_sub(now(),interval 150 MINUTE)
         ORDER BY TIME
 
     </select>

@@ -170,7 +170,19 @@ function warn2(data){
             "老人住址：<span class='messageD'>"+ data.urgency.oldMan.oldAddress+"</span></p></div>";
         if(gatewayID_exist(gid)==0)return;
         oldId=data.urgency.oldMan.oid;
-        $.messager.alert('紧急报警！',urgencyMessage,'info',function(){
+        //亮红灯
+        $.ajax({
+            type: "POST",
+            url: pathJs + "/data/updateOldmanStatusTo2",
+            dataType: "json",
+            data:{
+                oldmanId:oldId
+            },
+            async:false,
+            success: function (data) {
+            }
+        });
+        $.messager.confirm('紧急报警！',urgencyMessage,'info',function(){
             // 该网关故障消息已读
             $.ajax({
                 type: "POST",
@@ -219,7 +231,19 @@ function warn2(data){
         oldPhone=data.oldMan.oldPhone;
         oldAddress=data.oldMan.oldAddress;
         if(gatewayID_exist(gid)==0)return;
-        $.messager.alert('网关故障！',gatewayDownMessage,'danger',function(){
+        //亮红灯
+        $.ajax({
+            type: "POST",
+            url: pathJs + "/data/updateOldmanStatusTo2",
+            dataType: "json",
+            data:{
+                oldmanId:oldId
+            },
+            async:false,
+            success: function (data) {
+            }
+        });
+        $.messager.confirm('网关故障！',gatewayDownMessage,'danger',function(){
             // 该网关故障消息已读
             $.ajax({
                 type: "POST",
@@ -278,7 +302,19 @@ function warn2(data){
         oldPhone=data.oldMan.oldPhone;
         oldAddress=data.oldMan.oldAddress;
         if(gatewayID_exist(gid)==0)return;
-        $.messager.alert('设备故障！',gatewayDownMessage,'info',function(){
+        //亮红灯
+        $.ajax({
+            type: "POST",
+            url: pathJs + "/data/updateOldmanStatusTo2",
+            dataType: "json",
+            data:{
+                oldmanId:oldId
+            },
+            async:false,
+            success: function (data) {
+            }
+        });
+        $.messager.confirm('设备故障！',gatewayDownMessage,'info',function(){
             //该网关故障消息已读
             $.ajax({
                 type: "POST",
@@ -438,19 +474,31 @@ function warn2(data){
         //     }
         // });
         if(gatewayID_exist(gid)==0)return;
+        //亮红灯
+        $.ajax({
+            type: "POST",
+            url: pathJs + "/data/updateOldmanStatusTo2",
+            dataType: "json",
+            data:{
+                oldmanId:oldId
+            },
+            async:false,
+            success: function (data) {
+            }
+        });
         $.messager.confirm(title,warnMessage,'info',function(){
             //该网关故障消息已读
-            // $.ajax({
-            //     type: "POST",
-            //     url: pathJs + "/data/updateOldmanStatus",
-            //     dataType: "json",
-            //     data:{
-            //         oldmanId:oldId
-            //     },
-            //     async:false,
-            //     success: function (data) {
-            //     }
-            // });
+            $.ajax({
+                type: "POST",
+                url: pathJs + "/data/updateOldmanStatus",
+                dataType: "json",
+                data:{
+                    oldmanId:oldId
+                },
+                async:false,
+                success: function (data) {
+                }
+            });
         });
         playSound("warn");
 
@@ -468,6 +516,7 @@ function warn2(data){
     //addWarnIcon(data.oldMan.gatewayID);
 
 }
+
 function gatewayID_exist(gid) {
     $.ajax({
         type: "GET",
@@ -1184,6 +1233,7 @@ function getWorkerMarkers() {
                 //
 
                 var point = new BMap.Point(data.data[i].cx, data.data[i].cy);
+                //alert(map.getDistance(new BMap.Point(0, 0),point));
                 var marker = new BMap.Marker(point, {icon: icon});
                 marker.setTitle(data.data[i].id);
                 map.addOverlay(marker);
@@ -1509,17 +1559,58 @@ function getLouMarkers() {
                 //new remove listener
 
                 var camera_num=0;
+                var careSystemNum=0;
+                for(var j=0;j<dataR[i].oldMan.length;j++){
+                    if(dataR[i].oldMan[j].careSystem==1)
+                        careSystemNum++;
+                }
+                //alert(careSystemNum);
+                // if(careSystemNum>0){
+                //     //var json_device={icon:{w:21,h:21,l:0,t:0,x:6,lb:5}};
+                //     //添加设备图标
+                //     var icon_device = BMapLib.MarkerTool.SYS_ICONS[8];
+                //     // var icon_device = new BMap.Icon("https://organold.oss-cn-shanghai.aliyuncs.com/img/info.png", new BMap.Size(45,45),{imageOffset: new BMap.Size(0,0),infoWindowOffset:new BMap.Size(json_device.lb+5,1),offset:new BMap.Size(0,0)});
+                //     var point_device = new BMap.Point(dataR[i].xR, dataR[i].yR);
+                //     var marker_device= new BMap.Marker(point_device, {icon: icon_device});
+                //     var label_device = new BMap.Label(louNumY,{offset:new BMap.Size(5,-20)});
+                //     label_device.setStyle({
+                //         color: "red",
+                //         font: "8px Tahoma,Helvetica,Arial,'宋体',sans-serif;",
+                //         backgroundColor: "transparent",
+                //         fontWeight: "bold",
+                //         border: "none"
+                //     });
+                //     marker_device.setLabel(label_device);
+                //     //marker_device.setTitle(careSystemNum);
+                //     map.addOverlay(marker_device);
+                //
+                // }
                 if(dataR[i].greenSum+dataR[i].redSum+dataR[i].yellowSum)
                     map.addOverlay(marker[i]);
-                if(dataR[i].redSum)
+                if(careSystemNum)
                     map.addOverlay(marker2[i]);
                 if(dataR[i].yellowSum)
                     map.addOverlay(marker3[i]);
-                for(var j=0;j<dataR[i].oldMan.length;j++)
-                {
-                    if(dataR[i].oldMan[j].camera)
-                        camera_num++;
-                }
+
+
+
+                // for(var j=0;j<dataR[i].oldMan.length;j++)
+                // {
+                //     var careSystemNum=0;
+                //     if(dataR[i].oldMan[j].careSystem==1)
+                //         careSystemNum++;
+                //     if(dataR[i].oldMan[j].careSystem==1){
+                //         var json_device={icon:{w:21,h:21,l:0,t:0,x:6,lb:5}};
+                //         //添加设备图标
+                //         var icon_device = BMapLib.MarkerTool.SYS_ICONS[8];
+                //         //var icon_device = new BMap.Icon("https://organold.oss-cn-shanghai.aliyuncs.com/img/info.png", new BMap.Size(45,45),{imageOffset: new BMap.Size(0,0),infoWindowOffset:new BMap.Size(json_device.lb+5,1),offset:new BMap.Size(0,0)});
+                //         var point_device = new BMap.Point(dataR[i].xR, dataR[i].yR);
+                //         var marker_device= new BMap.Marker(point_device, {icon: icon_device});
+                //         marker_device.setTitle(careSystemNum);
+                //         map.addOverlay(marker_device);
+                //
+                //     }
+                // }
 
                 if(camera_num){
                     //删除摄像头
@@ -1538,7 +1629,7 @@ function getLouMarkers() {
                     fontWeight: "bold",
                     border: "none"
                 });
-                var label2 = new BMap.Label(louNumR,{offset:new BMap.Size(5,-20)});
+                var label2 = new BMap.Label(careSystemNum,{offset:new BMap.Size(5,-20)});
                 label2.setStyle({
                     color: "red",
                     font: "8px Tahoma,Helvetica,Arial,'宋体',sans-serif;",
@@ -1657,7 +1748,7 @@ function getLouMarkers() {
 
                     for(var j=0;j<this.oldsInfo.length;j++)
                     {
-                        if(this.oldsInfo[j].status!=2)continue;
+                        //if(this.oldsInfo[j].careSystem!=1)continue;
 
                         infostr+=this.oldsInfo[j].oldName;
                         infostr=infostr+":"+"<div id='test' style='width:10px;height:10px;background:#dd1144;'></div>";
@@ -2222,7 +2313,7 @@ $('#main_pie').highcharts({
         name: '人数占比',
         data: [
             ['参加居家养老老人总数',sum],
-            ['街道老人总数',167000]
+            ['街道老人总数',33147]
         ],
         center:["50%","18%"]
     }]
@@ -2479,7 +2570,7 @@ function pieClickDevice(name) {
                 var cnt=0;
                 for (var i = 0; i < data.data.length; i++) {
                     for (var j = 0; j < data.data[i].oldMan.length; j++) {
-                        if(data.data[i].oldMan[j].careSystem)
+                        if(data.data[i].oldMan[j].careSystem==1)
                         {
                             //oid=data.data[i].oldMan[j].oid;
                             testMessage+="<div onclick='markOldman(this)'>" +"编号:"+data.data[i].oldMan[j].oid+",姓名:"+data.data[i].oldMan[j].oldName+"</div>";
@@ -2591,7 +2682,7 @@ function markOldman(param){
             if(dataR[i].oldMan[j].oid==id){
                 var json={icon:{w:21,h:21,l:0,t:0,x:6,lb:5}};
                 //var icon = new BMap.Icon("https://organold.oss-cn-shanghai.aliyuncs.com/img/warnS.png", new BMap.Size(128,128),{imageOffset: new BMap.Size(0,0),infoWindowOffset:new BMap.Size(json.lb+5,1),offset:new BMap.Size(0,0)});
-                var icon = new BMap.Icon("https://organold.oss-cn-shanghai.aliyuncs.com/img/info.png", new BMap.Size(128,128),{imageOffset: new BMap.Size(0,0),infoWindowOffset:new BMap.Size(json.lb+5,1),offset:new BMap.Size(0,0)});
+                var icon = new BMap.Icon("https://organold.oss-cn-shanghai.aliyuncs.com/img/info.png", new BMap.Size(45,45),{imageOffset: new BMap.Size(0,0),infoWindowOffset:new BMap.Size(json.lb+5,1),offset:new BMap.Size(0,0)});
 
                 var point = new BMap.Point(dataR[i].xR, dataR[i].yR);
                 marker= new BMap.Marker(point, {icon: icon});
